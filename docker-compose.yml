@@ -1,0 +1,25 @@
+version: '2'
+services:
+  db:
+    extends:
+      file: ./docker/common/docker-compose.yml
+      service: mysql
+    container_name: mdb
+    hostname: mdb
+    ports:
+      - "13306:3306"
+#    volumes:
+#      - ./docker/db_init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=mdb
+  dotnet:
+    build:
+      context: docker
+      dockerfile: Dockerfile.dotnet
+    container_name: dotnet
+    hostname: dotnet
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: tail -f /dev/stdout
