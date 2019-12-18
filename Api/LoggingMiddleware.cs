@@ -64,7 +64,7 @@ namespace Api
                 bodyAsText = await reader.ReadToEndAsync();
                 request.Body.Position = 0;
             }
-            return $"m={request.Method},ct={request.ContentType},schme={request.Scheme},host={request.Host},path={request.Path},q={request.QueryString},b={bodyAsText}";
+            return $"m={request.Method},ct={request.ContentType},host={request.Host},path={request.Path},q={request.QueryString},b={bodyAsText}";
         }
 
         private async Task<string> FormatResponse(HttpResponse response)
