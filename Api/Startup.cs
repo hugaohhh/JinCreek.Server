@@ -21,6 +21,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddDbContext<MdbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
@@ -40,6 +41,8 @@ namespace Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseLoggingMiddleware();
 
             app.UseHttpsRedirection();
 
