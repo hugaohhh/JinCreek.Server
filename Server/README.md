@@ -1,19 +1,22 @@
 # Server.csproj
 
 
-## ユーザ登録
+## 1 ユーザ登録
+
+`/api/authentication/register`に`username`と`password`をJSON形式(`Content-Type: application/json`)でPOSTするとユーザが作成される。
+`password`は6文字以上で、英字と数字と記号を含む必要がある。
 
 例：
 
 ```
-$ http -v --verify=no POST https://localhost:5001/api/authentication/register username="t-suzuki@indigo.co.jp" password="9Q'vl!"
+$ http -v POST http://localhost:5000/api/authentication/register username="t-suzuki@indigo.co.jp" password="9Q'vl!"
 POST /api/authentication/register HTTP/1.1
 Accept: application/json, */*
 Accept-Encoding: gzip, deflate
 Connection: keep-alive
 Content-Length: 59
 Content-Type: application/json
-Host: localhost:5001
+Host: localhost:5000
 User-Agent: HTTPie/1.0.3
 
 {
@@ -28,19 +31,21 @@ Server: Kestrel
 ```
 
 
-## トークン取得
+## 2 トークンの取得
+
+`/api/authentication/login`に`username`と`password`をPOSTすると`accessToken`と`refreshToken`が返る。
 
 例：
 
 ```
-$ http -v --verify=no POST https://localhost:5001/api/authentication/login username="t-suzuki@indigo.co.jp" password="9Q'vl!"
+$ http -v POST http://localhost:5000/api/authentication/login username="t-suzuki@indigo.co.jp" password="9Q'vl!"
 POST /api/authentication/login HTTP/1.1
 Accept: application/json, */*
 Accept-Encoding: gzip, deflate
 Connection: keep-alive
 Content-Length: 59
 Content-Type: application/json
-Host: localhost:5001
+Host: localhost:5000
 User-Agent: HTTPie/1.0.3
 
 {
@@ -65,19 +70,49 @@ Transfer-Encoding: chunked
 ```
 
 
-## リフレッシュ
+## 3 アクセス
+
+`accessToken`を`Authorization: Bearer`ヘッダにつけて`GET`する。
 
 例：
 
 ```
-$ http -v --verify=no POST https://localhost:5001/api/authentication/refresh refreshtoken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODYyNDI5LCJpYXQiOjE1NzY4MTkyMjl9.vIXlAOJgHaPjug4pk6lMwjq8myaFWfA-TJT9VrXVFQo
+$ http -v GET http://localhost:5000/api/randomnumber/generate Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgzMjU3MSwiZXhwIjoxNTc2ODMyNjMxLCJpYXQiOjE1NzY4MzI1NzF9.A1MF2O82jDtB9yp3_fVVrJ2Uv5q4IDZlAhhw4EvHQ3Y"
+GET /api/randomnumber/generate HTTP/1.1
+Accept: */*
+Accept-Encoding: gzip, deflate
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgzMjU3MSwiZXhwIjoxNTc2ODMyNjMxLCJpYXQiOjE1NzY4MzI1NzF9.A1MF2O82jDtB9yp3_fVVrJ2Uv5q4IDZlAhhw4EvHQ3Y
+Connection: keep-alive
+Host: localhost:5000
+User-Agent: HTTPie/1.0.3
+
+
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Date: Fri, 20 Dec 2019 09:03:49 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+665
+```
+
+
+## 4 リフレッシュ
+
+`/api/authentication/refresh`に`refreshtoken`をPOSTすると、新しい`accessToken`が返る。
+
+例：
+
+```
+$ http -v POST http://localhost:5000/api/authentication/refresh refreshtoken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODYyNDI5LCJpYXQiOjE1NzY4MTkyMjl9.vIXlAOJgHaPjug4pk6lMwjq8myaFWfA-TJT9VrXVFQo
 POST /api/authentication/refresh HTTP/1.1
 Accept: application/json, */*
 Accept-Encoding: gzip, deflate
 Connection: keep-alive
 Content-Length: 241
 Content-Type: application/json
-Host: localhost:5001
+Host: localhost:5000
 User-Agent: HTTPie/1.0.3
 
 {
@@ -94,3 +129,45 @@ Transfer-Encoding: chunked
     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTUxMiwiZXhwIjoxNTc2ODE5NTcyLCJpYXQiOjE1NzY4MTk1MTJ9.ZH44O3e9kxjI05xFbgDqiyTv72JLPLUsWIviO3zr6eI"
 }
 ```
+
+
+## 5 おまけ
+
+accessTokenのペイロード：
+
+```
+"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODE5Mjg5LCJpYXQiOjE1NzY4MTkyMjl9.hbnmqwgKX81O257WsevBz1Nqxe9r_kfv4OE2byd4H7o",
+```
+
+↓
+
+```
+{
+  "unique_name": "369b9e52-cdf2-4a85-bf3b-dd05b1fd6cb6",
+  "nbf": 1576819229,
+  "exp": 1576819289,
+  "iat": 1576819229
+}
+```
+
+トークンタイプが含まれていない!
+
+
+refreshTokenのペイロード：
+
+```
+"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODYyNDI5LCJpYXQiOjE1NzY4MTkyMjl9.vIXlAOJgHaPjug4pk6lMwjq8myaFWfA-TJT9VrXVFQo"
+```
+
+↓
+
+```
+{
+  "unique_name": "369b9e52-cdf2-4a85-bf3b-dd05b1fd6cb6",
+  "nbf": 1576819229,
+  "exp": 1576862429,
+  "iat": 1576819229
+}
+```
+
+トークンタイプが含まれていない!
