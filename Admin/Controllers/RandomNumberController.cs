@@ -4,8 +4,9 @@ using System;
 
 namespace Admin.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class RandomNumberController : Controller
+    public class RandomNumberController : ControllerBase
     {
         [Authorize]
         [HttpGet("Generate")]

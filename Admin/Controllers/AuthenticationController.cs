@@ -14,23 +14,19 @@ using System.Threading.Tasks;
 
 namespace Admin.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class AuthenticationController : Controller
+    public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly AppSettings _appSettings;
-        private readonly ApplicationDbContext _dataContext;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            IOptions<AppSettings> appSettings,
-            ApplicationDbContext dataContext)
+        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
-            _dataContext = dataContext;
         }
 
         [HttpPost("Register")]
