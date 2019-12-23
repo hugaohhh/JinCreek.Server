@@ -1,4 +1,4 @@
-# Server.csproj
+# Admin.csproj
 
 
 ## 1 ユーザ登録

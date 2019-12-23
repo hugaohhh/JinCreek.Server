@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace Server.Controllers
+namespace Admin.Controllers
 {
     [Route("api/[controller]")]
     public class RandomNumberController : Controller
