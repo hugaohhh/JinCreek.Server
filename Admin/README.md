@@ -4,7 +4,7 @@
 ## 1 ユーザ登録
 
 `/api/authentication/register`に`username`と`password`をJSON形式(`Content-Type: application/json`)でPOSTするとユーザが作成される。
-`password`は6文字以上で、英字と数字と記号を含む必要がある。
+`password`は6文字以上で、英字大文字と英字小文字と数字と記号を含む必要がある。
 
 例：
 
