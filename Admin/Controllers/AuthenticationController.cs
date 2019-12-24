@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Admin.Data;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,11 +29,6 @@ namespace Admin.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]UsersRegisterRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var user = new IdentityUser
             {
                 UserName = request.UserName
@@ -55,11 +47,6 @@ namespace Admin.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody]UsersLoginRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var signInResult = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, true, true);
 
             if (!signInResult.Succeeded)
@@ -148,19 +135,24 @@ namespace Admin.Controllers
 
     public class UsersRegisterRequest
     {
+        [Required]
         public String UserName { get; set; }
+        [Required]
         public String Password { get; set; }
     }
 
     public class UsersLoginRequest
     {
+        [Required]
         public String UserName { get; set; }
+        [Required]
         public String Password { get; set; }
     }
 
     public class UsersRefreshRequest
     {
         public String AccessToken { get; set; }
+        [Required]
         public String RefreshToken { get; set; }
     }
 }
