@@ -7,42 +7,59 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace AdminTests.Controllers
 {
-    [TestClass]
     public class AuthenticationControllerTests
     {
-        [TestMethod]
+
+        public AuthenticationControllerTests()
+        {
+            // see https://aka.ms/IdentityModel/PII
+            IdentityModelEventSource.ShowPII = true;
+        }
+
+        [Fact]
         public void TestAuthentication()
         {
-            IdentityModelEventSource.ShowPII = true;  // see https://aka.ms/IdentityModel/PII
+            static string GetString(OkObjectResult result, string propertyName)
+            {
+                return result.Value.GetType().GetProperty(propertyName).GetValue(result.Value) as string;
+            }
 
-            var userManagerMock = new Mock<FakeUserManager>();
-            userManagerMock.Setup(manager => manager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
 
-            var signInManagerMock = new Mock<FakeSignInManager>();
-            signInManagerMock.Setup(manager => manager.PasswordSignInAsync("hoge", "fuga", true, true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            var testuser = new IdentityUser { UserName = "hoge" };
 
-            var optionsMock = new Mock<IOptions<AppSettings>>();
-            optionsMock.Setup(options => options.Value).Returns(new AppSettings { Secret = "this is my key, there are many of them but this one is mine" });
+            var userManager = new Mock<FakeUserManager>();
+            userManager.Setup(_ => _.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            userManager.Setup(_ => _.FindByNameAsync(testuser.UserName)).ReturnsAsync(testuser);
+            userManager.Setup(_ => _.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(testuser);
 
-            var controller = new AuthenticationController(userManagerMock.Object, signInManagerMock.Object, optionsMock.Object);
+            var signInManager = new Mock<FakeSignInManager>();
+            signInManager.Setup(_ => _.PasswordSignInAsync("hoge", "fuga", true, true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
-            var result1 = controller.Register(new UsersRegisterRequest { UserName = "hoge", Password = "fuga" });
-            Assert.IsNotNull(result1.Result);
+            var appSettings = new Mock<IOptions<AppSettings>>();
+            appSettings.Setup(_ => _.Value).Returns(new AppSettings { Secret = "this is my key, there are many of them but this one is mine" });
 
-            var result2 = controller.Login(new UsersLoginRequest { UserName = "hoge", Password = "fuga" });
-            Assert.IsNotNull(result2.Result);
 
-            var result3 = controller.Refresh(new UsersRefreshRequest { RefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODYyNDI5LCJpYXQiOjE1NzY4MTkyMjl9.vIXlAOJgHaPjug4pk6lMwjq8myaFWfA-TJT9VrXVFQo" });
-            Assert.IsNotNull(result3.Result);
+            var controller = new AuthenticationController(userManager.Object, signInManager.Object, appSettings.Object);
+
+            IActionResult result1 = controller.Register(new UsersRegisterRequest { UserName = "hoge", Password = "fuga" }).Result;
+            Assert.IsType<OkResult>(result1);
+
+            IActionResult result2 = controller.Login(new UsersLoginRequest { UserName = "hoge", Password = "fuga" }).Result;
+            Assert.IsType<OkObjectResult>(result2);
+            string refreshToken = GetString(result2 as OkObjectResult, "RefreshToken");
+
+            IActionResult result3 = controller.Refresh(new UsersRefreshRequest { RefreshToken = refreshToken }).Result;
+            Assert.IsType<OkObjectResult>(result3);
+            string accessToken = GetString(result3 as OkObjectResult, "AccessToken");
         }
 
         //

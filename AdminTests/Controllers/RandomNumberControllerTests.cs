@@ -1,22 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Admin.Controllers;
+﻿using Admin.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xunit;
 
 namespace AdminTests.Controllers
 {
-    [TestClass]
     public class RandomNumberControllerTests
     {
-        [TestMethod]
+        [Fact]
         public void GetDeviceAuthenticationTest()
         {
-            var hoge = new RandomNumberController();
-
-            //Assert.Fail();
-            Assert.AreEqual(2, hoge.Generate().Value);
-
+            var controller = new RandomNumberController();
+            Assert.InRange<int>(controller.Generate().Value, 0, 1000);
         }
     }
 }
