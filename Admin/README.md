@@ -1,7 +1,19 @@
 # Admin.csproj
 
+管理画面 (Angular) が呼び出すWeb API
 
-## 1 ユーザ登録
+
+## 0 Swagger
+
+以下でSwaggerが見られる（NSwagを使用）：
+
+- http://localhost:5000/swagger/
+- https://localhost:5001/swagger/
+- http://localhost:5000/swagger/v1/swagger.json
+- https://localhost:5001/swagger/v1/swagger.json
+
+
+## 1 ユーザ登録（テスト用）
 
 `/api/authentication/register`に`username`と`password`をJSON形式(`Content-Type: application/json`)でPOSTするとユーザが作成される。
 `password`は6文字以上で、英字大文字と英字小文字と数字と記号を含む必要がある。
