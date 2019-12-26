@@ -66,7 +66,16 @@ namespace Admin.Controllers
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(request.RefreshToken, tokenValidationParameters, out var securityToken);
+            SecurityToken securityToken;
+            ClaimsPrincipal principal;
+            try
+            {
+                principal = tokenHandler.ValidateToken(request.RefreshToken, tokenValidationParameters, out securityToken);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { title = e.Message });
+            }
 
             if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
