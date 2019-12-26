@@ -1,4 +1,6 @@
-﻿■CA証明書と秘密鍵作成
+﻿# 処理
+
+## CA証明書と秘密鍵作成
 
 ```
 $ docker exec -it nginx /gen-ca.sh
@@ -28,7 +30,7 @@ Email Address []: (空白)
 ```
 
 
-■サーバー証明書: 秘密鍵と証明書要求ファイル（CSR）作成
+## サーバー証明書: 秘密鍵と証明書要求ファイル（CSR）作成
 
 
 ```
@@ -110,7 +112,7 @@ writing RSA key
 
 
 
-■クライアント証明書
+## クライアント証明書
 
 ```
 $ docker exec -it nginx /gen-client.sh
@@ -184,13 +186,27 @@ Enter Export Password:← クライアント証明書閲覧用のパスワード
 Verifying - Enter Export Password:クライアント証明書閲覧用のパスワード
 
 -rw------- 1 root root 2541 12月 26 16:09 /client.pfx
+
+Enter Import Password:← クライアント証明書閲覧用のパスワード
 ```
 
 
 
+## パスワード
 
 CAのパスワード: password1
 サーバー証明書のパスワード: password2
 クライアント証明書のパスワード: password3
 クライアント証明書閲覧用のパスワード: password4
+
+## 確認
+
+
+下記の-Eが必要。他はHTTPステータスコード表示のため。
+
+```
+# curl -k -o /dev/null -w '%{http_code}\n' -s https://www.jincreek.jp -E /etc/ssl/client/client.pem
+200
+```
+
 

@@ -61,6 +61,7 @@ COPY nginx/etc/ssl/client/client-key.pem /etc/ssl/client/
 COPY nginx/etc/ssl/client/client-csr.pem /etc/ssl/client/
 COPY nginx/etc/ssl/client/client.crt     /etc/ssl/client/
 COPY nginx/etc/ssl/client/client.pfx     /etc/ssl/client/
+COPY nginx/etc/ssl/client/client.pem     /etc/ssl/client/
 RUN chmod 600 /etc/ssl/client/client-key.pem /etc/ssl/client/client.pfx
 
 

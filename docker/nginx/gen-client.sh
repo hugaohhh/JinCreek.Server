@@ -13,6 +13,7 @@ csr=${clt_dir}/${prefix}-csr.pem
 key=${clt_dir}/${prefix}-key.pem
 crt=${clt_dir}/${prefix}.crt
 pfx=${ctl_dir}/${prefix}.pfx
+pem=${ctl_dir}/${prefix}.pem
 
 echo ""
 echo "prefix is ${prefix}"
@@ -31,4 +32,7 @@ openssl pkcs12 -export -in ${crt} -inkey ${key} \
 
 echo ""
 ls -l ${pfx}
+
+openssl pkcs12 -in ${pfx} -out ${pem} -nodes -clcerts
+
 
