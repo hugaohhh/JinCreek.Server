@@ -1,4 +1,4 @@
-¡CAØ–¾‘‚Æ”é–§Œ®ì¬
+ï»¿â– CAè¨¼æ˜æ›¸ã¨ç§˜å¯†éµä½œæˆ
 
 ```
 $ docker exec -it nginx /gen-ca.sh
@@ -6,8 +6,8 @@ Generating a RSA private key
 ................................................+++++
 .................................................................................+++++
 writing new private key to '/etc/ssl/private_ca/private/cakey.pem'
-Enter PEM pass phrase: © CA‚ÌƒpƒXƒ[ƒh
-Verifying - Enter PEM pass phrase: © CA‚ÌƒpƒXƒ[ƒh
+Enter PEM pass phrase: â† CAã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+Verifying - Enter PEM pass phrase: â† CAã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 -----
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
@@ -20,15 +20,15 @@ Country Name (2 letter code) [AU]:JP
 State or Province Name (full name) [Some-State]:Tokyo
 Locality Name (eg, city) []:Chuo-ku
 Organization Name (eg, company) [Internet Widgits Pty Ltd]:JinCreek
-Organizational Unit Name (eg, section) []: (‹ó”’)
+Organizational Unit Name (eg, section) []: (ç©ºç™½)
 Common Name (e.g. server FQDN or YOUR name) []:JinCreek CA
-Email Address []: (‹ó”’)
--rw-r--r-- 1 root root  917 12Œ 26 16:05 /etc/ssl/private_ca/JinCreek-CA.der
--rw-r--r-- 1 root root 1298 12Œ 26 16:05 /etc/ssl/private_ca/cacert.pem
+Email Address []: (ç©ºç™½)
+-rw-r--r-- 1 root root  917 12æœˆ 26 16:05 /etc/ssl/private_ca/JinCreek-CA.der
+-rw-r--r-- 1 root root 1298 12æœˆ 26 16:05 /etc/ssl/private_ca/cacert.pem
 ```
 
 
-¡ƒT[ƒo[Ø–¾‘: ”é–§Œ®‚ÆØ–¾‘—v‹ƒtƒ@ƒCƒ‹iCSRjì¬
+â– ã‚µãƒ¼ãƒãƒ¼è¨¼æ˜æ›¸: ç§˜å¯†éµã¨è¨¼æ˜æ›¸è¦æ±‚ãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆCSRï¼‰ä½œæˆ
 
 
 ```
@@ -40,8 +40,8 @@ Generating a RSA private key
 ......+++++
 ..............................................................................................................................+++++
 writing new private key to '/etc/ssl/server/www-jincreek-jp-key.pem'
-Enter PEM pass phrase:© ƒT[ƒo[Ø–¾‘‚ÌƒpƒXƒ[ƒh
-Verifying - Enter PEM pass phrase:© ƒT[ƒo[Ø–¾‘‚ÌƒpƒXƒ[ƒh
+Enter PEM pass phrase:â† ã‚µãƒ¼ãƒãƒ¼è¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+Verifying - Enter PEM pass phrase:â† ã‚µãƒ¼ãƒãƒ¼è¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 -----
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
@@ -54,19 +54,19 @@ Country Name (2 letter code) [AU]:JP
 State or Province Name (full name) [Some-State]:Tokyo
 Locality Name (eg, city) []:Chuo-ku
 Organization Name (eg, company) [Internet Widgits Pty Ltd]:JinCreek
-Organizational Unit Name (eg, section) []:(‹ó”’)
+Organizational Unit Name (eg, section) []:(ç©ºç™½)
 Common Name (e.g. server FQDN or YOUR name) []:www.jincreek.jp
-Email Address []:(‹ó”’)
+Email Address []:(ç©ºç™½)
 
 Please enter the following 'extra' attributes
 to be sent with your certificate request
-A challenge password []:(‹ó”’)
-An optional company name []:(‹ó”’)
+A challenge password []:(ç©ºç™½)
+An optional company name []:(ç©ºç™½)
 
 sign ...
 
 Using configuration from /usr/lib/ssl/openssl.cnf
-Enter pass phrase for /etc/ssl/private_ca/private/cakey.pem:© CA‚ÌƒpƒXƒ[ƒh
+Enter pass phrase for /etc/ssl/private_ca/private/cakey.pem:â† CAã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 Check that the request matches the signature
 Signature ok
 Certificate Details:
@@ -101,16 +101,16 @@ Data Base Updated
 
 delete key-password
 
-Enter pass phrase for /etc/ssl/server/www-jincreek-jp-key.pem:© ƒT[ƒo[Ø–¾‘‚ÌƒpƒXƒ[ƒh
+Enter pass phrase for /etc/ssl/server/www-jincreek-jp-key.pem:â† ã‚µãƒ¼ãƒãƒ¼è¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 writing RSA key
 
--rw------- 1 root root 1679 12Œ 26 16:07 /etc/ssl/server/www-jincreek-jp-key.pem.nopass
--rw-r--r-- 1 root root 4521 12Œ 26 16:07 /etc/ssl/server/www-jincreek-jp.crt
+-rw------- 1 root root 1679 12æœˆ 26 16:07 /etc/ssl/server/www-jincreek-jp-key.pem.nopass
+-rw-r--r-- 1 root root 4521 12æœˆ 26 16:07 /etc/ssl/server/www-jincreek-jp.crt
 ```
 
 
 
-¡ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘
+â– ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸
 
 ```
 $ docker exec -it nginx /gen-client.sh
@@ -121,8 +121,8 @@ Generating a RSA private key
 ....+++++
 .................+++++
 writing new private key to '/etc/ssl/client/client-key.pem'
-Enter PEM pass phrase:© ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‚ÌƒpƒXƒ[ƒh
-Verifying - Enter PEM pass phrase:© ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‚ÌƒpƒXƒ[ƒh
+Enter PEM pass phrase:â† ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+Verifying - Enter PEM pass phrase:â† ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 -----
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
@@ -135,16 +135,16 @@ Country Name (2 letter code) [AU]:JP
 State or Province Name (full name) [Some-State]:Tokyo
 Locality Name (eg, city) []:Chuo-ku
 Organization Name (eg, company) [Internet Widgits Pty Ltd]:JinCreek
-Organizational Unit Name (eg, section) []:(‹ó”’)
+Organizational Unit Name (eg, section) []:(ç©ºç™½)
 Common Name (e.g. server FQDN or YOUR name) []:Yamada Taro 1
-Email Address []:(‹ó”’)
+Email Address []:(ç©ºç™½)
 
 Please enter the following 'extra' attributes
 to be sent with your certificate request
-A challenge password []:(‹ó”’)
-An optional company name []:(‹ó”’)
+A challenge password []:(ç©ºç™½)
+An optional company name []:(ç©ºç™½)
 Using configuration from /usr/lib/ssl/openssl.cnf
-Enter pass phrase for /etc/ssl/private_ca/private/cakey.pem:© CA‚ÌƒpƒXƒ[ƒh
+Enter pass phrase for /etc/ssl/private_ca/private/cakey.pem:â† CAã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 Check that the request matches the signature
 Signature ok
 Certificate Details:
@@ -179,18 +179,18 @@ Data Base Updated
 
 generate pfx...
 
-Enter pass phrase for /etc/ssl/client/client-key.pem:© ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‚ÌƒpƒXƒ[ƒh
-Enter Export Password:© ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‰{———p‚ÌƒpƒXƒ[ƒh
-Verifying - Enter Export Password:ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‰{———p‚ÌƒpƒXƒ[ƒh
+Enter pass phrase for /etc/ssl/client/client-key.pem:â† ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+Enter Export Password:â† ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸é–²è¦§ç”¨ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+Verifying - Enter Export Password:ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸é–²è¦§ç”¨ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 
--rw------- 1 root root 2541 12Œ 26 16:09 /client.pfx
+-rw------- 1 root root 2541 12æœˆ 26 16:09 /client.pfx
 ```
 
 
 
 
-CA‚ÌƒpƒXƒ[ƒh: password1
-ƒT[ƒo[Ø–¾‘‚ÌƒpƒXƒ[ƒh: password2
-ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‚ÌƒpƒXƒ[ƒh: password3
-ƒNƒ‰ƒCƒAƒ“ƒgØ–¾‘‰{———p‚ÌƒpƒXƒ[ƒh: password4
+CAã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰: password1
+ã‚µãƒ¼ãƒãƒ¼è¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰: password2
+ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰: password3
+ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆè¨¼æ˜æ›¸é–²è¦§ç”¨ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰: password4
 
