@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{33E0843A-9815-4D01-BA07-806EA94A3952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Api\Auth.csproj", "{33E0843A-9815-4D01-BA07-806EA94A3952}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTests", "ApiTests\ApiTests.csproj", "{62D054E9-011B-4535-8455-1990129E89DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthTests", "ApiTests\AuthTests.csproj", "{62D054E9-011B-4535-8455-1990129E89DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
