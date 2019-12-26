@@ -1,0 +1,83 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 2 (0x2)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=JP, ST=Tokyo, L=Chuo-ku, O=JinCreek, CN=JinCreek CA
+        Validity
+            Not Before: Dec 26 07:08:57 2019 GMT
+            Not After : Dec 25 07:08:57 2020 GMT
+        Subject: C=JP, ST=Tokyo, O=JinCreek, CN=Yamada Taro 1
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:c2:6f:30:94:97:18:76:ee:b5:b5:8e:c0:d1:13:
+                    6f:ef:83:34:be:57:20:36:bc:f0:ad:bb:35:b0:69:
+                    f9:87:76:19:3e:ba:a7:52:7e:7a:29:a6:4c:cc:9d:
+                    c5:54:e4:f0:6f:2b:34:04:0b:61:6c:9a:6a:97:80:
+                    1d:4e:d1:b8:ec:b2:35:a9:ed:8f:a0:07:b6:86:31:
+                    5e:a5:1e:80:96:4c:59:26:36:78:24:af:b5:dd:6e:
+                    08:c8:33:53:c6:bf:ac:a2:02:a3:35:11:a1:b0:dd:
+                    40:41:4c:98:4b:ac:a9:5c:07:03:46:76:dc:2b:90:
+                    36:fb:b7:b5:2f:a5:86:a7:9d:5f:90:af:20:4c:9e:
+                    32:8b:3c:d7:72:06:06:2b:a7:f0:9b:eb:4d:9f:5b:
+                    e0:3b:26:4a:95:3b:71:4b:ac:3e:ae:4c:a1:75:25:
+                    03:16:de:eb:94:6f:4f:e5:e6:cd:22:9a:97:ed:aa:
+                    97:6d:9d:cf:b4:83:42:c3:59:fd:97:77:8e:98:ee:
+                    f7:66:17:30:2d:20:7e:96:0d:08:5d:33:9c:21:7d:
+                    89:50:16:a8:ab:ae:aa:fa:ec:c8:0d:c4:5b:e5:b9:
+                    97:46:f0:99:5c:34:be:e9:2b:1b:c0:6e:f9:42:7f:
+                    af:75:bb:55:b1:ab:e6:54:a0:d3:6e:f2:78:72:b0:
+                    62:35
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Cert Type: 
+                SSL Client, S/MIME, Object Signing
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                E6:E8:78:9B:B9:EF:37:09:50:0B:A6:8C:22:64:CB:92:14:A0:28:C9
+            X509v3 Authority Key Identifier: 
+                keyid:EC:CF:F0:87:1E:2A:47:D8:72:2C:5E:5B:9B:8B:96:9B:1C:AA:58:41
+
+    Signature Algorithm: sha256WithRSAEncryption
+         ac:c3:8b:0e:94:df:c3:15:59:c4:a5:46:db:e0:03:0a:f6:2a:
+         ef:53:ea:be:4e:bc:b6:e2:21:fe:88:06:6b:91:b9:ec:49:54:
+         d6:52:dd:2f:fe:5b:47:f5:48:a1:32:a3:4e:f3:2d:2b:c7:57:
+         93:99:70:a3:15:1b:8f:20:18:e3:c5:f8:6f:e8:cb:83:90:a1:
+         b4:43:b3:d3:b4:8d:da:85:3d:9c:05:fa:6c:85:07:a0:9a:a9:
+         cf:65:48:93:6f:b7:19:40:a1:98:0f:c6:d5:58:f4:ca:66:32:
+         8c:e0:3d:07:f8:e8:53:0e:88:39:6d:fd:98:00:31:1e:44:9c:
+         03:8a:7c:8a:18:7f:cd:bf:d1:b6:a8:5d:39:c7:be:a7:bb:71:
+         97:31:75:a0:97:6c:83:58:9a:dc:2b:98:cf:f3:ff:28:9d:59:
+         d3:24:7b:b9:2a:db:09:dd:93:62:73:bd:13:3f:c1:e2:b6:1b:
+         16:64:e3:af:c8:85:33:e0:93:85:78:c2:b1:04:36:16:44:c4:
+         e0:b1:77:f5:0a:28:bb:d6:0b:7c:a6:fd:89:bb:e9:7a:18:81:
+         8d:1a:f6:37:8a:f9:ee:3f:bc:d1:0d:26:e2:11:af:09:05:4c:
+         2d:dd:fb:3c:cb:16:81:a7:c3:be:bd:57:3c:06:48:28:38:ec:
+         f1:a4:1f:95
+-----BEGIN CERTIFICATE-----
+MIIDqzCCApOgAwIBAgIBAjANBgkqhkiG9w0BAQsFADBYMQswCQYDVQQGEwJKUDEO
+MAwGA1UECAwFVG9reW8xEDAOBgNVBAcMB0NodW8ta3UxETAPBgNVBAoMCEppbkNy
+ZWVrMRQwEgYDVQQDDAtKaW5DcmVlayBDQTAeFw0xOTEyMjYwNzA4NTdaFw0yMDEy
+MjUwNzA4NTdaMEgxCzAJBgNVBAYTAkpQMQ4wDAYDVQQIDAVUb2t5bzERMA8GA1UE
+CgwISmluQ3JlZWsxFjAUBgNVBAMMDVlhbWFkYSBUYXJvIDEwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQDCbzCUlxh27rW1jsDRE2/vgzS+VyA2vPCtuzWw
+afmHdhk+uqdSfnoppkzMncVU5PBvKzQEC2FsmmqXgB1O0bjssjWp7Y+gB7aGMV6l
+HoCWTFkmNngkr7XdbgjIM1PGv6yiAqM1EaGw3UBBTJhLrKlcBwNGdtwrkDb7t7Uv
+pYannV+QryBMnjKLPNdyBgYrp/Cb602fW+A7JkqVO3FLrD6uTKF1JQMW3uuUb0/l
+5s0impftqpdtnc+0g0LDWf2Xd46Y7vdmFzAtIH6WDQhdM5whfYlQFqirrqr67MgN
+xFvluZdG8JlcNL7pKxvAbvlCf691u1Wxq+ZUoNNu8nhysGI1AgMBAAGjgY8wgYww
+CQYDVR0TBAIwADARBglghkgBhvhCAQEEBAMCBLAwLAYJYIZIAYb4QgENBB8WHU9w
+ZW5TU0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1UdDgQWBBTm6Hibue83CVAL
+powiZMuSFKAoyTAfBgNVHSMEGDAWgBTsz/CHHipH2HIsXlubi5abHKpYQTANBgkq
+hkiG9w0BAQsFAAOCAQEArMOLDpTfwxVZxKVG2+ADCvYq71Pqvk68tuIh/ogGa5G5
+7ElU1lLdL/5bR/VIoTKjTvMtK8dXk5lwoxUbjyAY48X4b+jLg5ChtEOz07SN2oU9
+nAX6bIUHoJqpz2VIk2+3GUChmA/G1Vj0ymYyjOA9B/joUw6IOW39mAAxHkScA4p8
+ihh/zb/RtqhdOce+p7txlzF1oJdsg1ia3CuYz/P/KJ1Z0yR7uSrbCd2TYnO9Ez/B
+4rYbFmTjr8iFM+CThXjCsQQ2FkTE4LF39Qoou9YLfKb9ibvpehiBjRr2N4r57j+8
+0Q0m4hGvCQVMLd37PMsWgafDvr1XPAZIKDjs8aQflQ==
+-----END CERTIFICATE-----

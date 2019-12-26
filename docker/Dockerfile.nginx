@@ -1,0 +1,71 @@
+FROM serverapp_base
+
+RUN echo "" \
+ && echo "" >> /etc/apt/sources.list \
+ && echo "deb http://nginx.org/packages/ubuntu/ bionic nginx" >> /etc/apt/sources.list \
+ && echo "deb-src http://nginx.org/packages/ubuntu/ bionic nginx" >> /etc/apt/sources.list \
+ && wget https://nginx.org/keys/nginx_signing.key \
+ && apt-key add nginx_signing.key \
+ && apt update -y \
+ && apt install -y \
+   nginx \
+ && echo ""
+
+COPY nginx/gen-ca.sh /
+RUN nkf -u -Lu --overwrite /gen-ca.sh \
+ && chmod +x /gen-ca.sh
+COPY nginx/gen-server.sh /
+RUN nkf -u -Lu --overwrite /gen-server.sh \
+ && chmod +x /gen-server.sh
+COPY nginx/gen-client.sh /
+RUN nkf -u -Lu --overwrite /gen-client.sh \
+ && chmod +x /gen-client.sh
+
+
+RUN dd if=/dev/urandom of=/root/.rnd bs=256 count=1
+RUN mkdir /etc/ssl/private_ca \
+ && mkdir /etc/ssl/private_ca/certs \
+ && mkdir /etc/ssl/private_ca/private \
+ && mkdir /etc/ssl/private_ca/crl \
+ && mkdir /etc/ssl/private_ca/newcerts \
+ && chmod 700 /etc/ssl/private_ca/private \
+ && echo '01' > /etc/ssl/private_ca/serial \
+ && touch /etc/ssl/private_ca/index.txt \
+ && touch /etc/ssl/private_ca/index.txt.attr \
+ && mkdir /etc/ssl/server \
+ && mkdir /etc/ssl/client
+
+COPY nginx/etc/ssl/openssl.cnf /etc/ssl/
+
+
+### result for "docker exec -it nginx /gen-ca.sh"
+COPY nginx/etc/ssl/private_ca/index.txt          /etc/ssl/private_ca/
+COPY nginx/etc/ssl/private_ca/index.txt.attr     /etc/ssl/private_ca/
+COPY nginx/etc/ssl/private_ca/serial             /etc/ssl/private_ca/
+COPY nginx/etc/ssl/private_ca/JinCreek-CA.der    /etc/ssl/private_ca/
+COPY nginx/etc/ssl/private_ca/cacert.pem         /etc/ssl/private_ca/
+COPY nginx/etc/ssl/private_ca/private/cakey.pem  /etc/ssl/private_ca/private/
+COPY nginx/etc/ssl/private_ca/newcerts/01.pem    /etc/ssl/private_ca/newcerts/
+COPY nginx/etc/ssl/private_ca/newcerts/02.pem    /etc/ssl/private_ca/newcerts/
+RUN chmod 600 /etc/ssl/private_ca/private/cakey.pem
+
+### result for "docker exec -it nginx /gen-server.sh"
+COPY nginx/etc/ssl/server/www-jincreek-jp-key.pem        /etc/ssl/server/
+COPY nginx/etc/ssl/server/www-jincreek-jp-csr.pem        /etc/ssl/server/
+COPY nginx/etc/ssl/server/www-jincreek-jp.crt            /etc/ssl/server/
+COPY nginx/etc/ssl/server/www-jincreek-jp-key.pem.nopass /etc/ssl/server/
+RUN chmod 600 /etc/ssl/server/www-jincreek-jp-key.pem /etc/ssl/server/www-jincreek-jp-key.pem.nopass
+
+### result for "docker exec -it nginx /gen-client.sh"
+COPY nginx/etc/ssl/client/client-key.pem /etc/ssl/client/
+COPY nginx/etc/ssl/client/client-csr.pem /etc/ssl/client/
+COPY nginx/etc/ssl/client/client.crt     /etc/ssl/client/
+COPY nginx/etc/ssl/client/client.pfx     /etc/ssl/client/
+RUN chmod 600 /etc/ssl/client/client-key.pem /etc/ssl/client/client.pfx
+
+
+### nginx setting
+COPY nginx/etc/nginx/conf.d/ssl.conf /etc/nginx/conf.d/ssl.conf
+
+## Clean up...
+RUN rm -rf /var/lib/apt/lists/* 

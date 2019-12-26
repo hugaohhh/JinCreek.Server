@@ -1,18 +1,5 @@
-version: '2'
+version: '3'
 services:
-  db:
-    extends:
-      file: ./docker/common/docker-compose.yml
-      service: mysql
-    container_name: mdb
-    hostname: mdb
-    ports:
-      - "13306:3306"
-#    volumes:
-#      - ./docker/db_init:/docker-entrypoint-initdb.d
-    environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=mdb
   dotnet:
     build:
       context: docker
@@ -21,5 +8,46 @@ services:
     hostname: dotnet
     volumes:
       - .:/app
+      - home-dir:/root
     working_dir: /app
     command: tail -f /dev/stdout
+  base:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.ubuntu
+    container_name: base
+    hostname: base 
+    volumes:
+      - home-dir:/root
+  mariadb:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.mariadb
+    container_name: mariadb
+    hostname: mariadb 
+    restart: always
+    ports:
+      - "13306:3306"
+#    volumes:
+#      - ./docker/db_init:/docker-entrypoint-initdb.d
+    volumes:
+      - home-dir:/root
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=mdb
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.nginx
+    container_name: nginx
+    hostname: nginx 
+    restart: always
+    ports:
+      - "10080:80"
+      - "10443:443"
+    volumes:
+      - home-dir:/root
+    command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+#    command: tail -f /dev/stdout
+volumes:
+  home-dir:     
