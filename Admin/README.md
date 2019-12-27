@@ -3,7 +3,18 @@
 管理画面 (Angular) が呼び出すWeb API
 
 
-## 0 Swagger
+## 1 マイグレーション
+
+Package Manager Console (View > Other Windows > Package Manager Console) で：
+
+```
+PM> Update-Database -Project Admin -StartupProject Admin
+```
+
+see https://docs.microsoft.com/ja-jp/ef/core/miscellaneous/cli/powershell#common-parameters
+
+
+## 2 Swagger
 
 以下でSwaggerが見られる（NSwagを使用）：
 
@@ -13,7 +24,7 @@
 - https://localhost:5001/swagger/v1/swagger.json
 
 
-## 1 ユーザ登録（テスト用）
+## 3 ユーザ登録（テスト用）
 
 `/api/authentication/register`に`username`と`password`をJSON形式(`Content-Type: application/json`)でPOSTするとユーザが作成される。
 `password`は6文字以上で、英字大文字と英字小文字と数字と記号を含む必要がある。
@@ -43,7 +54,7 @@ Server: Kestrel
 ```
 
 
-## 2 トークンの取得
+## 4 トークンの取得
 
 `/api/authentication/login`に`username`と`password`をPOSTすると`accessToken`と`refreshToken`が返る。
 
@@ -82,7 +93,7 @@ Transfer-Encoding: chunked
 ```
 
 
-## 3 アクセス
+## 5 アクセス
 
 `accessToken`を`Authorization: Bearer`ヘッダにつけて`GET`する。
 
@@ -110,7 +121,7 @@ Transfer-Encoding: chunked
 ```
 
 
-## 4 リフレッシュ
+## 6 リフレッシュ
 
 `/api/authentication/refresh`に`refreshtoken`をPOSTすると、新しい`accessToken`が返る。
 
@@ -143,7 +154,7 @@ Transfer-Encoding: chunked
 ```
 
 
-## 5 おまけ
+## 7 おまけ
 
 accessTokenのペイロード：
 
