@@ -9,9 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace AdminTests.Controllers
@@ -26,14 +23,15 @@ namespace AdminTests.Controllers
         }
 
         [Fact]
-        public void TestAuthentication()
+        public async void TestAuthentication()
         {
             static string GetString(OkObjectResult result, string propertyName)
             {
-                return result.Value.GetType().GetProperty(propertyName).GetValue(result.Value) as string;
+                return (string)result.Value.GetType().GetProperty(propertyName).GetValue(result.Value);
             }
 
 
+            // setup mock
             var testuser = new IdentityUser { UserName = "hoge" };
 
             var userManager = new Mock<FakeUserManager>();
@@ -48,18 +46,19 @@ namespace AdminTests.Controllers
             appSettings.Setup(_ => _.Value).Returns(new AppSettings { Secret = "this is my key, there are many of them but this one is mine" });
 
 
+            // run
             var controller = new AuthenticationController(userManager.Object, signInManager.Object, appSettings.Object);
 
-            IActionResult result1 = controller.Register(new UsersRegisterRequest { UserName = "hoge", Password = "fuga" }).Result;
+            IActionResult result1 = await controller.Register(new UsersRegisterRequest { UserName = "hoge", Password = "fuga" });
             Assert.IsType<OkResult>(result1);
 
-            IActionResult result2 = controller.Login(new UsersLoginRequest { UserName = "hoge", Password = "fuga" }).Result;
+            IActionResult result2 = await controller.Login(new UsersLoginRequest { UserName = "hoge", Password = "fuga" });
             Assert.IsType<OkObjectResult>(result2);
-            string refreshToken = GetString(result2 as OkObjectResult, "RefreshToken");
+            string refreshToken = GetString((OkObjectResult)result2, "RefreshToken");
 
-            IActionResult result3 = controller.Refresh(new UsersRefreshRequest { RefreshToken = refreshToken }).Result;
+            IActionResult result3 = await controller.Refresh(new UsersRefreshRequest { RefreshToken = refreshToken });
             Assert.IsType<OkObjectResult>(result3);
-            string accessToken = GetString(result3 as OkObjectResult, "AccessToken");
+            string accessToken = GetString((OkObjectResult)result3, "AccessToken");
         }
 
         //
