@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using Common.Models.Db;
 
-namespace Auth.Models.Db
+namespace Common.Repositories
 {
-    public class MdbContext : DbContext
+    public class MainDbContext : DbContext
     {
         public DbSet<Company> Company { get; set; }
 
@@ -13,7 +14,7 @@ namespace Auth.Models.Db
         public DbSet<AdminUser> AdminUser { get; set; }
         public DbSet<GeneralUser> GeneralUser { get; set; }
 
-        public MdbContext(DbContextOptions<MdbContext> options) : base(options)
+        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
         }
 

@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Models.Db;
 
-namespace Auth.Models.Db
+namespace Common.Repositories
 {
-    public class SomeRepository
+    public class MainDbRepository
     {
-        private MdbContext _dbContext;
+        private MainDbContext _dbContext;
 
-        public SomeRepository(MdbContext dbContext)
+        public MainDbRepository(MainDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -1,10 +1,11 @@
-using Auth.Models.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Common.Repositories;
 
 namespace Auth
 {
@@ -22,12 +23,11 @@ namespace Auth
         {
             services.AddControllers();
 
-            services.AddDbContext<MdbContext>(options =>
+            services.AddDbContext<MainDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
             });
-
-            services.AddTransient<SomeRepository>();
+            services.AddTransient<MainDbRepository>();
 
             services.AddSwaggerDocument(config =>
                 {

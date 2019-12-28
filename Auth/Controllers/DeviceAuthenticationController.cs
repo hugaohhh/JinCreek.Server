@@ -1,9 +1,10 @@
-﻿using Auth.Models.Api;
-using Auth.Models.Db;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Auth.Interfaces;
+using Common.Models.Db;
+using Common.Repositories;
 
 namespace Auth.Controllers
 {
@@ -13,7 +14,7 @@ namespace Auth.Controllers
     {
         private readonly ILogger<DeviceAuthenticationController> _logger;
 
-        private readonly SomeRepository _repository;
+        private readonly MainDbRepository _repository;
 
         //private readonly MdbContext _context;
 
@@ -22,7 +23,7 @@ namespace Auth.Controllers
         //    _context = context;
         //}
 
-        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger, SomeRepository repository)
+        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger, MainDbRepository repository)
         {
             _logger = logger;
             _repository = repository;
