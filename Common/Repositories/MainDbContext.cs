@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.Models.Db;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using Common.Models.Db;
 
 namespace Common.Repositories
 {
@@ -41,7 +41,9 @@ namespace Common.Repositories
                 .HasForeignKey(u => u.DomainId);
 
             modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("user_type");
+                .HasDiscriminator<string>("user_type")
+                .HasValue<AdminUser>("admin")
+                .HasValue<GeneralUser>("general");
 
             modelBuilder.Entity<User>(user =>
             {

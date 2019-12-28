@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Auth.Interfaces;
+using Common.Models.Db;
+using Common.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Auth.Interfaces;
-using Common.Models.Db;
-using Common.Repositories;
 
 namespace Auth.Controllers
 {
@@ -53,13 +53,38 @@ namespace Auth.Controllers
 
 
             var domain = new Domain { DomainName = "some.jp" };
+            var userGroupName = "group name";
             var userGroup = new UserGroup
             {
-                UserGroupName = "group name",
+                UserGroupName = userGroupName,
                 Domain = domain,
             };
 
-            _repository.Create(userGroup);
+
+            //_repository.Create(userGroup);
+
+            var userGroup2 = _repository.GetUserGroup(userGroupName);
+
+
+            var admin = new AdminUser
+            {
+                Domain = userGroup2.Domain,
+                UserGroup = userGroup2,
+                LastName = "管理人",
+                FirstName = "一郎",
+                Password = "password"
+            };
+
+            var general = new GeneralUser
+            {
+                Domain = userGroup2.Domain,
+                UserGroup = userGroup2,
+                LastName = "一般",
+                FirstName = "次郎",
+            };
+
+            _repository.Create(admin);
+            _repository.Create(general);
 
             return auth;
         }

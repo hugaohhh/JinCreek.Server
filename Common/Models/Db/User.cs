@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -49,7 +47,7 @@ namespace Common.Models.Db
         [Column("setting_by_user")]
         public string SettingByUser { get; set; }
 
-        public UserGroup UserGroup {get; set;}
+        public UserGroup UserGroup { get; set; }
 
         public Domain Domain { get; set; }
     }
