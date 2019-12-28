@@ -1,16 +1,20 @@
-﻿using System;
-using Api.Models.Api;
+﻿using Auth.Models.Api;
+using Auth.Models.Db;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
-namespace Api.Controllers
+namespace Auth.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceAuthenticationController : ControllerBase
     {
         private readonly ILogger<DeviceAuthenticationController> _logger;
+
+        private readonly SomeRepository _repository;
+
         //private readonly MdbContext _context;
 
         //public DeviceAuthenticationController(MdbContext context)
@@ -18,9 +22,10 @@ namespace Api.Controllers
         //    _context = context;
         //}
 
-        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger)
+        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger, SomeRepository repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
 
@@ -44,6 +49,17 @@ namespace Api.Controllers
 
             Task.Delay(new System.Random().Next(100) * 1000);
             _logger.LogDebug("HELLO");
+
+
+            var domain = new Domain { DomainName = "some.jp" };
+            var userGroup = new UserGroup
+            {
+                UserGroupName = "group name",
+                Domain = domain,
+            };
+
+            _repository.Create(userGroup);
+
             return auth;
         }
 

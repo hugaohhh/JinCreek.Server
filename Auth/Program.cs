@@ -4,7 +4,7 @@ using NLog.Web;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Api
+namespace Auth
 {
     public class Program
     {

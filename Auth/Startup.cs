@@ -1,4 +1,4 @@
-using Api.Models.Db;
+using Auth.Models.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Api
+namespace Auth
 {
     public class Startup
     {
@@ -26,6 +26,8 @@ namespace Api
             {
                 options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
             });
+
+            services.AddTransient<SomeRepository>();
 
             services.AddSwaggerDocument(config =>
                 {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Api
+namespace Auth
 {
     // https://tech-lab.sios.jp/archives/16110 , https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
     public class LoggingMiddleware
