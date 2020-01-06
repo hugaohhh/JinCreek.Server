@@ -19,7 +19,7 @@ namespace AdminTests.Controllers
         }
 
         [Fact]
-        public async void TestCRUD()
+        public async void TestCrud()
         {
             var controller = new OrganizationsController(_context);
             var org = new Organization { Id = "5" };

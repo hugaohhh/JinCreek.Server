@@ -123,23 +123,23 @@ namespace Admin.Controllers
     public class UsersRegisterRequest
     {
         [Required]
-        public String UserName { get; set; }
+        public string UserName { get; set; }
         [Required]
-        public String Password { get; set; }
+        public string Password { get; set; }
     }
 
     public class UsersLoginRequest
     {
         [Required]
-        public String UserName { get; set; }
+        public string UserName { get; set; }
         [Required]
-        public String Password { get; set; }
+        public string Password { get; set; }
     }
 
     public class UsersRefreshRequest
     {
-        public String AccessToken { get; set; }
+        public string AccessToken { get; set; }
         [Required]
-        public String RefreshToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

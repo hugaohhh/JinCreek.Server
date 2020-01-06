@@ -55,6 +55,6 @@ namespace Admin.Models
         /// <summary>
         /// 有効
         /// </summary>
-        public Boolean IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

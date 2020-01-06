@@ -11,8 +11,8 @@ namespace AdminTests.IntegrationTests.Controllers
     public class AuthenticationControllerTests : IClassFixture<WebApplicationFactory<Admin.Startup>>
     {
         private readonly WebApplicationFactory<Admin.Startup> _factory;
-        private const string LOGIN_URL = "/api/authentication/login";
-        private const string REFRESH_URL = "/api/authentication/refresh";
+        private const string LoginUrl = "/api/authentication/login";
+        private const string RefreshUrl = "/api/authentication/refresh";
 
         public AuthenticationControllerTests(WebApplicationFactory<Admin.Startup> factory)
         {
@@ -26,36 +26,36 @@ namespace AdminTests.IntegrationTests.Controllers
 
             {
                 // GET, DELETE, POST, PUT, PATCH
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.GetAsync(LOGIN_URL)).StatusCode);
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.DeleteAsync(LOGIN_URL)).StatusCode);
-                Assert.NotEqual(HttpStatusCode.MethodNotAllowed, (await client.PostAsync(LOGIN_URL, null)).StatusCode); // POST: see below
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PutAsync(LOGIN_URL, null)).StatusCode);
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PatchAsync(LOGIN_URL, null)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.GetAsync(LoginUrl)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.DeleteAsync(LoginUrl)).StatusCode);
+                Assert.NotEqual(HttpStatusCode.MethodNotAllowed, (await client.PostAsync(LoginUrl, null)).StatusCode); // POST: see below
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PutAsync(LoginUrl, null)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PatchAsync(LoginUrl, null)).StatusCode);
 
                 // POSTs
-                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "aaaaaaaaaaaaaaaaaaaaa", password = "9Q'vl!" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "aaaaaa" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { password = "9Q'vl!" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LOGIN_URL, CreateHttpContent(null))).StatusCode);
+                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "aaaaaaaaaaaaaaaaaaaaa", password = "9Q'vl!" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "aaaaaa" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LoginUrl, CreateHttpContent(new { password = "9Q'vl!" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(LoginUrl, CreateHttpContent(null))).StatusCode);
             }
 
             {
-                HttpResponseMessage response = await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }));
+                HttpResponseMessage response = await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }));
                 string refreshToken = (string)JObject.Parse(await response.Content.ReadAsStringAsync())["refreshToken"];
 
                 // GET, DELETE, POST, PUT, PATCH
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.GetAsync(REFRESH_URL)).StatusCode);
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.DeleteAsync(REFRESH_URL)).StatusCode);
-                Assert.NotEqual(HttpStatusCode.MethodNotAllowed, (await client.PostAsync(REFRESH_URL, null)).StatusCode); // POST: see below
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PutAsync(REFRESH_URL, null)).StatusCode);
-                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PatchAsync(REFRESH_URL, null)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.GetAsync(RefreshUrl)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.DeleteAsync(RefreshUrl)).StatusCode);
+                Assert.NotEqual(HttpStatusCode.MethodNotAllowed, (await client.PostAsync(RefreshUrl, null)).StatusCode); // POST: see below
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PutAsync(RefreshUrl, null)).StatusCode);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, (await client.PatchAsync(RefreshUrl, null)).StatusCode);
 
                 // POST
-                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(REFRESH_URL, CreateHttpContent(new { refreshToken }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(REFRESH_URL, CreateHttpContent(new { refreshToken = "aaaa" }))).StatusCode);
-                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(REFRESH_URL, CreateHttpContent(null))).StatusCode);
+                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(RefreshUrl, CreateHttpContent(new { refreshToken }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(RefreshUrl, CreateHttpContent(new { refreshToken = "aaaa" }))).StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsync(RefreshUrl, CreateHttpContent(null))).StatusCode);
             }
         }
 
@@ -66,14 +66,14 @@ namespace AdminTests.IntegrationTests.Controllers
 
             string refreshToken;
             {
-                var json = JObject.Parse(await (await client.PostAsync(LOGIN_URL, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).Content.ReadAsStringAsync());
+                var json = JObject.Parse(await (await client.PostAsync(LoginUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).Content.ReadAsStringAsync());
                 Assert.NotNull(json["accessToken"]);
                 Assert.NotNull(json["refreshToken"]);
                 refreshToken = (string)json["refreshToken"];
             }
 
             {
-                var json = JObject.Parse(await (await client.PostAsync(REFRESH_URL, CreateHttpContent(new { refreshToken }))).Content.ReadAsStringAsync());
+                var json = JObject.Parse(await (await client.PostAsync(RefreshUrl, CreateHttpContent(new { refreshToken }))).Content.ReadAsStringAsync());
                 Assert.NotNull(json["accessToken"]);
             }
         }

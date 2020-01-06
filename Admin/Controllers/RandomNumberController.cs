@@ -10,7 +10,7 @@ namespace Admin.Controllers
     {
         [Authorize]
         [HttpGet("Generate")]
-        public ActionResult<Int32> Generate()
+        public ActionResult<int> Generate()
         {
             return new Random().Next(0, 1000);
         }

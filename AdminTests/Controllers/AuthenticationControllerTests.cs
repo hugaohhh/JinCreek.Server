@@ -27,17 +27,17 @@ namespace AdminTests.Controllers
         {
             static string GetString(OkObjectResult result, string propertyName)
             {
-                return (string)result.Value.GetType().GetProperty(propertyName).GetValue(result.Value);
+                return (string)result.Value.GetType().GetProperty(propertyName)?.GetValue(result.Value);
             }
 
 
             // setup mock
-            var testuser = new IdentityUser { UserName = "hoge" };
+            var testUser = new IdentityUser { UserName = "hoge" };
 
             var userManager = new Mock<FakeUserManager>();
             userManager.Setup(_ => _.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
-            userManager.Setup(_ => _.FindByNameAsync(testuser.UserName)).ReturnsAsync(testuser);
-            userManager.Setup(_ => _.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(testuser);
+            userManager.Setup(_ => _.FindByNameAsync(testUser.UserName)).ReturnsAsync(testUser);
+            userManager.Setup(_ => _.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(testUser);
 
             var signInManager = new Mock<FakeSignInManager>();
             signInManager.Setup(_ => _.PasswordSignInAsync("hoge", "fuga", true, true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
@@ -58,7 +58,7 @@ namespace AdminTests.Controllers
 
             IActionResult result3 = await controller.Refresh(new UsersRefreshRequest { RefreshToken = refreshToken });
             Assert.IsType<OkObjectResult>(result3);
-            string accessToken = GetString((OkObjectResult)result3, "AccessToken");
+            GetString((OkObjectResult)result3, "AccessToken");
         }
 
         //
