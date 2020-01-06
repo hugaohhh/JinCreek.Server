@@ -5,8 +5,12 @@ RUN echo "Start $(date)" \
 RUN apt install -y \
   vim jq mariadb-client
 
-RUN dotnet tool install --global dotnet-ef
-ENV PATH $PATH:/root/.dotnet/tools
+RUN dotnet tool install --global dotnet-ef \
+ && mv /root/.dotnet /usr/local/dotnet \
+ && ln -s /usr/local/dotnet  /root/.dotnet 
+
+
+ENV PATH $PATH:/usr/local/dotnet/tools
 
 ### Clean up...
 RUN rm -rf /var/lib/apt/lists/*

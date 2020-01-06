@@ -4,26 +4,24 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace JinCreek.Server.Common.Models.Db
+namespace JinCreek.Server.Common.Models
 {
     public class UserGroup
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        [Column("user_group_id")]
-        public Guid UserGroupId { get; set; }
+        public Guid Id { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column("user_group_name")]
+        [Column(TypeName = "LONGTEXT BINARY")]
         public string UserGroupName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column("domain_id")]
         public Guid DomainId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
@@ -40,32 +38,28 @@ namespace JinCreek.Server.Common.Models.Db
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        [Column("user_id")]
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column("domain_id")]
         public Guid DomainId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column("user_group_id")]
         public Guid UserGroupId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column("last_name")]
+        [Column(TypeName = "LONGTEXT BINARY")]
         public string LastName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column("first_name")]
+        [Column(TypeName = "LONGTEXT BINARY")]
         public string FirstName { get; set; }
 
-        [Column("setting_by_user")]
         public string SettingByUser { get; set; }
 
         public UserGroup UserGroup { get; set; }
@@ -77,7 +71,6 @@ namespace JinCreek.Server.Common.Models.Db
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column("password")]
         public string Password { get; set; }
     }
 

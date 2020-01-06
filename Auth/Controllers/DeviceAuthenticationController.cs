@@ -1,5 +1,5 @@
 ﻿using JinCreek.Server.Auth.Interfaces;
-using JinCreek.Server.Common.Models.Db;
+using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

@@ -1,7 +1,7 @@
-﻿using JinCreek.Server.Common.Models.Db;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System.Diagnostics.CodeAnalysis;
+using JinCreek.Server.Common.Models;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -40,12 +40,12 @@ namespace JinCreek.Server.Common.Repositories
 
             modelBuilder.Entity<Domain>(domain =>
             {
-                domain.Property(d => d.DomainId).HasValueGenerator<GuidValueGenerator>();
+                domain.Property(d => d.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
             modelBuilder.Entity<UserGroup>(domain =>
             {
-                domain.Property(ug => ug.UserGroupId).HasValueGenerator<GuidValueGenerator>();
+                domain.Property(ug => ug.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
             modelBuilder.Entity<User>()
@@ -54,13 +54,13 @@ namespace JinCreek.Server.Common.Repositories
                 .HasForeignKey(u => u.DomainId);
 
             modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("user_type")
+                .HasDiscriminator<string>("UserType")
                 .HasValue<AdminUser>("admin")
                 .HasValue<GeneralUser>("general");
 
             modelBuilder.Entity<User>(user =>
             {
-                user.Property(u => u.UserId).HasValueGenerator<GuidValueGenerator>();
+                user.Property(u => u.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
 
