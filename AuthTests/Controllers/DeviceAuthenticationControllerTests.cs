@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ApiTests.Controllers
+namespace AuthTests.Controllers
 {
     [TestClass()]
     public class DeviceAuthenticationControllerTests

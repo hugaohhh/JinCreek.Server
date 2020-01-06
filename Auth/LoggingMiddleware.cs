@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
-namespace Api
+namespace Auth
 {
     // https://tech-lab.sios.jp/archives/16110 , https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
     public class LoggingMiddleware
@@ -56,7 +55,7 @@ namespace Api
 
         private async Task<string> FormatRequest(HttpRequest request)
         {
-            var bodyAsText = "";
+            string bodyAsText;
             request.EnableBuffering();
 
             using (StreamReader reader = new StreamReader(request.Body, System.Text.Encoding.UTF8, true, 1024, true))

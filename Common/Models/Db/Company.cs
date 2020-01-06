@@ -1,16 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Api.Models.Db
+namespace Common.Models.Db
 {
     public class Company
     {
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("company_id")]
         public long Id { get; set; }
 
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Column("code", TypeName = "VARCHAR(255) BINARY")]
         public string Code { get; set; }
 

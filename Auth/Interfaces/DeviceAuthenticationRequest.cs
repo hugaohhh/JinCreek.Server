@@ -1,4 +1,4 @@
-﻿namespace Api.Models.Api
+﻿namespace Auth.Interfaces
 {
     public class DeviceAuthenticationRequest
     {

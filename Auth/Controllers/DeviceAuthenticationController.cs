@@ -1,16 +1,21 @@
-﻿using System;
-using Api.Models.Api;
+﻿using Auth.Interfaces;
+using Common.Models.Db;
+using Common.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
-namespace Api.Controllers
+namespace Auth.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceAuthenticationController : ControllerBase
     {
         private readonly ILogger<DeviceAuthenticationController> _logger;
+
+        private readonly MainDbRepository _repository;
+
         //private readonly MdbContext _context;
 
         //public DeviceAuthenticationController(MdbContext context)
@@ -18,9 +23,10 @@ namespace Api.Controllers
         //    _context = context;
         //}
 
-        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger)
+        public DeviceAuthenticationController(ILogger<DeviceAuthenticationController> logger, MainDbRepository repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
 
@@ -42,8 +48,39 @@ namespace Api.Controllers
             //_logger.LogError("error log message");
             //Console.WriteLine("console log messages");
 
-            Task.Delay(new System.Random().Next(100) * 1000);
+            Task.Delay(new Random().Next(100) * 1000);
             _logger.LogDebug("HELLO");
+
+
+            //            var domain = new Domain { DomainName = "some.jp" };
+            var userGroupName = "group name";
+
+
+            //_repository.Create(userGroup);
+
+            var userGroup2 = _repository.GetUserGroup(userGroupName);
+
+
+            var admin = new AdminUser
+            {
+                Domain = userGroup2.Domain,
+                UserGroup = userGroup2,
+                LastName = "管理人",
+                FirstName = "一郎",
+                Password = "password"
+            };
+
+            var general = new GeneralUser
+            {
+                Domain = userGroup2.Domain,
+                UserGroup = userGroup2,
+                LastName = "一般",
+                FirstName = "次郎",
+            };
+
+            _repository.Create(admin);
+            _repository.Create(general);
+
             return auth;
         }
 
