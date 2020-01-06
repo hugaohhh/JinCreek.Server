@@ -194,3 +194,31 @@ refreshTokenのペイロード：
 ```
 
 トークンタイプが含まれていない!
+
+
+## 8 おまけ2
+
+エラーのときに例えば次のようなレスポンスボディが返る（see [既定の BadRequest 応答](https://docs.microsoft.com/ja-jp/aspnet/core/web-api/index?view=aspnetcore-3.1#default-badrequest-response)）：
+
+```
+{
+    "errors": {
+        "Password": [
+            "The Password field is required."
+        ],
+        "UserName": [
+            "The UserName field is required."
+        ]
+    },
+    "status": 400,
+    "title": "One or more validation errors occurred.",
+    "traceId": "|987ed40a-43c30b9d932aa609.",
+    "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+}
+```
+
+このうち`traceId`は
+https://github.com/aspnet/AspNetCore/blob/release/3.1/src/Mvc/Mvc.Core/src/Infrastructure/DefaultProblemDetailsFactory.cs#L93
+でセットしている。
+内容は`Activity.Current.Id` ([doc](https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.DiagnosticSource/src/ActivityUserGuide.md)) か、`Activity.Current.Id`がnullであれば`httpContext.TraceIdentifier`がセットされる。
+通常は`Activity.Current.Id`がセットされる。
