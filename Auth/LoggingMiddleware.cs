@@ -55,7 +55,7 @@ namespace Auth
 
         private async Task<string> FormatRequest(HttpRequest request)
         {
-            var bodyAsText = "";
+            string bodyAsText;
             request.EnableBuffering();
 
             using (StreamReader reader = new StreamReader(request.Body, System.Text.Encoding.UTF8, true, 1024, true))

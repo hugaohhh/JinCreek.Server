@@ -1,4 +1,5 @@
-﻿using Common.Models.Db;
+﻿using System.Diagnostics.CodeAnalysis;
+using Common.Models.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
@@ -8,10 +9,22 @@ namespace Common.Repositories
     {
         public DbSet<Company> Company { get; set; }
 
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<UserGroup> UserGroup { get; set; }
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<Domain> Domain { get; set; }
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<User> User { get; set; }
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AdminUser> AdminUser { get; set; }
+        // DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<GeneralUser> GeneralUser { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
@@ -36,7 +49,7 @@ namespace Common.Repositories
             });
 
             modelBuilder.Entity<User>()
-                .HasOne<Domain>(d => d.Domain)
+                .HasOne(d => d.Domain)
                 .WithMany(d => d.Users)
                 .HasForeignKey(u => u.DomainId);
 
@@ -52,12 +65,12 @@ namespace Common.Repositories
 
 
             modelBuilder.Entity<User>()
-                .HasOne<UserGroup>(u => u.UserGroup)
+                .HasOne(u => u.UserGroup)
                 .WithMany(ug => ug.Users)
                 .HasForeignKey(u => u.UserGroupId);
 
             modelBuilder.Entity<UserGroup>()
-                .HasOne<Domain>(d => d.Domain)
+                .HasOne(d => d.Domain)
                 .WithMany(d => d.UserGroups)
                 .HasForeignKey(d => d.DomainId);
 

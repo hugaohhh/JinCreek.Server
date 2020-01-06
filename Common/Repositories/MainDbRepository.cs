@@ -6,7 +6,7 @@ namespace Common.Repositories
 {
     public class MainDbRepository
     {
-        private MainDbContext _dbContext;
+        private readonly MainDbContext _dbContext;
 
         public MainDbRepository(MainDbContext dbContext)
         {
@@ -39,7 +39,7 @@ namespace Common.Repositories
                 .Include(ug => ug.Domain)
                 .Where(ug => ug.UserGroupName == userGroupName);
 
-            return list.First<UserGroup>();
+            return list.First();
         }
     }
 }

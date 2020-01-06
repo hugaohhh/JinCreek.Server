@@ -48,17 +48,12 @@ namespace Auth.Controllers
             //_logger.LogError("error log message");
             //Console.WriteLine("console log messages");
 
-            Task.Delay(new System.Random().Next(100) * 1000);
+            Task.Delay(new Random().Next(100) * 1000);
             _logger.LogDebug("HELLO");
 
 
-            var domain = new Domain { DomainName = "some.jp" };
+            //            var domain = new Domain { DomainName = "some.jp" };
             var userGroupName = "group name";
-            var userGroup = new UserGroup
-            {
-                UserGroupName = userGroupName,
-                Domain = domain,
-            };
 
 
             //_repository.Create(userGroup);
