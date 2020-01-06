@@ -1,4 +1,4 @@
-﻿using JinCreek.Server.Common.Models.Db;
+﻿using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

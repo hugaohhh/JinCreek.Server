@@ -4,18 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace JinCreek.Server.Common.Models.Db
+namespace JinCreek.Server.Common.Models
 {
     public class Domain
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        [Column("domain_id")]
-        public Guid DomainId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        [Column("domain_name")]
+        [Column(TypeName = "LONGTEXT BINARY")]
         public string DomainName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
