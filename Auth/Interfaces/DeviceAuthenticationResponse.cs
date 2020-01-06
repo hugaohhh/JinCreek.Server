@@ -1,4 +1,4 @@
-﻿namespace Auth.Interfaces
+﻿namespace JinCreek.Server.Auth.Interfaces
 {
     public class DeviceAuthenticationResponse
     {

@@ -1,12 +1,12 @@
-﻿using Auth.Interfaces;
-using Common.Models.Db;
+﻿using Common.Models.Db;
 using Common.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using JinCreek.Server.Auth.Interfaces;
 
-namespace Auth.Controllers
+namespace JinCreek.Server.Auth.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AuthTests.Controllers
+namespace JinCreek.Server.AuthTests.Controllers
 {
     [TestClass()]
     public class DeviceAuthenticationControllerTests

@@ -1,8 +1,8 @@
-﻿using Common.Models.Db;
+﻿using System.Linq;
+using JinCreek.Server.Common.Models.Db;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace Common.Repositories
+namespace JinCreek.Server.Common.Repositories
 {
     public class MainDbRepository
     {
