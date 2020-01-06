@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Common.Models.Db
+namespace JinCreek.Server.Common.Models.Db
 {
     public class Domain
     {

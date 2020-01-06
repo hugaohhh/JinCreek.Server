@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace Common.Repositories.Migrations
+namespace JinCreek.Server.Common.Repositories.Migrations
 {
     class MainDbContextFactory : IDesignTimeDbContextFactory<MainDbContext>
     {

@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Common.Models.Db;
+﻿using JinCreek.Server.Common.Models.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Common.Repositories
+namespace JinCreek.Server.Common.Repositories
 {
     public class MainDbContext : DbContext
     {

@@ -1,10 +1,10 @@
-﻿using Common.Models.Db;
-using Common.Repositories;
+﻿using JinCreek.Server.Auth.Interfaces;
+using JinCreek.Server.Common.Models.Db;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using JinCreek.Server.Auth.Interfaces;
 
 namespace JinCreek.Server.Auth.Controllers
 {

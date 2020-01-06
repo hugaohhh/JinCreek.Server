@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using JinCreek.Server.Common.Models.Db;
+﻿using JinCreek.Server.Common.Models.Db;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace JinCreek.Server.Common.Repositories
 {
