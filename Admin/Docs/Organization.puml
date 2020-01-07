@@ -27,7 +27,7 @@ class Admin.Models.Organization {
     bool IsActive
 }
 
-interface Admin.Models.IOrganizationRepository {
+interface Admin.Repositories.IOrganizationRepository {
     void Add(Organization organization)
     IEnumerable<Organization> GetAll()
     Organization Get(string key)
@@ -35,9 +35,11 @@ interface Admin.Models.IOrganizationRepository {
     void Update(Organization organization)
 }
 
-Admin.Models.IOrganizationRepository <|-- Admin.Models.OrganizationRepository : implements
+Admin.Repositories.IOrganizationRepository <|-- Admin.Repositories.OrganizationRepository : implements
 Microsoft.AspNetCore.Mvc.ControllerBase <|-- Admin.Controllers.OrganizationsController : extends
-Admin.Models.IOrganizationRepository <.. Admin.Controllers.OrganizationsController
-Admin.Models.Organization <.. Admin.Models.OrganizationRepository
+Admin.Repositories.IOrganizationRepository <.. Admin.Controllers.OrganizationsController
+Admin.Models.Organization <.. Admin.Repositories.OrganizationRepository
+Admin.Models.Organization <.. Admin.Controllers.OrganizationsController
+
 
 @enduml
