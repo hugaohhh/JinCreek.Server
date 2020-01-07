@@ -1,3 +1,5 @@
+using Admin.Data;
+using Admin.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Admin.Data;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +84,8 @@ namespace Admin
                     document.Info.Title = "Admin API";
                 };
             });
+
+            services.AddTransient<IOrganizationRepository, OrganizationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

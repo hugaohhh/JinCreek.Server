@@ -1,11 +1,8 @@
-﻿using Admin.Data;
-using Admin.Models;
+﻿using Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Admin.Controllers
 {
@@ -14,25 +11,25 @@ namespace Admin.Controllers
     [Authorize]
     public class OrganizationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOrganizationRepository _organizations;
 
-        public OrganizationsController(ApplicationDbContext context)
+        public OrganizationsController(IOrganizationRepository organizations)
         {
-            _context = context;
+            _organizations = organizations;
         }
 
         // GET: api/Organizations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Organization>>> GetOrganizations()
+        public IEnumerable<Organization> GetOrganizations()
         {
-            return await _context.Organizations.ToListAsync();
+            return _organizations.GetAll();
         }
 
         // GET: api/Organizations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Organization>> GetOrganization(string id)
+        public ActionResult<Organization> GetOrganization(string id)
         {
-            var organization = await _context.Organizations.FindAsync(id);
+            var organization = _organizations.Get(id);
 
             if (organization == null)
             {
@@ -46,18 +43,16 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrganization(string id, Organization organization)
+        public IActionResult PutOrganization(string id, Organization organization)
         {
             if (id != organization.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(organization).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                _organizations.Update(organization);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,12 +73,11 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Organization>> PostOrganization(Organization organization)
+        public ActionResult<Organization> PostOrganization(Organization organization)
         {
-            _context.Organizations.Add(organization);
             try
             {
-                await _context.SaveChangesAsync();
+                _organizations.Add(organization);
             }
             catch (DbUpdateException)
             {
@@ -102,23 +96,19 @@ namespace Admin.Controllers
 
         // DELETE: api/Organizations/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Organization>> DeleteOrganization(string id)
+        public ActionResult<Organization> DeleteOrganization(string id)
         {
-            var organization = await _context.Organizations.FindAsync(id);
+            var organization = _organizations.Remove(id);
             if (organization == null)
             {
                 return NotFound();
             }
-
-            _context.Organizations.Remove(organization);
-            await _context.SaveChangesAsync();
-
             return organization;
         }
 
         private bool OrganizationExists(string id)
         {
-            return _context.Organizations.Any(e => e.Id == id);
+            return _organizations.Get(id) != null;
         }
     }
 }

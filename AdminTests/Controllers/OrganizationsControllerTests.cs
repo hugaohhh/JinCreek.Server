@@ -11,45 +11,45 @@ namespace AdminTests.Controllers
 {
     public class OrganizationsControllerTests
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOrganizationRepository _organizations;
 
         public OrganizationsControllerTests()
         {
-            _context = CreateInMemoryDatabaseContext();
+            _organizations = new OrganizationRepository(CreateInMemoryDatabaseContext());
         }
 
         [Fact]
-        public async void TestCrud()
+        public void TestCrud()
         {
-            var controller = new OrganizationsController(_context);
+            var controller = new OrganizationsController(_organizations);
             var org = new Organization { Id = "5" };
 
             {
                 // POST: api/Organizations
-                ActionResult<Organization> result = await controller.PostOrganization(org);
+                ActionResult<Organization> result = controller.PostOrganization(org);
                 Assert.IsType<CreatedAtActionResult>(result.Result);
                 Assert.Equal(org, ((CreatedAtActionResult)result.Result).Value);
             }
 
             // PUT: api/Organizations/5
-            Assert.IsType<NoContentResult>(await controller.PutOrganization(org.Id, org));
-            Assert.IsType<BadRequestResult>(await controller.PutOrganization("6", org));
+            Assert.IsType<NoContentResult>(controller.PutOrganization(org.Id, org));
+            Assert.IsType<BadRequestResult>(controller.PutOrganization("6", org));
 
             {
                 // GET: api/Organizations
-                ActionResult<IEnumerable<Organization>> result = await controller.GetOrganizations();
-                Assert.IsType<List<Organization>>(result.Value);
-                Assert.Equal(org, ((List<Organization>)result.Value)[0]);
+                IEnumerable<Organization> result = controller.GetOrganizations();
+                Assert.IsType<List<Organization>>(result);
+                Assert.Equal(org, ((List<Organization>)result)[0]);
             }
 
             // GET: api/Organizations/5
-            Assert.Equal(org, (await controller.GetOrganization("5")).Value);
-            ActionResult<Organization> hoge = await controller.GetOrganization("6");
+            Assert.Equal(org, (controller.GetOrganization("5")).Value);
+            ActionResult<Organization> hoge = controller.GetOrganization("6");
             Assert.IsType<NotFoundResult>(hoge.Result);
 
             // DELETE: api/Organizations/5
-            Assert.Equal(org, (await controller.DeleteOrganization("5")).Value);
-            Assert.IsType<NotFoundResult>((await controller.DeleteOrganization("6")).Result);
+            Assert.Equal(org, (controller.DeleteOrganization("5")).Value);
+            Assert.IsType<NotFoundResult>((controller.DeleteOrganization("6")).Result);
 
 
             //// why?
