@@ -12,5 +12,6 @@ namespace Admin.Data
         }
 
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<Terminal> Terminals { get; set; }
     }
 }
