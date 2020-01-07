@@ -40,12 +40,18 @@ namespace Admin.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody]UsersLoginRequest request)
         {
-            var signInResult = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, true, true);
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return BadRequest("Invalid user name or password");
+            }
+
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, true);
             if (!signInResult.Succeeded)
             {
                 return BadRequest("Invalid user name or password");
             }
-            var user = await _userManager.FindByNameAsync(request.UserName);
+
             return Ok(new
             {
                 AccessToken = GetToken(user.Id, _appSettings.AccessTokenExpiration),
