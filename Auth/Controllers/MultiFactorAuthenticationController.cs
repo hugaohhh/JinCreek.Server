@@ -13,13 +13,13 @@ namespace JinCreek.Server.Auth.Controllers
     {
         private readonly ILogger<MultiFactorAuthenticationController> _logger;
 
-        private readonly MainDbRepository _mainDbRepository;
+        private readonly UserRepository _mainDbRepository;
 
         // private readonly RadiusDbRepository _radiusDbRepository;
 
 
         public MultiFactorAuthenticationController(ILogger<MultiFactorAuthenticationController> logger,
-            MainDbRepository mainDbRepository)
+            UserRepository mainDbRepository)
         {
             _logger = logger;
             _mainDbRepository = mainDbRepository;

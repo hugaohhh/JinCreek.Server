@@ -15,13 +15,13 @@ namespace JinCreek.Server.Auth.Controllers
     {
         private readonly ILogger<SimDeviceAuthenticationController> _logger;
 
-        private readonly MainDbRepository _mainDbRepository;
+        private readonly UserRepository _mainDbRepository;
 
         // private readonly RadiusDbRepository _radiusDbRepository;
 
 
         public SimDeviceAuthenticationController(ILogger<SimDeviceAuthenticationController> logger,
-            MainDbRepository mainDbRepository)
+            UserRepository mainDbRepository)
         {
             _logger = logger;
             _mainDbRepository = mainDbRepository;

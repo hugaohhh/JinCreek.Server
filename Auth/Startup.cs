@@ -26,7 +26,15 @@ namespace JinCreek.Server.Auth
             {
                 options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
             });
-            services.AddTransient<MainDbRepository>();
+            services.AddTransient<UserRepository>();
+            services.AddTransient<SimDeviceRepository>();
+            services.AddTransient<AuthenticationRepository>();
+
+            services.AddDbContext<RadiusDbContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("RadiusDbConnection"));
+            });
+
 
             services.AddSwaggerDocument(config =>
                 {
