@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using System;
 using System.IO;
 
 namespace JinCreek.Server.Common.Repositories.Migrations
@@ -12,7 +14,13 @@ namespace JinCreek.Server.Common.Repositories.Migrations
             var config = GetConfiguration();
 
             var optionsBuilder = new DbContextOptionsBuilder<MainDbContext>();
-            optionsBuilder.UseMySql(config.GetConnectionString("MainDbConnection"));
+            //            optionsBuilder.UseMySql(config.GetConnectionString("MainDbConnection"));
+            optionsBuilder.UseMySql(
+                config.GetConnectionString("MainDbConnection"),
+                builder => builder.ServerVersion(
+                    new Version(10, 4, 11),
+                    ServerType.MariaDb
+                    ));
 
             return new MainDbContext(optionsBuilder.Options);
         }
