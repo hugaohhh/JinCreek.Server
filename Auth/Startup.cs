@@ -26,11 +26,25 @@ namespace JinCreek.Server.Auth
             {
                 options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
             });
-            services.AddTransient<MainDbRepository>();
+            services.AddTransient<UserRepository>();
+            services.AddTransient<SimDeviceRepository>();
+            services.AddTransient<AuthenticationRepository>();
+
+            services.AddDbContext<RadiusDbContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("RadiusDbConnection"));
+            });
+
 
             services.AddSwaggerDocument(config =>
                 {
-                    config.PostProcess = document => { document.Info.Version = "v3"; };
+                    config.PostProcess = document =>
+                    {
+                        document.Info.Version = "v1";
+                        document.Info.Title = "JinCreek îFèÿÉAÉvÉä API";
+                        document.Info.Description = "JinCreek API";
+                        document.Info.TermsOfService = "None";
+                    };
                 }
             );
         }

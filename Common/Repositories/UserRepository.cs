@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace JinCreek.Server.Common.Repositories
 {
-    public class MainDbRepository
+    public class UserRepository
     {
         private readonly MainDbContext _dbContext;
 
-        public MainDbRepository(MainDbContext dbContext)
+        public UserRepository(MainDbContext dbContext)
         {
             _dbContext = dbContext;
         }
