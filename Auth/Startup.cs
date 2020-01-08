@@ -30,7 +30,13 @@ namespace JinCreek.Server.Auth
 
             services.AddSwaggerDocument(config =>
                 {
-                    config.PostProcess = document => { document.Info.Version = "v3"; };
+                    config.PostProcess = document =>
+                    {
+                        document.Info.Version = "v1";
+                        document.Info.Title = "JinCreek îFèÿÉAÉvÉä API";
+                        document.Info.Description = "JinCreek API";
+                        document.Info.TermsOfService = "None";
+                    };
                 }
             );
         }
