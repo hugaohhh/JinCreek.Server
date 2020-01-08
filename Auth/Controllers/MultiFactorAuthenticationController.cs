@@ -1,4 +1,4 @@
-﻿using JinCreek.Server.Auth.Interfaces;
+﻿using JinCreek.Server.Interfaces;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace JinCreek.Server.Auth.Interfaces
+namespace JinCreek.Server.Interfaces
 {
     public class DeauthenticationRequest
     {

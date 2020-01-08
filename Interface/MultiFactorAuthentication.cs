@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace JinCreek.Server.Auth.Interfaces
+namespace JinCreek.Server.Interfaces
 {
     public class MultiFactorAuthenticationRequest
     {
