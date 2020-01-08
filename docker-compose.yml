@@ -28,13 +28,12 @@ services:
     restart: always
     ports:
       - "13306:3306"
-#    volumes:
-#      - ./docker/db_init:/docker-entrypoint-initdb.d
     volumes:
+      - ./docker/mariadb/initdb:/docker-entrypoint-initdb.d
       - home-dir:/root
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=mdb
+#      - MYSQL_DATABASE=mdb
   nginx:
     build:
       context: ./docker
