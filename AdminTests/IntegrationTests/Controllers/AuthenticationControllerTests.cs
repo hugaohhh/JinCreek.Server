@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,13 +7,14 @@ using Xunit;
 
 namespace AdminTests.IntegrationTests.Controllers
 {
-    public class AuthenticationControllerTests : IClassFixture<WebApplicationFactory<Admin.Startup>>
+    public class AuthenticationControllerTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
-        private readonly WebApplicationFactory<Admin.Startup> _factory;
+        private readonly CustomWebApplicationFactory<Admin.Startup> _factory;
+        private const string RegisterUrl = "/api/authentication/register";
         private const string LoginUrl = "/api/authentication/login";
         private const string RefreshUrl = "/api/authentication/refresh";
 
-        public AuthenticationControllerTests(WebApplicationFactory<Admin.Startup> factory)
+        public AuthenticationControllerTests(CustomWebApplicationFactory<Admin.Startup> factory)
         {
             _factory = factory;
         }
@@ -23,6 +23,12 @@ namespace AdminTests.IntegrationTests.Controllers
         public async void TestStatusCode()
         {
             HttpClient client = _factory.CreateClient();
+
+            {
+                // register
+                // TODO: move to initializer?
+                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(RegisterUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).StatusCode);
+            }
 
             {
                 // GET, DELETE, POST, PUT, PATCH
