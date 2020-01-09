@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
@@ -17,18 +18,16 @@ namespace AdminTests.IntegrationTests.Controllers
         public AuthenticationControllerTests(CustomWebApplicationFactory<Admin.Startup> factory)
         {
             _factory = factory;
+
+            // Arrange
+            HttpClient client = _factory.CreateClient();
+            Utils.RegisterUser(client, "t-suzuki@indigo.co.jp", "9Q'vl!");
         }
 
         [Fact]
         public async void TestStatusCode()
         {
             HttpClient client = _factory.CreateClient();
-
-            {
-                // register
-                // TODO: move to initializer?
-                Assert.Equal(HttpStatusCode.OK, (await client.PostAsync(RegisterUrl, CreateHttpContent(new { username = "t-suzuki@indigo.co.jp", password = "9Q'vl!" }))).StatusCode);
-            }
 
             {
                 // GET, DELETE, POST, PUT, PATCH
