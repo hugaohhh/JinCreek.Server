@@ -64,15 +64,19 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public string SettingByUser { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public UserGroup UserGroup { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Domain Domain { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<FactorCombination> FactorCombinations { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public UserSetting UserSetting { get; set; }
     }
@@ -106,6 +110,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid UserId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public User User { get; set; }
 

@@ -13,7 +13,7 @@ CREATE TABLE `Lte` (
 );
 
 CREATE TABLE `Organization` (
-    `Id` bigint NOT NULL AUTO_INCREMENT,
+    `Id` char(36) NOT NULL,
     `Code` VARCHAR(255) BINARY NOT NULL,
     `Name` LONGTEXT BINARY NULL,
     `Address` LONGTEXT BINARY NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `DeviceGroup` (
     `Id` char(36) NOT NULL,
     `Version` LONGTEXT BINARY NOT NULL,
     `OsType` LONGTEXT BINARY NOT NULL,
-    `OrganizationId` bigint NOT NULL,
+    `OrganizationId` char(36) NOT NULL,
     CONSTRAINT `PK_DeviceGroup` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_DeviceGroup_Organization_OrganizationId` FOREIGN KEY (`OrganizationId`) REFERENCES `Organization` (`Id`) ON DELETE CASCADE
 );
@@ -40,7 +40,7 @@ CREATE TABLE `DeviceGroup` (
 CREATE TABLE `Domain` (
     `Id` char(36) NOT NULL,
     `DomainName` LONGTEXT BINARY NOT NULL,
-    `OrganizationId` bigint NOT NULL,
+    `OrganizationId` char(36) NOT NULL,
     CONSTRAINT `PK_Domain` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_Domain_Organization_OrganizationId` FOREIGN KEY (`OrganizationId`) REFERENCES `Organization` (`Id`) ON DELETE CASCADE
 );
@@ -48,7 +48,7 @@ CREATE TABLE `Domain` (
 CREATE TABLE `SimGroup` (
     `Id` char(36) NOT NULL,
     `SimGroupName` LONGTEXT BINARY NOT NULL,
-    `OrganizationId` bigint NOT NULL,
+    `OrganizationId` char(36) NOT NULL,
     `PrimaryDns` LONGTEXT BINARY NOT NULL,
     `SecondDns` LONGTEXT BINARY NOT NULL,
     `Apn` LONGTEXT BINARY NOT NULL,
@@ -153,16 +153,16 @@ CREATE TABLE `FactorCombination` (
 );
 
 CREATE TABLE `AuthenticationLog` (
-    `Id` bigint NOT NULL AUTO_INCREMENT,
+    `Id` char(36) NOT NULL,
     `ConnectionTime` datetime(6) NOT NULL,
     `SendByte` int NOT NULL,
     `ReceviByte` int NOT NULL,
     `Discriminator` longtext CHARACTER SET utf8mb4 NOT NULL,
-    `FactorCombinationId` char(36) NULL,
     `IsAuthResult` tinyint(1) NULL,
     `MultiFactorAuthentication_FactorCombinationId` char(36) NULL,
     `SimDeviceAuth` int NULL,
     `SimDeviceId` char(36) NULL,
+    `FactorCombinationId` char(36) NULL,
     CONSTRAINT `PK_AuthenticationLog` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_AuthenticationLog_FactorCombination_FactorCombinationId` FOREIGN KEY (`FactorCombinationId`) REFERENCES `FactorCombination` (`Id`) ON DELETE CASCADE,
     CONSTRAINT `FK_AuthenticationLog_FactorCombination_MultiFactorAuthenticatio~` FOREIGN KEY (`MultiFactorAuthentication_FactorCombinationId`) REFERENCES `FactorCombination` (`Id`) ON DELETE CASCADE,
@@ -223,5 +223,5 @@ CREATE INDEX `IX_UserGroup_DomainId` ON `UserGroup` (`DomainId`);
 CREATE UNIQUE INDEX `IX_UserSetting_UserId` ON `UserSetting` (`UserId`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20200108102815_InitialCreate', '3.1.0');
+VALUES ('20200109013414_InitialCreate', '3.1.0');
 

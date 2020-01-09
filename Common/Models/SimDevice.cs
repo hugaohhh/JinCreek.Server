@@ -23,9 +23,11 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid DeviceId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Device Device { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Sim Sim { get; set; }
 
@@ -47,12 +49,15 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public int AuthPeriod { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<FactorCombination> FactorCombinations { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<SimDeviceAuthentication> SimDeviceAuthentications { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDeviceAuthenticationEnd SimDeviceAuthenticationEnd { get; set; }
 
@@ -70,6 +75,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid SimDeviceId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
 
@@ -77,7 +83,8 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         public Guid UserId { get; set; }
-        
+
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public User User { get; set; }
 
@@ -95,12 +102,15 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DateTime EndDay { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public MultiFactorAuthenticationEnd MultiFactorAuthenticationEnd { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<Deauthentication> Deauthentications { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<MultiFactorAuthentication> MultiFactorAuthentications { get; set; }
 

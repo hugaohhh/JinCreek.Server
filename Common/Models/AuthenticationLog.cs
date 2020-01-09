@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Models
@@ -11,8 +10,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public Guid Id { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -48,6 +46,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid FactorCombinationId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public FactorCombination FactorCombination { get; set; }
     }
@@ -60,6 +59,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid FactorCombinationId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public FactorCombination FactorCombination { get; set; }
     }
@@ -72,6 +72,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public int SimDeviceAuth { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
 
@@ -103,6 +104,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid FactorCombinationId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public FactorCombination FactorCombination { get; set; }
     }
@@ -115,6 +117,7 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid SimDeviceId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
     }

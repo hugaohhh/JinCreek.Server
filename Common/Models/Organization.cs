@@ -11,8 +11,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public Guid Id { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -65,9 +64,11 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<Domain> Domains { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<SimGroup> SimGroups { get; set; } 
+        public List<SimGroup> SimGroups { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<DeviceGroup> DeviceGroups { get; set; }
 

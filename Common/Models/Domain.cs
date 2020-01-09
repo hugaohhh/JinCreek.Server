@@ -28,11 +28,13 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public long OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Organization Organization { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<AdDevice> AdDevices { get; set; }
     }

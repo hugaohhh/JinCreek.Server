@@ -7,40 +7,75 @@ namespace JinCreek.Server.Common.Repositories
 {
     public class MainDbContext : DbContext
     {
-
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<Sim> Sim { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<SimGroup> SimGroup { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<Device> Device { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AdDevice> AdDevice { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<DeviceSetting> DeviceSetting { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<DeviceGroup> DeviceGroup { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<Lte> Lte { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<SimDevice> SimDevice { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<FactorCombination> FactorCombination { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AuthenticationState> AuthenticationState { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AuthenticationLog> AuthenticationLog { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<Authentication> Authentication { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<MultiFactorAuthentication> MultiFactorAuthentication { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<Deauthentication> Deauthentication { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<SimDeviceAuthentication> SimDeviceAuthentication { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<MultiFactorAuthenticationEnd> MultiFactorAuthenticationEnd { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<SimDeviceAuthenticationEnd> SimDeviceAuthenticationEnd { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<Organization> Organization { get; set; }
 
@@ -75,6 +110,16 @@ namespace JinCreek.Server.Common.Repositories
             //    .HasAlternateKey(dg => new {
             //        dg.OrganizationId, dg.OsType, dg.Version
             //    }).HasName("DeviceGroup_Code_UQ");
+
+            modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
+            {
+                authenticationLog.Property(ac => ac.Id).HasValueGenerator<GuidValueGenerator>();
+            });
+
+            modelBuilder.Entity<Organization>(organization =>
+            {
+                organization.Property(o => o.Id).HasValueGenerator<GuidValueGenerator>();
+            });
 
             modelBuilder.Entity<Domain>(domain =>
             {

@@ -72,7 +72,7 @@ namespace JinCreek.Server.Common.Models
 
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public long OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
 
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Organization Organization { get; set; }
