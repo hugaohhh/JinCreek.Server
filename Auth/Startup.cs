@@ -34,7 +34,7 @@ namespace JinCreek.Server.Auth
             {
                 options.UseMySql(Configuration.GetConnectionString("RadiusDbConnection"));
             });
-
+            services.AddTransient<RadiusRepository>();
 
             services.AddSwaggerDocument(config =>
                 {
