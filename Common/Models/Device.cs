@@ -23,7 +23,7 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string MakeNumber { get; set; }
+        public string DeviceImei { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
