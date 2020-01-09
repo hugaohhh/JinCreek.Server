@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Models
 {
-    public class UserGroup
+    public class Sim
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -17,83 +17,47 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string UserGroupName { get; set; }
+        public string Msisdn { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public Guid DomainId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public Domain Domain { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<User> Users { get; set; }
-    }
-
-    public class User
-    {
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Key]
-        public Guid Id { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid DomainId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid UserGroupId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string LastName { get; set; }
+        public string Imsi { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string FirstName { get; set; }
+        public string IccId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public string SettingByUser { get; set; }
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string UserName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public UserGroup UserGroup { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public Domain Domain { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<FactorCombination> FactorCombinations { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public UserSetting UserSetting { get; set; }
-    }
-
-    public class AdminUser : User
-    {
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
         public string Password { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        public Guid SimGroupId { get; set; }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public SimGroup SimGroup { get; set; }
+
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public SimDevice SimDevice { get; set; }
+
     }
 
-    public class SuperAdminUser : AdminUser
-    {
-
-    }
-
-    public class UserSetting
+    public class SimGroup
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -103,17 +67,62 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public bool IsDisconnectWhenScreenLock { get; set; }
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string SimGroupName { get; set; }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        public Guid OrganizationId { get; set; }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public Organization Organization { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public Guid UserId { get; set; }
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string PrimaryDns { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public User User { get; set; }
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string SecondDns { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Apn { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string NasAddress { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Nw1AddressPool { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Nw1AddressRange { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string ServerAddress { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public List<Sim> Sims { get; set; }
+
 
     }
-
 }

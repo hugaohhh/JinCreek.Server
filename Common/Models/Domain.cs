@@ -13,6 +13,7 @@ namespace JinCreek.Server.Common.Models
         [Key]
         public Guid Id { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string DomainName { get; set; }
@@ -24,5 +25,17 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<UserGroup> UserGroups { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public Guid OrganizationId { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public Organization Organization { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public List<AdDevice> AdDevices { get; set; }
     }
 }
