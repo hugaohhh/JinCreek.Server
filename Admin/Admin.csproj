@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-Server-DD3CE4C2-5E5A-4B27-A682-ADF80314F751</UserSecretsId>
     <AssemblyVersion>1.0.19354.0608</AssemblyVersion>
     <FileVersion>1.0.19354.0608</FileVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
 

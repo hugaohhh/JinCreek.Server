@@ -8,6 +8,8 @@
     <AssemblyVersion>1.0.19358.0423</AssemblyVersion>
 
     <FileVersion>1.0.19358.0423</FileVersion>
+
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
