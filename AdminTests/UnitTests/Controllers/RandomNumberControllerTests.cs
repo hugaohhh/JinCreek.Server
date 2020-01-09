@@ -1,7 +1,7 @@
 ﻿using Admin.Controllers;
 using Xunit;
 
-namespace AdminTests.Controllers
+namespace AdminTests.UnitTests.Controllers
 {
     public class RandomNumberControllerTests
     {

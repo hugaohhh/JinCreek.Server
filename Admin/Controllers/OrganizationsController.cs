@@ -1,11 +1,9 @@
-﻿using Admin.Data;
-using Admin.Models;
+﻿using Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Admin.Services;
 
 namespace Admin.Controllers
 {
@@ -14,31 +12,35 @@ namespace Admin.Controllers
     [Authorize]
     public class OrganizationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IOrganizationRepository _organizations;
 
-        public OrganizationsController(ApplicationDbContext context)
+        public OrganizationsController(IAuthorizationService authorizationService, IOrganizationRepository organizations)
         {
-            _context = context;
+            _authorizationService = authorizationService;
+            _organizations = organizations;
         }
 
         // GET: api/Organizations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Organization>>> GetOrganizations()
+        public IEnumerable<Organization> GetOrganizations()
         {
-            return await _context.Organizations.ToListAsync();
+            return _organizations.GetAll();
         }
 
         // GET: api/Organizations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Organization>> GetOrganization(string id)
+        public ActionResult<Organization> GetOrganization(string id)
         {
-            var organization = await _context.Organizations.FindAsync(id);
-
+            var organization = _organizations.Get(id);
             if (organization == null)
             {
                 return NotFound();
             }
-
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
+            {
+                return Forbid();
+            }
             return organization;
         }
 
@@ -46,31 +48,21 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrganization(string id, Organization organization)
+        public IActionResult PutOrganization(string id, Organization organization)
         {
             if (id != organization.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(organization).State = EntityState.Modified;
-
-            try
+            if (_organizations.Get(id) == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
             {
-                if (!OrganizationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Forbid();
             }
-
+            _organizations.Update(organization);
             return NoContent();
         }
 
@@ -78,12 +70,15 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Organization>> PostOrganization(Organization organization)
+        public ActionResult<Organization> PostOrganization(Organization organization)
         {
-            _context.Organizations.Add(organization);
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Create).Result.Succeeded)
+            {
+                return Forbid();
+            }
             try
             {
-                await _context.SaveChangesAsync();
+                _organizations.Add(organization);
             }
             catch (DbUpdateException)
             {
@@ -91,34 +86,35 @@ namespace Admin.Controllers
                 {
                     return Conflict();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
-
             return CreatedAtAction("GetOrganization", new { id = organization.Id }, organization);
         }
 
         // DELETE: api/Organizations/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Organization>> DeleteOrganization(string id)
+        public ActionResult<Organization> DeleteOrganization(string id)
         {
-            var organization = await _context.Organizations.FindAsync(id);
+            var organization = _organizations.Get(id);
             if (organization == null)
             {
                 return NotFound();
             }
-
-            _context.Organizations.Remove(organization);
-            await _context.SaveChangesAsync();
-
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Delete).Result.Succeeded)
+            {
+                return Forbid();
+            }
+            organization = _organizations.Remove(id);
+            if (organization == null)
+            {
+                return NotFound();
+            }
             return organization;
         }
 
         private bool OrganizationExists(string id)
         {
-            return _context.Organizations.Any(e => e.Id == id);
+            return _organizations.Get(id) != null;
         }
     }
 }

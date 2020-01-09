@@ -24,10 +24,22 @@ class Admin.Models.Organization {
     string AdminEmail
     DateTime StartAt
     DateTime EndAt
-    Boolean IsActive
+    bool IsActive
 }
 
-Microsoft.AspNetCore.Mvc.ControllerBase <|-- Admin.Controllers.OrganizationsController
-Admin.Models.Organization <-- Admin.Controllers.OrganizationsController
+interface Admin.Repositories.IOrganizationRepository {
+    void Add(Organization organization)
+    IEnumerable<Organization> GetAll()
+    Organization Get(string key)
+    Organization Remove(string key)
+    void Update(Organization organization)
+}
+
+Admin.Repositories.IOrganizationRepository <|-- Admin.Repositories.OrganizationRepository : implements
+Microsoft.AspNetCore.Mvc.ControllerBase <|-- Admin.Controllers.OrganizationsController : extends
+Admin.Repositories.IOrganizationRepository <.. Admin.Controllers.OrganizationsController
+Admin.Models.Organization <.. Admin.Repositories.OrganizationRepository
+Admin.Models.Organization <.. Admin.Controllers.OrganizationsController
+
 
 @enduml
