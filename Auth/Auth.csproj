@@ -38,6 +38,8 @@
     <!-- 
     <Exec Command="$(NSwagExe_Core31) aspnetcore2openapi /assembly:$(TargetDir)Auth.dll /output:auth-openapi.json" />
     -->
+    <!-- 
     <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Auth.dll /output:auth-swagger.json" />
+    -->
   </Target>
 </Project>
