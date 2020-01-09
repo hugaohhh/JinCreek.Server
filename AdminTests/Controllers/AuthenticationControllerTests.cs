@@ -40,7 +40,7 @@ namespace AdminTests.Controllers
             userManager.Setup(_ => _.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(testUser);
 
             var signInManager = new Mock<FakeSignInManager>();
-            signInManager.Setup(_ => _.PasswordSignInAsync("hoge", "fuga", true, true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            signInManager.Setup(_ => _.CheckPasswordSignInAsync(testUser, "fuga", true)).ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
             var appSettings = new Mock<IOptions<AppSettings>>();
             appSettings.Setup(_ => _.Value).Returns(new AppSettings { Secret = "this is my key, there are many of them but this one is mine" });
