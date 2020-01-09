@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using Admin.Services;
 
 namespace Admin.Controllers
 {
@@ -11,10 +12,12 @@ namespace Admin.Controllers
     [Authorize]
     public class OrganizationsController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IOrganizationRepository _organizations;
 
-        public OrganizationsController(IOrganizationRepository organizations)
+        public OrganizationsController(IAuthorizationService authorizationService, IOrganizationRepository organizations)
         {
+            _authorizationService = authorizationService;
             _organizations = organizations;
         }
 
@@ -30,12 +33,14 @@ namespace Admin.Controllers
         public ActionResult<Organization> GetOrganization(string id)
         {
             var organization = _organizations.Get(id);
-
             if (organization == null)
             {
                 return NotFound();
             }
-
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
+            {
+                return Forbid();
+            }
             return organization;
         }
 
@@ -49,23 +54,15 @@ namespace Admin.Controllers
             {
                 return BadRequest();
             }
-
-            try
+            if (_organizations.Get(id) == null)
             {
-                _organizations.Update(organization);
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
             {
-                if (!OrganizationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Forbid();
             }
-
+            _organizations.Update(organization);
             return NoContent();
         }
 
@@ -75,6 +72,10 @@ namespace Admin.Controllers
         [HttpPost]
         public ActionResult<Organization> PostOrganization(Organization organization)
         {
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Create).Result.Succeeded)
+            {
+                return Forbid();
+            }
             try
             {
                 _organizations.Add(organization);
@@ -85,12 +86,8 @@ namespace Admin.Controllers
                 {
                     return Conflict();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
-
             return CreatedAtAction("GetOrganization", new { id = organization.Id }, organization);
         }
 
@@ -98,7 +95,16 @@ namespace Admin.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Organization> DeleteOrganization(string id)
         {
-            var organization = _organizations.Remove(id);
+            var organization = _organizations.Get(id);
+            if (organization == null)
+            {
+                return NotFound();
+            }
+            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Delete).Result.Succeeded)
+            {
+                return Forbid();
+            }
+            organization = _organizations.Remove(id);
             if (organization == null)
             {
                 return NotFound();

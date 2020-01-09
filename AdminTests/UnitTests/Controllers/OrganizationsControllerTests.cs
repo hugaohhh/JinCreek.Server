@@ -1,27 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using Admin.Controllers;
+﻿using Admin.Controllers;
 using Admin.Data;
 using Admin.Models;
+using Admin.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace AdminTests.UnitTests.Controllers
 {
     public class OrganizationsControllerTests
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IOrganizationRepository _organizations;
 
         public OrganizationsControllerTests()
         {
+            var services = new ServiceCollection();
+            services.AddAuthorization();
+            services.AddLogging();
+            services.AddOptions();
+            services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
+            _authorizationService = services.BuildServiceProvider().GetRequiredService<IAuthorizationService>();
             _organizations = new OrganizationRepository(CreateInMemoryDatabaseContext());
         }
 
         [Fact]
         public void TestCrud()
         {
-            var controller = new OrganizationsController(_organizations);
+            var controller = new OrganizationsController(_authorizationService, _organizations);
             var org = new Organization { Id = "5" };
 
             {

@@ -1,6 +1,8 @@
 using Admin.Data;
 using Admin.Models;
+using Admin.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -86,6 +88,7 @@ namespace Admin
             });
 
             services.AddTransient<IOrganizationRepository, OrganizationRepository>();
+            services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
