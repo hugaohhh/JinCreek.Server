@@ -53,12 +53,12 @@ namespace AdminTests.UnitTests.Controllers
             }
 
             // GET: api/Organizations/5
-            Assert.Equal(org, (controller.GetOrganization("5")).Value);
+            Assert.Equal(org, (controller.GetOrganization(org.Id)).Value);
             ActionResult<Organization> hoge = controller.GetOrganization("6");
             Assert.IsType<NotFoundResult>(hoge.Result);
 
             // DELETE: api/Organizations/5
-            Assert.Equal(org, (controller.DeleteOrganization("5")).Value);
+            Assert.Equal(org, (controller.DeleteOrganization(org.Id)).Value);
             Assert.IsType<NotFoundResult>((controller.DeleteOrganization("6")).Result);
 
 

@@ -1,5 +1,6 @@
 ﻿using Admin.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,7 @@ namespace Admin.Models
 
         public void Add(Organization organization)
         {
+            organization.Id = Guid.NewGuid().ToString();
             _context.Organizations.Add(organization);
             _context.SaveChanges();
         }
