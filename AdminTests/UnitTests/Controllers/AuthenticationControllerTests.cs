@@ -1,4 +1,5 @@
-﻿using Admin;
+﻿using System;
+using Admin;
 using Admin.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -8,10 +9,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Moq;
-using System;
 using Xunit;
 
-namespace AdminTests.Controllers
+namespace AdminTests.UnitTests.Controllers
 {
     public class AuthenticationControllerTests
     {

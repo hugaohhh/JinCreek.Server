@@ -1,13 +1,13 @@
-﻿using Admin.Controllers;
+﻿using System;
+using System.Collections.Generic;
+using Admin.Controllers;
 using Admin.Data;
 using Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
-namespace AdminTests.Controllers
+namespace AdminTests.UnitTests.Controllers
 {
     public class OrganizationsControllerTests
     {
