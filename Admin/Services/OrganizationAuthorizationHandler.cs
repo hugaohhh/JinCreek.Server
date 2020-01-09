@@ -1,4 +1,4 @@
-﻿using Admin.Models;
+﻿using JinCreek.Server.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System.Threading.Tasks;

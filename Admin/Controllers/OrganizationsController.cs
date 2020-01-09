@@ -1,9 +1,10 @@
-﻿using Admin.Models;
+﻿using Admin.Services;
+using JinCreek.Server.Common.Models;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using Admin.Services;
 
 namespace Admin.Controllers
 {
@@ -50,7 +51,7 @@ namespace Admin.Controllers
         [HttpPut("{id}")]
         public IActionResult PutOrganization(string id, Organization organization)
         {
-            if (id != organization.Id)
+            if (id != organization.Id.ToString())
             {
                 return BadRequest();
             }
@@ -82,7 +83,7 @@ namespace Admin.Controllers
             }
             catch (DbUpdateException)
             {
-                if (OrganizationExists(organization.Id))
+                if (OrganizationExists(organization.Id.ToString()))
                 {
                     return Conflict();
                 }

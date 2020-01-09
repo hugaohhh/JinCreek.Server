@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using JinCreek.Server.Common.Models;
+using System.Collections.Generic;
 
-namespace Admin.Models
+namespace JinCreek.Server.Common.Repositories
 {
     public interface IOrganizationRepository
     {

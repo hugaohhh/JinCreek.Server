@@ -1,35 +1,35 @@
-﻿using Admin.Data;
+﻿using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Admin.Models
+namespace JinCreek.Server.Common.Repositories
 {
     public class OrganizationRepository : IOrganizationRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MainDbContext _context;
 
-        public OrganizationRepository(ApplicationDbContext context)
+        public OrganizationRepository(MainDbContext context)
         {
             _context = context;
         }
 
         public void Add(Organization organization)
         {
-            organization.Id = Guid.NewGuid().ToString();
-            _context.Organizations.Add(organization);
+            organization.Id = Guid.NewGuid();
+            _context.Organization.Add(organization);
             _context.SaveChanges();
         }
 
         public IEnumerable<Organization> GetAll()
         {
-            return _context.Organizations.ToList();
+            return _context.Organization.ToList();
         }
 
         public Organization Get(string key)
         {
-            return _context.Organizations.Find(key);
+            return _context.Organization.Find(key);
         }
 
         public Organization Remove(string key)
@@ -39,7 +39,7 @@ namespace Admin.Models
             {
                 return null;
             }
-            var e = _context.Organizations.Remove(organization);
+            var e = _context.Organization.Remove(organization);
             _context.SaveChanges();
             return e.Entity;
         }

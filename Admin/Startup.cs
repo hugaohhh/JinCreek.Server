@@ -1,6 +1,6 @@
 using Admin.Data;
-using Admin.Models;
 using Admin.Services;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +32,9 @@ namespace Admin
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MainDbContext>(options =>
+                options.UseMySql(
+                    Configuration.GetConnectionString("MainDbConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllers();
