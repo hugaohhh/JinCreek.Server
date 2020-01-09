@@ -12,16 +12,17 @@ namespace JinCreek.Server.Auth.Controllers
     {
         private readonly ILogger<DeauthenticationController> _logger;
 
-        private readonly UserRepository _mainDbRepository;
+        private readonly AuthenticationRepository _authenticationRepository;
 
-        // private readonly RadiusDbRepository _radiusDbRepository;
+        private readonly RadiusRepository _radiusRepository;
 
 
         public DeauthenticationController(ILogger<DeauthenticationController> logger,
-            UserRepository mainDbRepository)
+            AuthenticationRepository authenticationRepository, RadiusRepository radiusRepository)
         {
             _logger = logger;
-            _mainDbRepository = mainDbRepository;
+            _authenticationRepository = authenticationRepository;
+            _radiusRepository = radiusRepository;
         }
 
 
