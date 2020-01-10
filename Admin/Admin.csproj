@@ -1,3 +1,4 @@
+﻿<!--EXTERNAL_PROPERTIES: NSwagExe_Core31-->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
@@ -21,6 +22,13 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
+  <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
+    <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Admin.dll /output:Docs\swagger.json" />
+  </Target>
 </Project>
