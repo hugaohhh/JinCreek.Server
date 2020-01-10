@@ -120,6 +120,62 @@
           "application/json",
           "text/json"
         ],
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "Page",
+            "in": "query",
+            "format": "int32",
+            "x-nullable": false
+          },
+          {
+            "type": "integer",
+            "name": "PageSize",
+            "in": "query",
+            "format": "int32",
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "Name",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "StartDayFrom",
+            "in": "query",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "StartDayTo",
+            "in": "query",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "EndDayFrom",
+            "in": "query",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "EndDayTo",
+            "in": "query",
+            "format": "date-time",
+            "x-nullable": false
+          },
+          {
+            "type": "boolean",
+            "name": "IsActive",
+            "in": "query",
+            "x-nullable": false
+          }
+        ],
         "responses": {
           "200": {
             "x-nullable": false,
@@ -187,7 +243,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "format": "guid",
+            "x-nullable": false
           }
         ],
         "responses": {
@@ -216,7 +273,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "format": "guid",
+            "x-nullable": false
           },
           {
             "name": "organization",
@@ -254,7 +312,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "format": "guid",
+            "x-nullable": false
           }
         ],
         "responses": {
@@ -345,12 +404,17 @@
     "Organization": {
       "type": "object",
       "required": [
-        "startAt",
-        "endAt",
-        "isActive"
+        "id",
+        "startDay",
+        "endDay",
+        "isValid"
       ],
       "properties": {
         "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "code": {
           "type": "string"
         },
         "name": {
@@ -359,28 +423,799 @@
         "address": {
           "type": "string"
         },
-        "telNo": {
+        "delegatePhone": {
           "type": "string"
+        },
+        "adminPhone": {
+          "type": "string"
+        },
+        "adminMail": {
+          "type": "string"
+        },
+        "startDay": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDay": {
+          "type": "string",
+          "format": "date-time"
         },
         "url": {
           "type": "string"
         },
-        "adminTelNo": {
-          "type": "string"
-        },
-        "adminEmail": {
-          "type": "string"
-        },
-        "startAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "endAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "isActive": {
+        "isValid": {
           "type": "boolean"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Domain"
+          }
+        },
+        "simGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SimGroup"
+          }
+        },
+        "deviceGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeviceGroup"
+          }
+        }
+      }
+    },
+    "Domain": {
+      "type": "object",
+      "required": [
+        "id",
+        "domainName",
+        "organizationId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "domainName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "userGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserGroup"
+          }
+        },
+        "organizationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "organization": {
+          "$ref": "#/definitions/Organization"
+        },
+        "adDevices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdDevice"
+          }
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "id",
+        "domainId",
+        "userGroupId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "domainId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "userGroupId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "settingByUser": {
+          "type": "string"
+        },
+        "userGroup": {
+          "$ref": "#/definitions/UserGroup"
+        },
+        "domain": {
+          "$ref": "#/definitions/Domain"
+        },
+        "factorCombinations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FactorCombination"
+          }
+        },
+        "userSetting": {
+          "$ref": "#/definitions/UserSetting"
+        }
+      }
+    },
+    "UserGroup": {
+      "type": "object",
+      "required": [
+        "id",
+        "userGroupName",
+        "domainId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "userGroupName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domainId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "domain": {
+          "$ref": "#/definitions/Domain"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      }
+    },
+    "FactorCombination": {
+      "type": "object",
+      "required": [
+        "id",
+        "simDeviceId",
+        "userId",
+        "nwAddress",
+        "startDay",
+        "endDay"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "simDeviceId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "simDevice": {
+          "$ref": "#/definitions/SimDevice"
+        },
+        "userId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "nwAddress": {
+          "type": "string",
+          "minLength": 1
+        },
+        "startDay": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDay": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "multiFactorAuthenticationEnd": {
+          "$ref": "#/definitions/MultiFactorAuthenticationEnd"
+        },
+        "deauthentications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Deauthentication"
+          }
+        },
+        "multiFactorAuthentications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MultiFactorAuthentication"
+          }
+        }
+      }
+    },
+    "SimDevice": {
+      "type": "object",
+      "required": [
+        "id",
+        "simId",
+        "deviceId",
+        "nw2AddressPool",
+        "startDay",
+        "endDay",
+        "authPeriod"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "simId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "deviceId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "device": {
+          "$ref": "#/definitions/Device"
+        },
+        "sim": {
+          "$ref": "#/definitions/Sim"
+        },
+        "nw2AddressPool": {
+          "type": "string",
+          "minLength": 1
+        },
+        "startDay": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDay": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authPeriod": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "factorCombinations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FactorCombination"
+          }
+        },
+        "simDeviceAuthentications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SimDeviceAuthentication"
+          }
+        },
+        "simDeviceAuthenticationEnd": {
+          "$ref": "#/definitions/SimDeviceAuthenticationEnd"
+        }
+      }
+    },
+    "Device": {
+      "type": "object",
+      "required": [
+        "id",
+        "deviceName",
+        "makeNumber",
+        "managerNumber",
+        "type",
+        "deviceGroupId",
+        "lteId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "deviceName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "makeNumber": {
+          "type": "string",
+          "minLength": 1
+        },
+        "managerNumber": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deviceGroupId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "deviceGroup": {
+          "$ref": "#/definitions/DeviceGroup"
+        },
+        "lteId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "lte": {
+          "$ref": "#/definitions/Lte"
+        },
+        "simDevice": {
+          "$ref": "#/definitions/SimDevice"
+        }
+      }
+    },
+    "DeviceGroup": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "osType",
+        "organizationId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "osType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "organization": {
+          "$ref": "#/definitions/Organization"
+        },
+        "organizationId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          }
+        }
+      }
+    },
+    "Lte": {
+      "type": "object",
+      "required": [
+        "id",
+        "lteName",
+        "lteAdapter",
+        "softwareRadioState"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "lteName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lteAdapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          }
+        },
+        "softwareRadioState": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Sim": {
+      "type": "object",
+      "required": [
+        "id",
+        "msisdn",
+        "imsi",
+        "iccId",
+        "userName",
+        "password",
+        "simGroupId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "msisdn": {
+          "type": "string",
+          "minLength": 1
+        },
+        "imsi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "iccId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "userName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1
+        },
+        "simGroupId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "simGroup": {
+          "$ref": "#/definitions/SimGroup"
+        },
+        "simDevice": {
+          "$ref": "#/definitions/SimDevice"
+        }
+      }
+    },
+    "SimGroup": {
+      "type": "object",
+      "required": [
+        "id",
+        "simGroupName",
+        "organizationId",
+        "primaryDns",
+        "secondDns",
+        "apn",
+        "nasAddress",
+        "nw1AddressPool",
+        "nw1AddressRange",
+        "serverAddress"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "simGroupName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "organizationId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "organization": {
+          "$ref": "#/definitions/Organization"
+        },
+        "primaryDns": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secondDns": {
+          "type": "string",
+          "minLength": 1
+        },
+        "apn": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nasAddress": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nw1AddressPool": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nw1AddressRange": {
+          "type": "string",
+          "minLength": 1
+        },
+        "serverAddress": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sim"
+          }
+        }
+      }
+    },
+    "SimDeviceAuthentication": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Authentication"
+        },
+        {
+          "type": "object",
+          "required": [
+            "simDeviceAuth",
+            "simDeviceId"
+          ],
+          "properties": {
+            "simDeviceAuth": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "simDevice": {
+              "$ref": "#/definitions/SimDevice"
+            },
+            "simDeviceId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "Authentication": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthenticationLog"
+        },
+        {
+          "type": "object",
+          "x-abstract": true,
+          "required": [
+            "isAuthResult"
+          ],
+          "properties": {
+            "isAuthResult": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "AuthenticationLog": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "id",
+        "connectionTime",
+        "sendByte",
+        "receviByte"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "connectionTime": {
+          "type": "string",
+          "format": "date-time",
+          "minLength": 1
+        },
+        "sendByte": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "receviByte": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SimDeviceAuthenticationEnd": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthenticationState"
+        },
+        {
+          "type": "object",
+          "required": [
+            "simDeviceId"
+          ],
+          "properties": {
+            "simDeviceId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            },
+            "simDevice": {
+              "$ref": "#/definitions/SimDevice"
+            }
+          }
+        }
+      ]
+    },
+    "AuthenticationState": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "id",
+        "timeLimit"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "timeLimit": {
+          "type": "string",
+          "format": "date-time",
+          "minLength": 1
+        }
+      }
+    },
+    "MultiFactorAuthenticationEnd": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthenticationState"
+        },
+        {
+          "type": "object",
+          "required": [
+            "factorCombinationId"
+          ],
+          "properties": {
+            "factorCombinationId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            },
+            "factorCombination": {
+              "$ref": "#/definitions/FactorCombination"
+            }
+          }
+        }
+      ]
+    },
+    "Deauthentication": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthenticationLog"
+        },
+        {
+          "type": "object",
+          "required": [
+            "factorCombinationId"
+          ],
+          "properties": {
+            "factorCombinationId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            },
+            "factorCombination": {
+              "$ref": "#/definitions/FactorCombination"
+            }
+          }
+        }
+      ]
+    },
+    "MultiFactorAuthentication": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Authentication"
+        },
+        {
+          "type": "object",
+          "required": [
+            "factorCombinationId"
+          ],
+          "properties": {
+            "factorCombinationId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            },
+            "factorCombination": {
+              "$ref": "#/definitions/FactorCombination"
+            }
+          }
+        }
+      ]
+    },
+    "UserSetting": {
+      "type": "object",
+      "required": [
+        "id",
+        "isDisconnectWhenScreenLock",
+        "userId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "isDisconnectWhenScreenLock": {
+          "type": "boolean"
+        },
+        "userId": {
+          "type": "string",
+          "format": "guid",
+          "minLength": 1
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "AdDevice": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Device"
+        },
+        {
+          "type": "object",
+          "required": [
+            "domainId"
+          ],
+          "properties": {
+            "domain": {
+              "$ref": "#/definitions/Domain"
+            },
+            "domainId": {
+              "type": "string",
+              "format": "guid",
+              "minLength": 1
+            },
+            "deviceSetting": {
+              "$ref": "#/definitions/DeviceSetting"
+            }
+          }
+        }
+      ]
+    },
+    "DeviceSetting": {
+      "type": "object",
+      "required": [
+        "id",
+        "isOffLineWindowsSingIn",
+        "windowsSignInListCacheDays",
+        "adDeviceId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "isOffLineWindowsSingIn": {
+          "type": "boolean"
+        },
+        "windowsSignInListCacheDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "adDevice": {
+          "$ref": "#/definitions/AdDevice"
+        },
+        "adDeviceId": {
+          "type": "string",
+          "format": "guid"
         }
       }
     }

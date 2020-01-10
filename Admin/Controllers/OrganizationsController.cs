@@ -26,7 +26,7 @@ namespace Admin.Controllers
         // GET: api/Organizations
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public IEnumerable<Organization> GetOrganizations()
+        public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
             return _userRepository.GetOrganization();
         }
@@ -118,6 +118,18 @@ namespace Admin.Controllers
         private bool OrganizationExists(Guid id)
         {
             return _userRepository.GetOrganization(id) != null;
+        }
+
+        public class GetOrganizationsParam
+        {
+            public int Page { get; set; } = 0;
+            public int PageSize { get; set; } = 20;
+            public string Name { get; set; }
+            public DateTime StartDayFrom { get; set; }
+            public DateTime StartDayTo { get; set; }
+            public DateTime EndDayFrom { get; set; }
+            public DateTime EndDayTo { get; set; }
+            public bool IsActive { get; set; }
         }
     }
 }
