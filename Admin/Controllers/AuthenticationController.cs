@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Admin.CustomProvider;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,11 +16,11 @@ namespace Admin.Controllers
     [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppSettings _appSettings;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings)
+        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -29,7 +30,7 @@ namespace Admin.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]UsersRegisterRequest request)
         {
-            var result = await _userManager.CreateAsync(new IdentityUser { UserName = request.UserName }, request.Password);
+            var result = await _userManager.CreateAsync(new ApplicationUser { UserName = request.UserName }, request.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
@@ -54,8 +55,8 @@ namespace Admin.Controllers
 
             return Ok(new
             {
-                AccessToken = GetToken(user.Id, _appSettings.AccessTokenExpiration),
-                RefreshToken = GetToken(user.Id, _appSettings.RefreshTokenExpiration)
+                AccessToken = GetToken(user.Id.ToString(), _appSettings.AccessTokenExpiration),
+                RefreshToken = GetToken(user.Id.ToString(), _appSettings.RefreshTokenExpiration)
             });
         }
 
@@ -101,7 +102,7 @@ namespace Admin.Controllers
 
             return Ok(new
             {
-                AccessToken = GetToken(user.Id, _appSettings.AccessTokenExpiration)
+                AccessToken = GetToken(user.Id.ToString(), _appSettings.AccessTokenExpiration)
             });
         }
 
@@ -115,6 +116,7 @@ namespace Admin.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, id),
+                    new Claim(ClaimTypes.Role, "Administrator"), // TODO: ユーザモデルからロールを設定する
                 }),
                 NotBefore = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddMinutes(expiration),

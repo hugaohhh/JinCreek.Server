@@ -24,6 +24,7 @@ namespace Admin.Controllers
 
         // GET: api/Organizations
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public IEnumerable<Organization> GetOrganizations()
         {
             return _organizations.GetAll();
