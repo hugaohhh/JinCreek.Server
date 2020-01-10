@@ -1,4 +1,6 @@
-﻿using JinCreek.Server.Common.Models;
+﻿using System;
+using System.Collections.Generic;
+using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -39,12 +41,12 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public AdminUser FindAdminUser(string id)
+        public AdminUser GetAdminUser(Guid id)
         {
             return _dbContext.AdminUser.Find(id);
         }
 
-        public AdminUser FindAdminUserByName(string name)
+        public AdminUser GetAdminUserByName(string name)
         {
             return _dbContext.AdminUser.SingleOrDefault(x => x.FirstName == name);
         }
@@ -56,6 +58,46 @@ namespace JinCreek.Server.Common.Repositories
                 .Where(ug => ug.UserGroupName == userGroupName);
 
             return list.First();
+        }
+
+
+        //
+        // Organizations
+        //
+
+        public void Create(Organization organization)
+        {
+            organization.Id = Guid.NewGuid();
+            _dbContext.Organization.Add(organization);
+            _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<Organization> GetOrganization()
+        {
+            return _dbContext.Organization.ToList();
+        }
+
+        public Organization GetOrganization(Guid id)
+        {
+            return _dbContext.Organization.Find(id);
+        }
+
+        public Organization Remove(Guid id)
+        {
+            var organization = GetOrganization(id);
+            if (organization == null)
+            {
+                return null;
+            }
+            var e = _dbContext.Organization.Remove(organization);
+            _dbContext.SaveChanges();
+            return e.Entity;
+        }
+
+        public void Update(Organization organization)
+        {
+            _dbContext.Entry(organization).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
     }
 }

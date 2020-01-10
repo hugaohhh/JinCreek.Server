@@ -15,7 +15,7 @@ namespace AdminTests.UnitTests.Controllers
     public class OrganizationsControllerTests
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly IOrganizationRepository _organizations;
+        private readonly UserRepository _userRepository;
 
         public OrganizationsControllerTests()
         {
@@ -25,13 +25,13 @@ namespace AdminTests.UnitTests.Controllers
             services.AddOptions();
             services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
             _authorizationService = services.BuildServiceProvider().GetRequiredService<IAuthorizationService>();
-            _organizations = new OrganizationRepository(CreateInMemoryDatabaseContext());
+            _userRepository = new UserRepository(CreateInMemoryDatabaseContext());
         }
 
         [Fact]
         public void TestCrud()
         {
-            var controller = new OrganizationsController(_authorizationService, _organizations);
+            var controller = new OrganizationsController(_authorizationService, _userRepository);
             var org = new Organization
             {
                 Id = new Guid(),

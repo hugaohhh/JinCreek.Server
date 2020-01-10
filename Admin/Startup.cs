@@ -92,7 +92,6 @@ namespace Admin
                 };
             });
 
-            services.AddTransient<IOrganizationRepository, OrganizationRepository>();
             services.AddTransient<UserRepository>();
             services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
         }

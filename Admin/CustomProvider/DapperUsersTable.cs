@@ -36,7 +36,7 @@ namespace Admin.CustomProvider
 
         public async Task<ApplicationUser> FindByIdAsync(Guid userId)
         {
-            var adminUser = _userRepository.FindAdminUser(userId.ToString());
+            var adminUser = _userRepository.GetAdminUser(userId);
             if (adminUser == null)
             {
                 return null;
@@ -51,7 +51,7 @@ namespace Admin.CustomProvider
 
         public async Task<ApplicationUser> FindByNameAsync(string userName)
         {
-            var adminUser = _userRepository.FindAdminUserByName(userName);
+            var adminUser = _userRepository.GetAdminUserByName(userName);
             if (adminUser == null)
             {
                 return null;

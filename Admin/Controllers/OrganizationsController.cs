@@ -15,12 +15,12 @@ namespace Admin.Controllers
     public class OrganizationsController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly IOrganizationRepository _organizations;
+        private readonly UserRepository _userRepository;
 
-        public OrganizationsController(IAuthorizationService authorizationService, IOrganizationRepository organizations)
+        public OrganizationsController(IAuthorizationService authorizationService, UserRepository userRepository)
         {
             _authorizationService = authorizationService;
-            _organizations = organizations;
+            _userRepository = userRepository;
         }
 
         // GET: api/Organizations
@@ -28,14 +28,14 @@ namespace Admin.Controllers
         [Authorize(Roles = "Administrator")]
         public IEnumerable<Organization> GetOrganizations()
         {
-            return _organizations.GetAll();
+            return _userRepository.GetOrganization();
         }
 
         // GET: api/Organizations/5
         [HttpGet("{id}")]
         public ActionResult<Organization> GetOrganization(Guid id)
         {
-            var organization = _organizations.Get(id);
+            var organization = _userRepository.GetOrganization(id);
             if (organization == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace Admin.Controllers
             {
                 return BadRequest();
             }
-            if (_organizations.Get(id) == null)
+            if (_userRepository.GetOrganization(id) == null)
             {
                 return NotFound();
             }
@@ -65,7 +65,7 @@ namespace Admin.Controllers
             {
                 return Forbid();
             }
-            _organizations.Update(organization);
+            _userRepository.Update(organization);
             return NoContent();
         }
 
@@ -81,7 +81,7 @@ namespace Admin.Controllers
             }
             try
             {
-                _organizations.Add(organization);
+                _userRepository.Create(organization);
             }
             catch (DbUpdateException)
             {
@@ -98,7 +98,7 @@ namespace Admin.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Organization> DeleteOrganization(Guid id)
         {
-            var organization = _organizations.Get(id);
+            var organization = _userRepository.GetOrganization(id);
             if (organization == null)
             {
                 return NotFound();
@@ -107,7 +107,7 @@ namespace Admin.Controllers
             {
                 return Forbid();
             }
-            organization = _organizations.Remove(id);
+            organization = _userRepository.Remove(id);
             if (organization == null)
             {
                 return NotFound();
@@ -117,7 +117,7 @@ namespace Admin.Controllers
 
         private bool OrganizationExists(Guid id)
         {
-            return _organizations.Get(id) != null;
+            return _userRepository.GetOrganization(id) != null;
         }
     }
 }
