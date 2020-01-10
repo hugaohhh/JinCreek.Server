@@ -27,7 +27,7 @@ namespace JinCreek.Server.Common.Repositories
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<DeviceSetting> DeviceSetting { get; set; }
+        public DbSet<AdDeviceSettingOfflineWindowsSignIn> AdDeviceSettingOfflineWindowsSignIn { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -55,11 +55,7 @@ namespace JinCreek.Server.Common.Repositories
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<Authentication> Authentication { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<MultiFactorAuthentication> MultiFactorAuthentication { get; set; }
+        public DbSet<MultiFactorAuthenticationLogSuccess> MultiFactorAuthenticationLogSuccess { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -67,15 +63,23 @@ namespace JinCreek.Server.Common.Repositories
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<SimDeviceAuthentication> SimDeviceAuthentication { get; set; }
+        public DbSet<SimDeviceAuthenticationLogSuccess> SimDeviceAuthenticationLogSuccess { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<MultiFactorAuthenticationEnd> MultiFactorAuthenticationEnd { get; set; }
+        public DbSet<MultiFactorAuthenticationStateDone> MultiFactorAuthenticationStateDone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<SimDeviceAuthenticationEnd> SimDeviceAuthenticationEnd { get; set; }
+        public DbSet<SimDeviceAuthenticationStateDone> SimDeviceAuthenticationStateDone { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<SimDeviceAuthenticationLogFail> SimDeviceAuthenticationLogFail { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<MultiFactorAuthenticationLogFail> MultiFactorAuthenticationLogFail { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -93,9 +97,18 @@ namespace JinCreek.Server.Common.Repositories
         // DbSetアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AdminUser> AdminUser { get; set; }
-        // DbSetアクセスのため自動プロパティを利用
-        //[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        //public DbSet<GeneralUser> GeneralUser { get; set; }
+        
+        //DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<GeneralUser> GeneralUser { get; set; }
+
+        //DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<EndUser> EndUser { get; set; }
+
+        //DbSetアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public DbSet<SuperAdminUser> SuperAdminUser { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
@@ -159,7 +172,7 @@ namespace JinCreek.Server.Common.Repositories
                 device.Property(d => d.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
-            modelBuilder.Entity<DeviceSetting>(deviceSetting =>
+            modelBuilder.Entity<AdDeviceSettingOfflineWindowsSignIn>(deviceSetting =>
             {
                 deviceSetting.Property(ds => ds.Id).HasValueGenerator<GuidValueGenerator>();
             });
@@ -189,14 +202,15 @@ namespace JinCreek.Server.Common.Repositories
                 authState.Property(authenticationState => authenticationState.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
-            modelBuilder.Entity<UserSetting>()
-                .HasOne(us => us.User)
-                .WithOne(u => u.UserSetting)
-                .HasForeignKey<UserSetting>(us => us.UserId);
+            modelBuilder.Entity<User>(user =>
+            {
+                user.Property(u => u.Id).HasValueGenerator<GuidValueGenerator>();
+            });
 
-            modelBuilder.Entity<MultiFactorAuthentication>()
+
+            modelBuilder.Entity<MultiFactorAuthenticationLogSuccess>()
                 .HasOne(da => da.FactorCombination)
-                .WithMany(fc => fc.MultiFactorAuthentications)
+                .WithMany(fc => fc.MultiFactorAuthenticationLogSuccesses)
                 .HasForeignKey(fc => fc.FactorCombinationId);
 
             modelBuilder.Entity<Deauthentication>()
@@ -204,25 +218,35 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(fc => fc.Deauthentications)
                 .HasForeignKey(fc => fc.FactorCombinationId);
 
-            modelBuilder.Entity<MultiFactorAuthenticationEnd>()
+            modelBuilder.Entity<MultiFactorAuthenticationStateDone>()
                 .HasOne(mfae => mfae.FactorCombination)
-                .WithOne(fc => fc.MultiFactorAuthenticationEnd)
-                .HasForeignKey<MultiFactorAuthenticationEnd>(mfae => mfae.FactorCombinationId);
+                .WithOne(fc => fc.MultiFactorAuthenticationStateDone)
+                .HasForeignKey<MultiFactorAuthenticationStateDone>(mfae => mfae.FactorCombinationId);
 
-            modelBuilder.Entity<SimDeviceAuthenticationEnd>()
+            modelBuilder.Entity<SimDeviceAuthenticationStateDone>()
                 .HasOne(asde => asde.SimDevice)
-                .WithOne(sd => sd.SimDeviceAuthenticationEnd)
-                .HasForeignKey<SimDeviceAuthenticationEnd>(asde => asde.SimDeviceId);
+                .WithOne(sd => sd.SimDeviceAuthenticationStateDone)
+                .HasForeignKey<SimDeviceAuthenticationStateDone>(asde => asde.SimDeviceId);
 
-            modelBuilder.Entity<SimDeviceAuthentication>()
+            modelBuilder.Entity<SimDeviceAuthenticationLogFail>()
+                .HasOne(asd => asd.Sim)
+                .WithMany(sd => sd.SimDeviceAuthenticationLogFails)
+                .HasForeignKey(fc => fc.SimId);
+
+            modelBuilder.Entity<MultiFactorAuthenticationLogFail>()
                 .HasOne(asd => asd.SimDevice)
-                .WithMany(sd => sd.SimDeviceAuthentications)
+                .WithMany(sd => sd.MultiFactorAuthenticationLogFails)
+                .HasForeignKey(fc => fc.SimDeviceId);
+
+            modelBuilder.Entity<SimDeviceAuthenticationLogSuccess>()
+                .HasOne(asd => asd.SimDevice)
+                .WithMany(sd => sd.SimDeviceAuthenticationLogSuccesses)
                 .HasForeignKey(fc => fc.SimDeviceId);
 
             modelBuilder.Entity<FactorCombination>()
-                .HasOne(fc => fc.User)
+                .HasOne(fc => fc.EndUser)
                 .WithMany(u => u.FactorCombinations)
-                .HasForeignKey(fc => fc.UserId);
+                .HasForeignKey(fc => fc.EndUserId);
 
             modelBuilder.Entity<FactorCombination>()
                 .HasOne(fc => fc.SimDevice)
@@ -244,10 +268,10 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(d => d.AdDevices)
                 .HasForeignKey(ad => ad.DomainId);
 
-            modelBuilder.Entity<DeviceSetting>()
+            modelBuilder.Entity<AdDeviceSettingOfflineWindowsSignIn>()
                 .HasOne(ds => ds.AdDevice)
-                .WithOne(ad => ad.DeviceSetting)
-                .HasForeignKey<DeviceSetting>(ds => ds.AdDeviceId);
+                .WithOne(ad => ad.AdDeviceSettingOfflineWindowsSignIn)
+                .HasForeignKey<AdDeviceSettingOfflineWindowsSignIn>(ds => ds.AdDeviceId);
 
             modelBuilder.Entity<DeviceGroup>()
                 .HasOne(dg => dg.Organization)
@@ -279,26 +303,21 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(c => c.Domains)
                 .HasForeignKey(d => d.OrganizationId);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<EndUser>()
                 .HasOne(d => d.Domain)
-                .WithMany(d => d.Users)
+                .WithMany(d => d.EndUsers)
                 .HasForeignKey(u => u.DomainId);
 
             modelBuilder.Entity<User>()
                 .HasDiscriminator<string>("UserType")
                 .HasValue<AdminUser>("admin")
-                .HasValue<User>("general")
+                .HasValue<GeneralUser>("general")
                 .HasValue<SuperAdminUser>("superAdmin");
 
-            modelBuilder.Entity<User>(user =>
-            {
-                user.Property(u => u.Id).HasValueGenerator<GuidValueGenerator>();
-            });
 
-
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<EndUser>()
                 .HasOne(u => u.UserGroup)
-                .WithMany(ug => ug.Users)
+                .WithMany(ug => ug.EndUsers)
                 .HasForeignKey(u => u.UserGroupId);
 
             modelBuilder.Entity<UserGroup>()
@@ -306,14 +325,42 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(d => d.UserGroups)
                 .HasForeignKey(d => d.DomainId);
 
-            modelBuilder.Entity<AdminUser>()
-                .HasBaseType<User>();
 
             modelBuilder.Entity<AdDevice>()
                 .HasBaseType<Device>();
 
+            modelBuilder.Entity<AdminUser>()
+                .HasBaseType<EndUser>();
+
+            modelBuilder.Entity<GeneralUser>()
+                .HasBaseType<EndUser>();
+
             modelBuilder.Entity<SuperAdminUser>()
-                .HasBaseType<AdminUser>();
+                .HasBaseType<User>();
+
+            modelBuilder.Entity<EndUser>()
+                .HasBaseType<User>();
+
+            modelBuilder.Entity<SimDeviceAuthenticationLogFail>()
+                .HasBaseType<AuthenticationLog>();
+
+            modelBuilder.Entity<MultiFactorAuthenticationLogFail>()
+                .HasBaseType<AuthenticationLog>();
+
+            modelBuilder.Entity<SimDeviceAuthenticationLogSuccess>()
+                .HasBaseType<AuthenticationLog>();
+
+            modelBuilder.Entity<MultiFactorAuthenticationLogSuccess>()
+                .HasBaseType<AuthenticationLog>();
+
+            modelBuilder.Entity<Deauthentication>()
+                .HasBaseType<AuthenticationLog>();
+
+            modelBuilder.Entity<SimDeviceAuthenticationStateDone>()
+                .HasBaseType<AuthenticationState>();
+
+            modelBuilder.Entity<MultiFactorAuthenticationStateDone>()
+                .HasBaseType<AuthenticationState>();
 
         }
     }

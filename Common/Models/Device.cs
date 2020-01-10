@@ -138,21 +138,16 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DeviceSetting DeviceSetting { get; set; }
+        public AdDeviceSettingOfflineWindowsSignIn AdDeviceSettingOfflineWindowsSignIn { get; set; }
 
     }
 
-    public class DeviceSetting
+    public class AdDeviceSettingOfflineWindowsSignIn
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
         public Guid Id { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public bool IsOffLineWindowsSingIn { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]

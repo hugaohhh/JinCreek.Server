@@ -20,44 +20,53 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Name { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Address { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string DelegatePhone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string AdminPhone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string AdminMail { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         public DateTime StartDay { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         public DateTime EndDay { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Url { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         public bool IsValid { get; set; }
 
         // DBアクセスのため自動プロパティを利用

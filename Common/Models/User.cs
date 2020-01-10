@@ -30,16 +30,11 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<User> Users { get; set; }
+        public List<EndUser> EndUsers { get; set; }
     }
 
-    public class User
+    public abstract class EndUser : User
     {
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Key]
-        public Guid Id { get; set; }
-
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
@@ -49,20 +44,6 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         public Guid UserGroupId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string LastName { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string FirstName { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public string SettingByUser { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -78,28 +59,11 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public UserSetting UserSetting { get; set; }
-
-
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public string AccountName { get; set; }
-
+        public bool IsDisconnectWhenScreenLock { get; set; }
     }
 
-    public class AdminUser : User
-    {
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public string Password { get; set; }
-    }
-
-    public class SuperAdminUser : AdminUser
-    {
-
-    }
-
-    public class UserSetting
+    public abstract class User
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -108,18 +72,38 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public bool IsDisconnectWhenScreenLock { get; set; }
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string LastName { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string FirstName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public Guid UserId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public User User { get; set; }
+        public string AccountName { get; set; }
 
     }
+
+    public class AdminUser : EndUser
+    {
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public string Password { get; set; }
+    }
+
+    public class GeneralUser : EndUser
+    {
+    }
+
+    public class SuperAdminUser : User
+    {
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public string Password { get; set; }
+    }
+
 
 }

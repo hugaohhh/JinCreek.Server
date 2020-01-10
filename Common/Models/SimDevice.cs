@@ -55,11 +55,15 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<SimDeviceAuthentication> SimDeviceAuthentications { get; set; }
+        public List<SimDeviceAuthenticationLogSuccess> SimDeviceAuthenticationLogSuccesses { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public SimDeviceAuthenticationEnd SimDeviceAuthenticationEnd { get; set; }
+        public SimDeviceAuthenticationStateDone SimDeviceAuthenticationStateDone { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public List<MultiFactorAuthenticationLogFail> MultiFactorAuthenticationLogFails { get; set; }
 
     }
 
@@ -82,11 +86,11 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public Guid UserId { get; set; }
+        public Guid EndUserId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public User User { get; set; }
+        public EndUser EndUser { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -104,7 +108,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public MultiFactorAuthenticationEnd MultiFactorAuthenticationEnd { get; set; }
+        public MultiFactorAuthenticationStateDone MultiFactorAuthenticationStateDone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -112,7 +116,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public List<MultiFactorAuthentication> MultiFactorAuthentications { get; set; }
+        public List<MultiFactorAuthenticationLogSuccess> MultiFactorAuthenticationLogSuccesses { get; set; }
 
     }
 

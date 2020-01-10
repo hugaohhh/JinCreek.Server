@@ -48,12 +48,17 @@ namespace JinCreek.Server.Common.Models
         [Required]
         public Guid SimGroupId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimGroup SimGroup { get; set; }
 
-
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public List<SimDeviceAuthenticationLogFail> SimDeviceAuthenticationLogFails { get; set; }
 
     }
 
@@ -70,10 +75,12 @@ namespace JinCreek.Server.Common.Models
         [Column(TypeName = "LONGTEXT BINARY")]
         public string SimGroupName { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         public Guid OrganizationId { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Organization Organization { get; set; }
 
