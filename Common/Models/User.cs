@@ -79,6 +79,12 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public UserSetting UserSetting { get; set; }
+
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        public string AccountName { get; set; }
+
     }
 
     public class AdminUser : User

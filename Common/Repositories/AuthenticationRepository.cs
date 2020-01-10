@@ -54,6 +54,7 @@ namespace JinCreek.Server.Common.Repositories
             var list = _dbContext.SimDevice
                 .Include(sd => sd.Sim)
                 .Include(sd => sd.Device)
+                .Include(sd=>sd.FactorCombinations)
                 .Where(sd => 
                     sd.Device.DeviceImei == deviceImei
                     && sd.Sim.Imsi == simImsi
@@ -70,5 +71,62 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext.AddRange(organization,lte,deviceGroup,simGroup,device,sim,simDevice);
             _dbContext.SaveChanges();
         }
+
+        public int Create(SimDeviceAuthentication simDeviceAuthentication)
+        {
+            _dbContext.SimDeviceAuthentication.Add(simDeviceAuthentication);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(SimDeviceAuthenticationEnd simDeviceAuthenticationEnd)
+        {
+            _dbContext.SimDeviceAuthenticationEnd.Add(simDeviceAuthenticationEnd);
+            return _dbContext.SaveChanges();
+        }
+
+        public Sim QuerySim(string simMsisdn, string simImsi, string simIccId)
+        {
+            return _dbContext.Sim
+                .Include(s=>s.SimDevice)
+                .Where(s => s.IccId == simIccId
+                            && s.Msisdn == simMsisdn
+                            && s.Imsi == simImsi)
+                .FirstOrDefault();
+        }
+
+        public Organization GetOrganization(string organizationcode1)
+        {
+            return _dbContext.Organization.SingleOrDefault(o => o.Code == organizationcode1);
+        }
+
+        public void Create(Domain domain, UserGroup userGroup, AdminUser admin, User user)
+        {
+            _dbContext.AddRange(domain,userGroup,admin,user);
+            _dbContext.SaveChanges();
+        }
+
+        public void Create(FactorCombination factorCombination)
+        {
+            _dbContext.FactorCombination.Add(factorCombination);
+            _dbContext.SaveChanges();
+        }
+
+        public List<string> QueryFactorCombination(SimDevice simDevice)
+        {
+            var factorCombinations = _dbContext.FactorCombination
+                .Include(f => f.User)
+                .Where(f => f.SimDeviceId == simDevice.Id)
+                .ToList();
+            var canLogonUsers = factorCombinations.Select(f => f.User.AccountName).ToList();
+            return canLogonUsers;
+        }
+
+        //public AuthenticationState QueryAuthenticationStateBySimDevice(SimDevice simDevice)
+        //{
+        //    var simDeviceAuthenticationEnd = _dbContext.SimDeviceAuthenticationEnd
+        //        .Where(s => s.SimDeviceId == simDevice.DeviceId);
+
+        //    return null;
+        //}
     }
 }

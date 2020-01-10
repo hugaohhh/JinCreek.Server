@@ -43,7 +43,7 @@ namespace JinCreek.Server.Common.Models
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
+        //[Required]
         public Guid FactorCombinationId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
@@ -56,7 +56,7 @@ namespace JinCreek.Server.Common.Models
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
+        //[Required]
         public Guid FactorCombinationId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
@@ -69,16 +69,11 @@ namespace JinCreek.Server.Common.Models
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public int SimDeviceAuth { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
+        //[Required]
         public Guid SimDeviceId { get; set; }
     }
 

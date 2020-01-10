@@ -115,6 +115,10 @@ namespace JinCreek.Server.Common.Repositories
                 .HasAlternateKey(c => c.Code)
                 .HasName("Organization_Code_UQ");
 
+            modelBuilder.Entity<User>()
+                .HasAlternateKey(u => u.AccountName)
+                .HasName("User_AccountName_UQ");
+
             //modelBuilder.Entity<DeviceGroup>()
             //    .HasAlternateKey(dg => new {
             //        dg.OrganizationId, dg.OsType, dg.Version

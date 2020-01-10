@@ -33,6 +33,12 @@ namespace JinCreek.Server.Auth.Controllers
         public IActionResult Authentication(MultiFactorAuthenticationRequest multiFactorAuthenticationRequest)
         {
             _logger.LogDebug("hello");
+
+            var account = multiFactorAuthenticationRequest.Account;
+            var authId = multiFactorAuthenticationRequest.AuthId;
+
+            
+
             return Ok(
                     new MultiFactorAuthenticationResponse());
         }
