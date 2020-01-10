@@ -1,6 +1,7 @@
 ﻿using System;
 using Admin;
 using Admin.Controllers;
+using Admin.CustomProvider;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -32,10 +33,10 @@ namespace AdminTests.UnitTests.Controllers
 
 
             // setup mock
-            var testUser = new IdentityUser { UserName = "hoge" };
+            var testUser = new ApplicationUser { UserName = "hoge" };
 
             var userManager = new Mock<FakeUserManager>();
-            userManager.Setup(_ => _.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            userManager.Setup(_ => _.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
             userManager.Setup(_ => _.FindByNameAsync(testUser.UserName)).ReturnsAsync(testUser);
             userManager.Setup(_ => _.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(testUser);
 
@@ -64,31 +65,31 @@ namespace AdminTests.UnitTests.Controllers
         //
         // see https://github.com/aspnet/Identity/issues/640
         //
-        public class FakeSignInManager : SignInManager<IdentityUser>
+        public class FakeSignInManager : SignInManager<ApplicationUser>
         {
             public FakeSignInManager() : base(
                 new FakeUserManager(),
                 new Mock<IHttpContextAccessor>().Object,
-                new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object,
+                new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>().Object,
                 new Mock<IOptions<IdentityOptions>>().Object,
-                new Mock<ILogger<SignInManager<IdentityUser>>>().Object,
+                new Mock<ILogger<SignInManager<ApplicationUser>>>().Object,
                 new Mock<IAuthenticationSchemeProvider>().Object,
-                new Mock<IUserConfirmation<IdentityUser>>().Object)
+                new Mock<IUserConfirmation<ApplicationUser>>().Object)
             { }
         }
 
-        public class FakeUserManager : UserManager<IdentityUser>
+        public class FakeUserManager : UserManager<ApplicationUser>
         {
             public FakeUserManager() : base(
-                new Mock<IUserStore<IdentityUser>>().Object,
+                new Mock<IUserStore<ApplicationUser>>().Object,
                 new Mock<IOptions<IdentityOptions>>().Object,
-                new Mock<IPasswordHasher<IdentityUser>>().Object,
-                new IUserValidator<IdentityUser>[0],
-                new IPasswordValidator<IdentityUser>[0],
+                new Mock<IPasswordHasher<ApplicationUser>>().Object,
+                new IUserValidator<ApplicationUser>[0],
+                new IPasswordValidator<ApplicationUser>[0],
                 new Mock<ILookupNormalizer>().Object,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
-                new Mock<ILogger<UserManager<IdentityUser>>>().Object)
+                new Mock<ILogger<UserManager<ApplicationUser>>>().Object)
             { }
         }
     }

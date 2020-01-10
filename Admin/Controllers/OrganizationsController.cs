@@ -1,4 +1,5 @@
-﻿using Admin.Services;
+﻿using System;
+using Admin.Services;
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,7 @@ namespace Admin.Controllers
 
         // GET: api/Organizations/5
         [HttpGet("{id}")]
-        public ActionResult<Organization> GetOrganization(string id)
+        public ActionResult<Organization> GetOrganization(Guid id)
         {
             var organization = _organizations.Get(id);
             if (organization == null)
@@ -50,9 +51,9 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public IActionResult PutOrganization(string id, Organization organization)
+        public IActionResult PutOrganization(Guid id, Organization organization)
         {
-            if (id != organization.Id.ToString())
+            if (id != organization.Id)
             {
                 return BadRequest();
             }
@@ -84,7 +85,7 @@ namespace Admin.Controllers
             }
             catch (DbUpdateException)
             {
-                if (OrganizationExists(organization.Id.ToString()))
+                if (OrganizationExists(organization.Id))
                 {
                     return Conflict();
                 }
@@ -95,7 +96,7 @@ namespace Admin.Controllers
 
         // DELETE: api/Organizations/5
         [HttpDelete("{id}")]
-        public ActionResult<Organization> DeleteOrganization(string id)
+        public ActionResult<Organization> DeleteOrganization(Guid id)
         {
             var organization = _organizations.Get(id);
             if (organization == null)
@@ -114,7 +115,7 @@ namespace Admin.Controllers
             return organization;
         }
 
-        private bool OrganizationExists(string id)
+        private bool OrganizationExists(Guid id)
         {
             return _organizations.Get(id) != null;
         }

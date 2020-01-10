@@ -1,4 +1,5 @@
-﻿using JinCreek.Server.Common.Models;
+﻿using System;
+using JinCreek.Server.Common.Models;
 using System.Collections.Generic;
 
 namespace JinCreek.Server.Common.Repositories
@@ -7,8 +8,8 @@ namespace JinCreek.Server.Common.Repositories
     {
         void Add(Organization organization);
         IEnumerable<Organization> GetAll();
-        Organization Get(string key);
-        Organization Remove(string key);
+        Organization Get(Guid id);
+        Organization Remove(Guid id);
         void Update(Organization organization);
     }
 }

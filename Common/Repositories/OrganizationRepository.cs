@@ -27,14 +27,14 @@ namespace JinCreek.Server.Common.Repositories
             return _context.Organization.ToList();
         }
 
-        public Organization Get(string key)
+        public Organization Get(Guid id)
         {
-            return _context.Organization.Find(key);
+            return _context.Organization.Find(id);
         }
 
-        public Organization Remove(string key)
+        public Organization Remove(Guid id)
         {
-            var organization = Get(key);
+            var organization = Get(id);
             if (organization == null)
             {
                 return null;
