@@ -54,7 +54,7 @@ namespace AdminTests.UnitTests.Controllers
 
             {
                 // GET: api/Organizations
-                IEnumerable<Organization> result = controller.GetOrganizations();
+                IEnumerable<Organization> result = controller.GetOrganizations(null);
                 Assert.IsType<List<Organization>>(result);
                 Assert.Equal(org, ((List<Organization>)result)[0]);
             }
