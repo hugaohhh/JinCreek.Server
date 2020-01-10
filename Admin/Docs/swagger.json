@@ -1,14 +1,10 @@
-{
+﻿{
   "x-generator": "NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v12.0.0.0))",
   "swagger": "2.0",
   "info": {
     "title": "Admin API",
     "version": "1.0.0"
   },
-  "host": "localhost:5001",
-  "schemes": [
-    "https"
-  ],
   "paths": {
     "/api/Authentication/Register": {
       "post": {
@@ -290,6 +286,165 @@
           }
         }
       }
+    },
+    "/api/Terminals": {
+      "get": {
+        "tags": [
+          "Terminals"
+        ],
+        "operationId": "Terminals_GetTerminals",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Terminal"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Terminals"
+        ],
+        "operationId": "Terminals_PostTerminal",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "terminal",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Terminal"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Terminal"
+            }
+          }
+        }
+      }
+    },
+    "/api/Terminals/{id}": {
+      "get": {
+        "tags": [
+          "Terminals"
+        ],
+        "operationId": "Terminals_GetTerminal",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Terminal"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Terminals"
+        ],
+        "operationId": "Terminals_PutTerminal",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          },
+          {
+            "name": "terminal",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Terminal"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Terminals"
+        ],
+        "operationId": "Terminals_DeleteTerminal",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Terminal"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -381,6 +536,23 @@
         },
         "isActive": {
           "type": "boolean"
+        }
+      }
+    },
+    "Terminal": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "no": {
+          "type": "string"
+        },
+        "modelName": {
+          "type": "string"
+        },
+        "serialNo": {
+          "type": "string"
         }
       }
     }
