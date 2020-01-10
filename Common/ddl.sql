@@ -12,6 +12,7 @@ CREATE TABLE `Lte` (
     CONSTRAINT `PK_Lte` PRIMARY KEY (`Id`)
 );
 
+
 CREATE TABLE `Organization` (
     `Id` char(36) NOT NULL,
     `Code` VARCHAR(255) BINARY NOT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE `SimGroup` (
 CREATE TABLE `Device` (
     `Id` char(36) NOT NULL,
     `DeviceName` LONGTEXT BINARY NOT NULL,
-    `MakeNumber` LONGTEXT BINARY NOT NULL,
+    `DeviceImei` LONGTEXT BINARY NOT NULL,
     `ManagerNumber` LONGTEXT BINARY NOT NULL,
     `Type` LONGTEXT BINARY NOT NULL,
     `DeviceGroupId` char(36) NOT NULL,
@@ -223,5 +224,5 @@ CREATE INDEX `IX_UserGroup_DomainId` ON `UserGroup` (`DomainId`);
 CREATE UNIQUE INDEX `IX_UserSetting_UserId` ON `UserSetting` (`UserId`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20200109013414_InitialCreate', '3.1.0');
+VALUES ('20200109054700_InitialCreate', '3.1.0');
 

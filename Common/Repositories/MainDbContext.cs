@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System.Diagnostics.CodeAnalysis;
 using JinCreek.Server.Common.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -99,12 +101,23 @@ namespace JinCreek.Server.Common.Repositories
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new AuthenticationRepository.EFLoggerProvider());
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Organization>()
                 .HasAlternateKey(c => c.Code)
                 .HasName("Organization_Code_UQ");
+
+            modelBuilder.Entity<User>()
+                .HasAlternateKey(u => u.AccountName)
+                .HasName("User_AccountName_UQ");
 
             //modelBuilder.Entity<DeviceGroup>()
             //    .HasAlternateKey(dg => new {
