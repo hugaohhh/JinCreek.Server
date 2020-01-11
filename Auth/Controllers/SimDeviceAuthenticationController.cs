@@ -47,76 +47,76 @@ namespace JinCreek.Server.Auth.Controllers
 
             //InsertTestData();
 
-            var simMsisdn = simDeviceAuthenticationRequest.SimMsisdn;
-            var simImsi = simDeviceAuthenticationRequest.SimImsi;
-            var simIccId = simDeviceAuthenticationRequest.SimIccId;
-            var deviceImei = simDeviceAuthenticationRequest.DeviceImei;
+            //var simMsisdn = simDeviceAuthenticationRequest.SimMsisdn;
+            //var simImsi = simDeviceAuthenticationRequest.SimImsi;
+            //var simIccId = simDeviceAuthenticationRequest.SimIccId;
+            //var deviceImei = simDeviceAuthenticationRequest.DeviceImei;
 
-            var list = _authenticationRepository.QuerySimDevice(simMsisdn, simImsi, simIccId, deviceImei);
-            string startTime = Configuration.GetSection("Auth:ExpireHour").Value;
-            if (list.Count <= 0)
-            {
-                var simDeviceAuthenticationFalse = new SimDeviceAuthentication
-                {
-                    SimDevice = null,
-                    IsAuthResult = false,
-                    ConnectionTime = DateTime.Now,
-                    SendByte = 0,
-                    ReceviByte = 0
-                };
+            //var list = _authenticationRepository.QuerySimDevice(simMsisdn, simImsi, simIccId, deviceImei);
+            //string startTime = Configuration.GetSection("Auth:ExpireHour").Value;
+            //if (list.Count <= 0)
+            //{
+            //    var simDeviceAuthenticationFalse = new SimDeviceAuthentication
+            //    {
+            //        SimDevice = null,
+            //        IsAuthResult = false,
+            //        ConnectionTime = DateTime.Now,
+            //        SendByte = 0,
+            //        ReceviByte = 0
+            //    };
 
-                //_authenticationRepository.Create(simDeviceAuthenticationFalse);
-                Sim sim = _authenticationRepository.QuerySim(simMsisdn, simImsi, simIccId);
-                if (sim == null)
-                {
-                    return Unauthorized(new ErrorResponse
-                    {
-                        ErrorCode = "10001",
-                        ErrorMessage = "Not found Sim record"
-                    });
-                }
-                _radiusDbRepository.SimDeviceAuthUpdateRadreply(sim, false);
-                
-                return Unauthorized(new ErrorResponse
-                {
-                    ErrorCode = "10001",
-                    ErrorMessage = "Not found record"
-                });
-            }
+            //    //_authenticationRepository.Create(simDeviceAuthenticationFalse);
+            //    Sim sim = _authenticationRepository.QuerySim(simMsisdn, simImsi, simIccId);
+            //    if (sim == null)
+            //    {
+            //        return Unauthorized(new ErrorResponse
+            //        {
+            //            ErrorCode = "10001",
+            //            ErrorMessage = "Not found Sim record"
+            //        });
+            //    }
+            //    _radiusDbRepository.SimDeviceAuthUpdateRadreply(sim, false);
 
-            // SimDeviceによって　認証状態を検索する　すでに登録したら　Errorメッセージを返事します
-            //AuthenticationState authentication =  _authenticationRepository.QueryAuthenticationStateBySimDevice(list.First());
+            //    return Unauthorized(new ErrorResponse
+            //    {
+            //        ErrorCode = "10001",
+            //        ErrorMessage = "Not found record"
+            //    });
+            //}
 
-            // 認証成功のSimDeviceによって　それに対応する FactorCombination を検索します
-            var canLogonUsers = _authenticationRepository.QueryFactorCombination(list.First());
+            //// SimDeviceによって　認証状態を検索する　すでに登録したら　Errorメッセージを返事します
+            ////AuthenticationState authentication =  _authenticationRepository.QueryAuthenticationStateBySimDevice(list.First());
 
-            _radiusDbRepository.SimDeviceAuthUpdateRadreply(list.First().Sim, true);
+            //// 認証成功のSimDeviceによって　それに対応する FactorCombination を検索します
+            //var canLogonUsers = _authenticationRepository.QueryFactorCombination(list.First());
 
-            var simDeviceAuthentication = new SimDeviceAuthentication
-            {
-                SimDevice = list.First(),
-                IsAuthResult = true,
-                ConnectionTime = DateTime.Now,
-                SendByte = 0,
-                ReceviByte = 0
-            };
+            //_radiusDbRepository.SimDeviceAuthUpdateRadreply(list.First().Sim, true);
 
-            var simDeviceAuthenticationEnd = new SimDeviceAuthenticationEnd
-            {
-                SimDevice = list.First(),
-                TimeLimit = DateTime.Now.AddHours(double.Parse(startTime))
-            };
-            _authenticationRepository.Create(simDeviceAuthentication);
-            _authenticationRepository.Create(simDeviceAuthenticationEnd);
-            var simDeviceAuthenticationResponse = new SimDeviceAuthenticationResponse
-            {
-                AuthId = Guid.NewGuid().ToString(),
-                CanLogonUsers = canLogonUsers,
-                SimDeviceConfigureDictionary = new Dictionary<string, string>
-                    {{"is_disconnect_network_screen_lock", true.ToString()}}
-            };
-            
-            return Ok(simDeviceAuthenticationResponse);
+            //var simDeviceAuthentication = new SimDeviceAuthentication
+            //{
+            //    SimDevice = list.First(),
+            //    IsAuthResult = true,
+            //    ConnectionTime = DateTime.Now,
+            //    SendByte = 0,
+            //    ReceviByte = 0
+            //};
+
+            //var simDeviceAuthenticationEnd = new SimDeviceAuthenticationEnd
+            //{
+            //    SimDevice = list.First(),
+            //    TimeLimit = DateTime.Now.AddHours(double.Parse(startTime))
+            //};
+            //_authenticationRepository.Create(simDeviceAuthentication);
+            //_authenticationRepository.Create(simDeviceAuthenticationEnd);
+            //var simDeviceAuthenticationResponse = new SimDeviceAuthenticationResponse
+            //{
+            //    AuthId = Guid.NewGuid().ToString(),
+            //    CanLogonUsers = canLogonUsers,
+            //    SimDeviceConfigureDictionary = new Dictionary<string, string>
+            //        {{"is_disconnect_network_screen_lock", true.ToString()}}
+            //};
+
+            //return Ok(simDeviceAuthenticationResponse);
 
             //return null;
         }
