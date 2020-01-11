@@ -72,17 +72,17 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext.SaveChanges();
         }
 
-        public int Create(SimDeviceAuthentication simDeviceAuthentication)
-        {
-            _dbContext.SimDeviceAuthentication.Add(simDeviceAuthentication);
-            return _dbContext.SaveChanges();
-        }
+        //public int Create(SimDeviceAuthentication simDeviceAuthentication)
+        //{
+        //    _dbContext.SimDeviceAuthentication.Add(simDeviceAuthentication);
+        //    return _dbContext.SaveChanges();
+        //}
 
-        public int Create(SimDeviceAuthenticationEnd simDeviceAuthenticationEnd)
-        {
-            _dbContext.SimDeviceAuthenticationEnd.Add(simDeviceAuthenticationEnd);
-            return _dbContext.SaveChanges();
-        }
+        //public int Create(SimDeviceAuthenticationEnd simDeviceAuthenticationEnd)
+        //{
+        //    _dbContext.SimDeviceAuthenticationEnd.Add(simDeviceAuthenticationEnd);
+        //    return _dbContext.SaveChanges();
+        //}
 
         public Sim QuerySim(string simMsisdn, string simImsi, string simIccId)
         {
@@ -111,15 +111,15 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext.SaveChanges();
         }
 
-        public List<string> QueryFactorCombination(SimDevice simDevice)
-        {
-            var factorCombinations = _dbContext.FactorCombination
-                .Include(f => f.User)
-                .Where(f => f.SimDeviceId == simDevice.Id)
-                .ToList();
-            var canLogonUsers = factorCombinations.Select(f => f.User.AccountName).ToList();
-            return canLogonUsers;
-        }
+        //public List<string> QueryFactorCombination(SimDevice simDevice)
+        //{
+        //    var factorCombinations = _dbContext.FactorCombination
+        //        .Include(f => f.User)
+        //        .Where(f => f.SimDeviceId == simDevice.Id)
+        //        .ToList();
+        //    var canLogonUsers = factorCombinations.Select(f => f.User.AccountName).ToList();
+        //    return canLogonUsers;
+        //}
 
         //public AuthenticationState QueryAuthenticationStateBySimDevice(SimDevice simDevice)
         //{
