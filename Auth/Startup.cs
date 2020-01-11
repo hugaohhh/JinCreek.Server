@@ -42,7 +42,7 @@ namespace JinCreek.Server.Auth
                     {
                         document.Info.Version = "v1";
                         document.Info.Title = "JinCreek 認証アプリ API";
-                        document.Info.Description = "JinCreek API";
+                        document.Info.Description = "JinCreekサービス の 認証アプリ APIです。";
                         document.Info.TermsOfService = "None";
                     };
                 }
