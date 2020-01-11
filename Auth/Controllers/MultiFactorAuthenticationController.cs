@@ -7,6 +7,7 @@ using NSwag.Annotations;
 
 namespace JinCreek.Server.Auth.Controllers
 {
+    [Produces("application/json")]
     [Route("api/multi_factor/authentication")]
     [ApiController]
     public class MultiFactorAuthenticationController : ControllerBase

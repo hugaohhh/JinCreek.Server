@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace JinCreek.Server.Auth.Controllers
 {
+    [Produces("application/json")]
     [Route("api/sim_device/authentication")]
     [ApiController]
     public class SimDeviceAuthenticationController : ControllerBase

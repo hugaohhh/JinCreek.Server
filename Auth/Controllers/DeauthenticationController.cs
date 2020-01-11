@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JinCreek.Server.Auth.Controllers
 {
+    [Produces("application/json")]
     [Route("api/deauthentication")]
     [ApiController]
     public class DeauthenticationController : ControllerBase
