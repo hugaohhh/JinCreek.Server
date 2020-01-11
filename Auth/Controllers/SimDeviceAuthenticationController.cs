@@ -10,6 +10,7 @@ using System.Linq;
 using JinCreek.Server.Common.Models;
 using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Configuration;
+using static JinCreek.Server.Interfaces.ErrorResponse;
 
 namespace JinCreek.Server.Auth.Controllers
 {
@@ -44,6 +45,8 @@ namespace JinCreek.Server.Auth.Controllers
         public IActionResult Authentication(SimDeviceAuthenticationRequest simDeviceAuthenticationRequest)
         {
             _logger.LogDebug("hello");
+
+            return Unauthorized(NotMatchSimDevice);
 
             //InsertTestData();
 
