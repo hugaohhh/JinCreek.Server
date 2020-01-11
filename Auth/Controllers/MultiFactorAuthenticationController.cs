@@ -1,13 +1,15 @@
-﻿using JinCreek.Server.Interfaces;
-using JinCreek.Server.Common.Repositories;
+﻿using JinCreek.Server.Common.Repositories;
+using JinCreek.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
+using System.Net.Mime;
 
 namespace JinCreek.Server.Auth.Controllers
 {
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/multi_factor/authentication")]
     [ApiController]
     public class MultiFactorAuthenticationController : ControllerBase

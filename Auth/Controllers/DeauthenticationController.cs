@@ -1,12 +1,14 @@
-﻿using JinCreek.Server.Interfaces;
+﻿using System.Net.Mime;
 using JinCreek.Server.Common.Repositories;
+using JinCreek.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace JinCreek.Server.Auth.Controllers
 {
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/deauthentication")]
     [ApiController]
     public class DeauthenticationController : ControllerBase

@@ -7,6 +7,7 @@ using NSwag.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using JinCreek.Server.Common.Models;
 using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,8 @@ using static JinCreek.Server.Interfaces.ErrorResponse;
 
 namespace JinCreek.Server.Auth.Controllers
 {
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/sim_device/authentication")]
     [ApiController]
     public class SimDeviceAuthenticationController : ControllerBase

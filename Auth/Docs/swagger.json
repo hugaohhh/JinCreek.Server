@@ -9,7 +9,6 @@
   },
   "consumes": [
     "application/json",
-    "text/json",
     "application/*+json"
   ],
   "paths": {
@@ -19,10 +18,13 @@
           "Deauthentication"
         ],
         "operationId": "Deauthentication_Deauthentication",
-        "produces": [
-          "text/plain",
+        "consumes": [
           "application/json",
-          "text/json"
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
         ],
         "parameters": [
           {
@@ -55,6 +57,11 @@
           "MultiFactorAuthentication"
         ],
         "operationId": "MultiFactorAuthentication_Authentication",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
         "parameters": [
           {
             "name": "multiFactorAuthenticationRequest",
