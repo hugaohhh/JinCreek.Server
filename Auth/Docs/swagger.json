@@ -15,17 +15,9 @@
     "/api/deauthentication": {
       "post": {
         "tags": [
-          "Deauthentication"
+          "認証解除"
         ],
         "operationId": "Deauthentication_Deauthentication",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "deauthenticationRequest",
@@ -39,13 +31,13 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "認証解除成功"
           },
           "400": {
             "x-nullable": false,
-            "description": "",
+            "description": "リクエスト内容不正",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/ValidationProblemDetails"
             }
           }
         }
@@ -54,14 +46,9 @@
     "/api/multi_factor/authentication": {
       "post": {
         "tags": [
-          "MultiFactorAuthentication"
+          "多要素認証"
         ],
         "operationId": "MultiFactorAuthentication_Authentication",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
         "parameters": [
           {
             "name": "multiFactorAuthenticationRequest",
@@ -76,14 +63,21 @@
         "responses": {
           "200": {
             "x-nullable": false,
-            "description": "",
+            "description": "認証成功",
             "schema": {
               "$ref": "#/definitions/MultiFactorAuthenticationResponse"
             }
           },
+          "400": {
+            "x-nullable": false,
+            "description": "リクエスト内容不正",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
           "401": {
             "x-nullable": false,
-            "description": "",
+            "description": "認証失敗",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -94,7 +88,7 @@
     "/api/sim_device/authentication": {
       "post": {
         "tags": [
-          "SimDeviceAuthentication"
+          "SIM＆端末認証"
         ],
         "operationId": "SimDeviceAuthentication_Authentication",
         "parameters": [
@@ -111,14 +105,21 @@
         "responses": {
           "200": {
             "x-nullable": false,
-            "description": "",
+            "description": "認証成功",
             "schema": {
               "$ref": "#/definitions/SimDeviceAuthenticationResponse"
             }
           },
+          "400": {
+            "x-nullable": false,
+            "description": "リクエスト内容不正",
+            "schema": {
+              "$ref": "#/definitions/ValidationProblemDetails"
+            }
+          },
           "401": {
             "x-nullable": false,
-            "description": "",
+            "description": "認証失敗",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -128,20 +129,49 @@
     }
   },
   "definitions": {
-    "ErrorResponse": {
-      "type": "object",
-      "required": [
-        "errorCode",
-        "errorMessage"
-      ],
-      "properties": {
-        "errorCode": {
-          "type": "string",
-          "minLength": 1
+    "ValidationProblemDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProblemDetails"
         },
-        "errorMessage": {
-          "type": "string",
-          "minLength": 1
+        {
+          "type": "object",
+          "properties": {
+            "errors": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ProblemDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        },
+        "extensions": {
+          "type": "object",
+          "additionalProperties": {}
         }
       }
     },
@@ -157,27 +187,37 @@
       "properties": {
         "deviceImei": {
           "type": "string",
+          "description": "IMEI。機器の識別番号",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "352555093320000"
         },
         "simIccId": {
           "type": "string",
+          "description": "ICCID。SIMカードに割り当てられるシリアル番号。",
           "maxLength": 19,
-          "minLength": 0
+          "minLength": 0,
+          "example": "8981100005819480000"
         },
         "simImsi": {
           "type": "string",
+          "description": "IMSI。携帯電話事業者と契約する際に発行される加入者識別番号。",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "440103213100000"
         },
         "simMsisdn": {
           "type": "string",
+          "description": "MSISDN。携帯電話網への加入を一意に識別する番号",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "02017911000"
         },
         "account": {
           "type": "string",
-          "minLength": 1
+          "description": "端末サインインで利用するアカウント。",
+          "minLength": 1,
+          "example": "JINCREEK\\initialpoint"
         }
       }
     },
@@ -186,9 +226,31 @@
       "properties": {
         "userConfigureDictionary": {
           "type": "object",
+          "description": "ユーザーに関わるサーバー側に保持する動的な設定項目。",
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "required": [
+        "errorCode",
+        "errorMessage"
+      ],
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "エラーコード。",
+          "minLength": 1,
+          "example": "10001"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "エラーメッセージ。",
+          "minLength": 1,
+          "example": "Not found record."
         }
       }
     },
@@ -201,11 +263,15 @@
       "properties": {
         "account": {
           "type": "string",
-          "minLength": 1
+          "description": "端末サインインで利用するアカウント。",
+          "minLength": 1,
+          "example": "JINCREEK\\initialpoint"
         },
         "authId": {
           "type": "string",
-          "minLength": 1
+          "description": "端末認証成功時の返却値。",
+          "minLength": 1,
+          "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
         }
       }
     },
@@ -217,19 +283,26 @@
       "properties": {
         "authId": {
           "type": "string",
-          "minLength": 1
+          "description": "認証成功時のUUID。",
+          "minLength": 1,
+          "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
         },
         "assignDeviceIpAddress": {
           "type": "string"
         },
         "canLogonUsers": {
           "type": "array",
+          "description": "ログイン可能ユーザー一覧。",
+          "example": [
+            "JINCREEK\\initialpoint"
+          ],
           "items": {
             "type": "string"
           }
         },
         "simDeviceConfigureDictionary": {
           "type": "object",
+          "description": "SIMや端末機器に関わるサーバー側に保持する動的な設定項目。",
           "additionalProperties": {
             "type": "string"
           }
@@ -247,29 +320,52 @@
       "properties": {
         "deviceImei": {
           "type": "string",
+          "description": "IMEI。機器の識別番号",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "352555093320000"
         },
         "simIccId": {
           "type": "string",
+          "description": "ICCID。SIMカードに割り当てられるシリアル番号。",
           "maxLength": 19,
-          "minLength": 0
+          "minLength": 0,
+          "example": "8981100005819480000"
         },
         "simImsi": {
           "type": "string",
+          "description": "IMSI。携帯電話事業者と契約する際に発行される加入者識別番号。",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "440103213100000"
         },
         "simMsisdn": {
           "type": "string",
+          "description": "MSISDN。携帯電話網への加入を一意に識別する番号",
           "maxLength": 15,
-          "minLength": 0
+          "minLength": 0,
+          "example": "02017911000"
         },
         "deviceIpAddress": {
           "type": "string",
+          "description": "現在の端末に割り当てられているIPアドレス; 将来的(iOS/Android)にサーバー側でIPアドレス変更に伴うLTE再接続を行う場合に利用。",
           "pattern": "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "認証解除",
+      "description": "認証解除を行う。"
+    },
+    {
+      "name": "多要素認証",
+      "description": "多要素認証を行う。成功時はユーザーに関わるサーバー側に保持する動的な設定項目を返却する。"
+    },
+    {
+      "name": "SIM＆端末認証",
+      "description": "SIM＆端末認証を行う。成功時はログイン可能ユーザ一覧、クライアント(デバイスやSIM)機器に関わるサーバー側に保持する動的な設定項目を返却する。"
+    }
+  ]
 }
