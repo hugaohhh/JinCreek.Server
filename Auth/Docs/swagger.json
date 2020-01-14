@@ -3,7 +3,7 @@
   "swagger": "2.0",
   "info": {
     "title": "JinCreek 認証アプリ API",
-    "description": "JinCreek API",
+    "description": "JinCreekサービス の 認証アプリ APIです。",
     "termsOfService": "None",
     "version": "v1"
   },
@@ -177,6 +177,7 @@
     },
     "DeauthenticationRequest": {
       "type": "object",
+      "description": "認証解除リクエスト",
       "required": [
         "deviceImei",
         "simIccId",
@@ -223,6 +224,7 @@
     },
     "MultiFactorAuthenticationResponse": {
       "type": "object",
+      "description": "多要素認証レスポンス",
       "properties": {
         "userConfigureDictionary": {
           "type": "object",
@@ -235,6 +237,7 @@
     },
     "ErrorResponse": {
       "type": "object",
+      "description": "エラーレスポンス",
       "required": [
         "errorCode",
         "errorMessage"
@@ -256,6 +259,7 @@
     },
     "MultiFactorAuthenticationRequest": {
       "type": "object",
+      "description": "多要素認証リクエスト",
       "required": [
         "account",
         "authId"
@@ -277,6 +281,7 @@
     },
     "SimDeviceAuthenticationResponse": {
       "type": "object",
+      "description": "SIMデバイス認証レスポンス",
       "required": [
         "authId"
       ],
@@ -288,7 +293,8 @@
           "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
         },
         "assignDeviceIpAddress": {
-          "type": "string"
+          "type": "string",
+          "description": "主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定"
         },
         "canLogonUsers": {
           "type": "array",
@@ -311,6 +317,7 @@
     },
     "SimDeviceAuthenticationRequest": {
       "type": "object",
+      "description": "SIMデバイス認証リクエスト",
       "required": [
         "deviceImei",
         "simIccId",
