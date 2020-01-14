@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Admin.Controllers
 {
@@ -16,11 +18,13 @@ namespace Admin.Controllers
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly UserRepository _userRepository;
+        private readonly MainDbContext _context;
 
-        public OrganizationsController(IAuthorizationService authorizationService, UserRepository userRepository)
+        public OrganizationsController(IAuthorizationService authorizationService, UserRepository userRepository, MainDbContext context)
         {
             _authorizationService = authorizationService;
             _userRepository = userRepository;
+            _context = context;
         }
 
         // GET: api/Organizations
@@ -33,7 +37,32 @@ namespace Admin.Controllers
         [Authorize(Roles = "SuperAdminUser")] // TODO: extract constant
         public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
-            return _userRepository.GetOrganization();
+            var query = _context.Organization.Where(a => true);
+            if (param.Name != null)
+            {
+                query = query.Where(a => a.Name == param.Name);
+            }
+            if (param.StartDayFrom != null)
+            {
+                query = query.Where(a => a.StartDay >= param.StartDayFrom);
+            }
+            if (param.StartDayTo != null)
+            {
+                query = query.Where(a => a.StartDay <= param.StartDayTo);
+            }
+            if (param.EndDayFrom != null)
+            {
+                query = query.Where(a => a.EndDay >= param.EndDayFrom);
+            }
+            if (param.EndDayTo != null)
+            {
+                query = query.Where(a => a.EndDay <= param.EndDayTo);
+            }
+            if (param.IsValid != null)
+            {
+                query = query.Where(a => a.IsValid == param.IsValid);
+            }
+            return query.Skip((param.Page - 1) * param.PageSize).Take(param.PageSize).ToList();
         }
 
         // GET: api/Organizations/5
@@ -150,14 +179,15 @@ namespace Admin.Controllers
 
         public class GetOrganizationsParam
         {
-            public int Page { get; set; } = 0;
+            [Range(1, int.MaxValue)]
+            public int Page { get; set; } = 1;
             public int PageSize { get; set; } = 20;
             public string Name { get; set; }
-            public DateTime StartDayFrom { get; set; }
-            public DateTime StartDayTo { get; set; }
-            public DateTime EndDayFrom { get; set; }
-            public DateTime EndDayTo { get; set; }
-            public bool IsActive { get; set; }
+            public DateTime? StartDayFrom { get; set; }
+            public DateTime? StartDayTo { get; set; }
+            public DateTime? EndDayFrom { get; set; }
+            public DateTime? EndDayTo { get; set; }
+            public bool? IsValid { get; set; }
         }
     }
 }
