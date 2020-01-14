@@ -2,9 +2,18 @@
 
 namespace JinCreek.Server.Interfaces
 {
+    /// <summary>
+    /// エラーレスポンス
+    /// </summary>
     public class ErrorResponse
     {
+        /// <summary>
+        /// SIMデバイス認証の合致しないエラー
+        /// </summary>
         public static readonly ErrorResponse NotMatchSimDevice = new ErrorResponse { ErrorCode = "1001", ErrorMessage = "Not Match SimDevice Info" };
+        /// <summary>
+        /// 多要素認証の合致しないエラー
+        /// </summary>
         public static readonly ErrorResponse NotMatchMultiFactor = new ErrorResponse { ErrorCode = "1002", ErrorMessage = "Not Match MultiFactor Info" };
 
         /// <summary>
