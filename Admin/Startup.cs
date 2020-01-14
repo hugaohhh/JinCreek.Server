@@ -79,7 +79,7 @@ namespace Admin
                 });
 
             // Register the Swagger services
-            services.AddSwaggerDocument(config =>
+            services.AddOpenApiDocument(config =>
             {
                 config.PostProcess = document =>
                 {
