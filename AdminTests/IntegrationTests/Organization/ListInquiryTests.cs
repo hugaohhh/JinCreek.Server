@@ -1,7 +1,9 @@
-﻿using JinCreek.Server.Common.Repositories;
+﻿using JinCreek.Server.Common.Models;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Xunit;
@@ -21,11 +23,11 @@ namespace AdminTests.IntegrationTests.Organization
             _client = factory.CreateClient();
 
             // Arrange
-            Utils.RegisterUser(_client, "user0@example.com", "User0#"); // TODO: ユーザー管理者にする
-            Utils.RegisterUser(_client, "user1@example.com", "User1#"); // TODO: スーパー管理者にする
-
             using var scope = factory.Services.GetService<IServiceScopeFactory>().CreateScope();
             var context = scope.ServiceProvider.GetService<MainDbContext>();
+            if (context.User.Count(user => true) > 0) return;
+            context.User.Add(new SuperAdminUser { AccountName = "USER0", Password = Utils.HashPassword("user0") });
+            context.User.Add(new AdminUser { AccountName = "USER1", Password = Utils.HashPassword("user1") });
             context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "1", Name = "org1", StartDay = DateTime.Parse("2020-01-14"), EndDay = DateTime.Parse("2021-01-14"), IsValid = true, });
             context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "2", Name = "org2", StartDay = DateTime.Parse("2020-01-14"), EndDay = DateTime.Parse("2021-01-14"), IsValid = true, });
             context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "3", Name = "org3", StartDay = DateTime.Parse("2020-01-14"), EndDay = DateTime.Parse("2021-01-14"), IsValid = true, });

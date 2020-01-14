@@ -1,10 +1,10 @@
-﻿using System;
-using Admin.Services;
+﻿using Admin.Services;
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace Admin.Controllers
@@ -24,14 +24,24 @@ namespace Admin.Controllers
         }
 
         // GET: api/Organizations
+        /// <summary>
+        /// 組織一覧照会
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "SuperAdminUser")] // TODO: extract constant
         public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
             return _userRepository.GetOrganization();
         }
 
         // GET: api/Organizations/5
+        /// <summary>
+        /// 組織照会
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public ActionResult<Organization> GetOrganization(Guid id)
         {
@@ -50,6 +60,12 @@ namespace Admin.Controllers
         // PUT: api/Organizations/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        /// <summary>
+        /// 組織更新
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="organization"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult PutOrganization(Guid id, Organization organization)
         {
@@ -72,7 +88,13 @@ namespace Admin.Controllers
         // POST: api/Organizations
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        /// <summary>
+        /// 組織登録
+        /// </summary>
+        /// <param name="organization"></param>
+        /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "SuperAdminUser")]
         public ActionResult<Organization> PostOrganization(Organization organization)
         {
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Create).Result.Succeeded)
@@ -95,7 +117,13 @@ namespace Admin.Controllers
         }
 
         // DELETE: api/Organizations/5
+        /// <summary>
+        /// 組織削除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SuperAdminUser")]
         public ActionResult<Organization> DeleteOrganization(Guid id)
         {
             var organization = _userRepository.GetOrganization(id);
