@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Interface</name>
+    </assembly>
+    <members>
+        <member name="T:JinCreek.Server.Interfaces.DeauthenticationRequest">
+            <summary>
+            認証解除リクエスト
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.DeauthenticationRequest.DeviceImei">
+            <summary>
+            IMEI。機器の識別番号
+            </summary>
+            <example>
+            "352555093320000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.DeauthenticationRequest.SimIccId">
+            <summary>
+            ICCID。SIMカードに割り当てられるシリアル番号。
+            </summary>
+            <example>
+            "8981100005819480000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.DeauthenticationRequest.SimImsi">
+            <summary>
+            IMSI。携帯電話事業者と契約する際に発行される加入者識別番号。
+            </summary>
+            <example>
+            "440103213100000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.DeauthenticationRequest.SimMsisdn">
+            <summary>
+            MSISDN。携帯電話網への加入を一意に識別する番号
+            </summary>
+            <example>
+            "02017911000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.DeauthenticationRequest.Account">
+            <summary>
+            端末サインインで利用するアカウント。
+            </summary>
+            <example>
+            "JINCREEK\\initialpoint"
+            </example>>
+        </member>
+        <member name="T:JinCreek.Server.Interfaces.ErrorResponse">
+            <summary>
+            エラーレスポンス
+            </summary>
+        </member>
+        <member name="F:JinCreek.Server.Interfaces.ErrorResponse.NotMatchSimDevice">
+            <summary>
+            SIMデバイス認証の合致しないエラー
+            </summary>
+        </member>
+        <member name="F:JinCreek.Server.Interfaces.ErrorResponse.NotMatchMultiFactor">
+            <summary>
+            多要素認証の合致しないエラー
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.ErrorResponse.ErrorCode">
+            <summary>
+            エラーコード。
+            </summary>
+            <example>
+            "10001"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.ErrorResponse.ErrorMessage">
+            <summary>
+            エラーメッセージ。
+            </summary>
+            <example>
+            "Not found record."
+            </example>>
+        </member>
+        <member name="T:JinCreek.Server.Interfaces.MultiFactorAuthenticationRequest">
+            <summary>
+            多要素認証リクエスト
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.MultiFactorAuthenticationRequest.Account">
+            <summary>
+            端末サインインで利用するアカウント。
+            </summary>
+            <example>
+            "JINCREEK\\initialpoint"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.MultiFactorAuthenticationRequest.AuthId">
+            <summary>
+            端末認証成功時の返却値。
+            </summary>
+            <example>
+            "0e4e88ae-c880-11e2-8598-5855cafa776b"
+            </example>>
+        </member>
+        <member name="T:JinCreek.Server.Interfaces.MultiFactorAuthenticationResponse">
+            <summary>
+            多要素認証レスポンス
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.MultiFactorAuthenticationResponse.UserConfigureDictionary">
+            <summary>
+            ユーザーに関わるサーバー側に保持する動的な設定項目。
+            </summary>
+        </member>
+        <member name="T:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest">
+            <summary>
+            SIMデバイス認証リクエスト
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest.DeviceImei">
+            <summary>
+            IMEI。機器の識別番号
+            </summary>
+            <example>
+            "352555093320000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest.SimIccId">
+            <summary>
+            ICCID。SIMカードに割り当てられるシリアル番号。
+            </summary>
+            <example>
+            "8981100005819480000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest.SimImsi">
+            <summary>
+            IMSI。携帯電話事業者と契約する際に発行される加入者識別番号。
+            </summary>
+            <example>
+            "440103213100000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest.SimMsisdn">
+            <summary>
+            MSISDN。携帯電話網への加入を一意に識別する番号
+            </summary>
+            <example>
+            "02017911000"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationRequest.DeviceIpAddress">
+            <summary>
+            現在の端末に割り当てられているIPアドレス; 将来的(iOS/Android)にサーバー側でIPアドレス変更に伴うLTE再接続を行う場合に利用。
+            </summary>
+        </member>
+        <member name="T:JinCreek.Server.Interfaces.SimDeviceAuthenticationResponse">
+            <summary>
+            SIMデバイス認証レスポンス
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationResponse.AuthId">
+            <summary>
+            認証成功時のUUID。
+            </summary>
+            <example>
+            "0e4e88ae-c880-11e2-8598-5855cafa776b"
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationResponse.AssignDeviceIpAddress">
+            <summary>
+            主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定
+            </summary>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationResponse.CanLogonUsers">
+            <summary>
+            ログイン可能ユーザー一覧。
+            </summary>
+            <example>
+            [ "JINCREEK\\initialpoint" ]
+            </example>>
+        </member>
+        <member name="P:JinCreek.Server.Interfaces.SimDeviceAuthenticationResponse.SimDeviceConfigureDictionary">
+            <summary>
+            SIMや端末機器に関わるサーバー側に保持する動的な設定項目。
+            </summary>
+        </member>
+    </members>
+</doc>
