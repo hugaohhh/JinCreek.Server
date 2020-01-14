@@ -35,20 +35,14 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public int Create(AdminUser adminUser)
+        public User GetUser(Guid id)
         {
-            _dbContext.AdminUser.Add(adminUser);
-            return _dbContext.SaveChanges();
+            return _dbContext.User.Find(id);
         }
 
-        public AdminUser GetAdminUser(Guid id)
+        public User GetUserByName(string name)
         {
-            return _dbContext.AdminUser.Find(id);
-        }
-
-        public AdminUser GetAdminUserByName(string name)
-        {
-            return _dbContext.AdminUser.SingleOrDefault(x => x.FirstName == name);
+            return _dbContext.User.SingleOrDefault(x => x.AccountName == name);
         }
 
         public UserGroup GetUserGroup(string userGroupName)

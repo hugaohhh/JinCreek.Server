@@ -27,6 +27,11 @@ namespace Admin.Controllers
             _appSettings = appSettings.Value;
         }
 
+        /// <summary>
+        /// スーパー管理者を作る（テスト用）
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]UsersRegisterRequest request)
         {
@@ -55,8 +60,8 @@ namespace Admin.Controllers
 
             return Ok(new
             {
-                AccessToken = GetToken(user.Id.ToString(), _appSettings.AccessTokenExpiration),
-                RefreshToken = GetToken(user.Id.ToString(), _appSettings.RefreshTokenExpiration)
+                AccessToken = GetToken(user.Id.ToString(), user.Role, _appSettings.AccessTokenExpiration),
+                RefreshToken = GetToken(user.Id.ToString(), user.Role, _appSettings.RefreshTokenExpiration)
             });
         }
 
@@ -102,11 +107,11 @@ namespace Admin.Controllers
 
             return Ok(new
             {
-                AccessToken = GetToken(user.Id.ToString(), _appSettings.AccessTokenExpiration)
+                AccessToken = GetToken(user.Id.ToString(), user.Role, _appSettings.AccessTokenExpiration)
             });
         }
 
-        private String GetToken(String id, Int32 expiration)
+        private string GetToken(string id, string role, int expiration)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -116,7 +121,7 @@ namespace Admin.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, id),
-                    new Claim(ClaimTypes.Role, "Administrator"), // TODO: ユーザモデルからロールを設定する
+                    new Claim(ClaimTypes.Role, role),
                 }),
                 NotBefore = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddMinutes(expiration),

@@ -14,5 +14,6 @@ namespace Admin.CustomProvider
         public string AuthenticationType { get; set; }
         public bool IsAuthenticated { get; set; }
         public string Name { get; set; }
+        public string Role { get; set; }
     }
 }
