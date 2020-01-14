@@ -36,7 +36,7 @@ namespace JinCreek.Server.Auth
             });
             services.AddTransient<RadiusRepository>();
 
-            services.AddSwaggerDocument(config =>
+            services.AddOpenApiDocument(config =>
                 {
                     config.PostProcess = document =>
                     {
