@@ -446,14 +446,19 @@
           },
           "delegatePhone": {
             "type": "string",
-            "minLength": 1
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
           },
           "adminPhone": {
             "type": "string",
-            "minLength": 1
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
           },
           "adminMail": {
             "type": "string",
+            "format": "email",
             "minLength": 1
           },
           "startDay": {

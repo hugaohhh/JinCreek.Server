@@ -73,7 +73,9 @@ namespace JinCreek.Server.Common.Repositories
 
         public Organization GetOrganization(Guid id)
         {
-            return _dbContext.Organization.Find(id);
+            var e = _dbContext.Organization.Find(id);
+            _dbContext.Entry(e).State = EntityState.Detached;
+            return e;
         }
 
         public Organization Remove(Guid id)

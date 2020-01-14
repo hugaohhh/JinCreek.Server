@@ -61,8 +61,7 @@ namespace AdminTests.IntegrationTests.Organization
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
-            //var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            //Assert.NotNull(json["traceId"]);
+            Assert.Empty(result.Content.ReadAsStringAsync().Result);
         }
 
         /// <summary>
@@ -76,7 +75,8 @@ namespace AdminTests.IntegrationTests.Organization
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
         }
@@ -88,22 +88,23 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case03()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            Run(_client, token, NewObject(delegatePhone: "1234567890a"));
-            Run(_client, token, NewObject(adminPhone: "1234567890a"));
+            Run(_client, token, NewObject(delegatePhone: "1234567890a", adminPhone: "2345678901b"));
 
             static void Run(HttpClient client, string token, JObject obj)
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
-                Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+                //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);
-                Assert.NotNull(json["errors"]?["delegatePhone"]);
-                Assert.NotNull(json["errors"]?["url"]);
-                Assert.NotNull(json["errors"]?["adminMail"]);
-                Assert.NotNull(json["errors"]?["startDay"]);
-                Assert.NotNull(json["errors"]?["endDay"]);
-                Assert.NotNull(json["errors"]?["isValid"]);
+                Assert.NotNull(json["errors"]?["DelegatePhone"]);
+                Assert.NotNull(json["errors"]?["AdminPhone"]);
+                Assert.Null(json["errors"]?["Url"]);
+                Assert.Null(json["errors"]?["AdminMail"]);
+                Assert.Null(json["errors"]?["StartDay"]);
+                Assert.Null(json["errors"]?["EndDay"]);
+                Assert.Null(json["errors"]?["IsValid"]);
             }
         }
 
@@ -121,11 +122,17 @@ namespace AdminTests.IntegrationTests.Organization
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
-                Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+                //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+                Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);
-                Assert.NotNull(json["errors"]?["delegatePhone"]);
-                Assert.NotNull(json["errors"]?["adminPhone"]);
+                Assert.NotNull(json["errors"]?["DelegatePhone"]);
+                Assert.NotNull(json["errors"]?["AdminPhone"]);
+                Assert.Null(json["errors"]?["Url"]);
+                Assert.Null(json["errors"]?["AdminMail"]);
+                Assert.Null(json["errors"]?["StartDay"]);
+                Assert.Null(json["errors"]?["EndDay"]);
+                Assert.Null(json["errors"]?["IsValid"]);
             }
         }
 
@@ -142,7 +149,7 @@ namespace AdminTests.IntegrationTests.Organization
             // Assert
             Assert.Equal(HttpStatusCode.Created, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            Assert.Null(json["traceId"]);
+            //Assert.NotNull(json["traceId"]);
             Assert.Equal(obj["name"], json["name"]);
             Assert.Equal(obj["address"], json["address"]);
             Assert.Equal(obj["delegatePhone"], json["delegatePhone"]);

@@ -82,7 +82,7 @@ namespace Admin.Controllers
                 return Forbid();
             }
             _userRepository.Update(organization);
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Organizations

@@ -18,7 +18,7 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly HttpClient _client;
         private const string Url = "/api/organizations";
 
-        private readonly JinCreek.Server.Common.Models.Organization Org1 =
+        private readonly JinCreek.Server.Common.Models.Organization _org1 =
             new JinCreek.Server.Common.Models.Organization
             {
                 Id = Guid.NewGuid(),
@@ -39,7 +39,7 @@ namespace AdminTests.IntegrationTests.Organization
             if (context.User.Count(user => true) > 0) return;
             context.User.Add(new SuperAdminUser { AccountName = "USER0", Password = Utils.HashPassword("user0") });
             context.User.Add(new AdminUser { AccountName = "USER1", Password = Utils.HashPassword("user1") });
-            context.Organization.Add(Org1);
+            context.Organization.Add(_org1);
             context.SaveChanges();
         }
 
@@ -51,10 +51,11 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
             var result = Utils.Get(_client, $"{Url}/", token);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["id"]);
+            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
+            //var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+            //Assert.NotNull(json["traceId"]);
+            //Assert.NotNull(json["errors"]?["id"]);
         }
 
         /// <summary>
@@ -65,10 +66,11 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
             var result = Utils.Get(_client, $"{Url}/aaaaaaaaaaaaaaaaaaaa", token);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["id"]);
+            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            //var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+            //Assert.NotNull(json["traceId"]);
+            //Assert.NotNull(json["errors"]?["id"]);
         }
 
         /// <summary>
@@ -106,20 +108,20 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case5()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
-            var result = Utils.Get(_client, $"{Url}/{Org1.Id}", token);
+            var result = Utils.Get(_client, $"{Url}/{_org1.Id}", token);
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             //Assert.NotNull(json["traceId"]);
             Assert.Null(json["errors"]?["id"]);
-            Assert.Equal(Org1.Name, json["name"]);
-            Assert.Equal(Org1.Address, json["address"]);
-            Assert.Equal(Org1.DelegatePhone, json["delegatePhone"]);
-            Assert.Equal(Org1.Url, json["url"]);
-            Assert.Equal(Org1.AdminPhone, json["adminPhone"]);
-            Assert.Equal(Org1.AdminMail, json["adminMail"]);
-            Assert.Equal(Org1.StartDay, json["startDay"]);
-            Assert.Equal(Org1.EndDay, json["endDay"]);
-            Assert.Equal(Org1.IsValid, json["isValid"]);
+            Assert.Equal(_org1.Name, json["name"]);
+            Assert.Equal(_org1.Address, json["address"]);
+            Assert.Equal(_org1.DelegatePhone, json["delegatePhone"]);
+            Assert.Equal(_org1.Url, json["url"]);
+            Assert.Equal(_org1.AdminPhone, json["adminPhone"]);
+            Assert.Equal(_org1.AdminMail, json["adminMail"]);
+            Assert.Equal(_org1.StartDay, json["startDay"]);
+            Assert.Equal(_org1.EndDay, json["endDay"]);
+            Assert.Equal(_org1.IsValid, json["isValid"]);
         }
     }
 }
