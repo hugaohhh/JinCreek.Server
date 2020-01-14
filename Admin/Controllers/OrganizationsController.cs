@@ -2,6 +2,7 @@
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -169,7 +170,7 @@ namespace Admin.Controllers
             {
                 return NotFound();
             }
-            return organization;
+            return new ObjectResult(organization) { StatusCode = StatusCodes.Status204NoContent };
         }
 
         private bool OrganizationExists(Guid id)

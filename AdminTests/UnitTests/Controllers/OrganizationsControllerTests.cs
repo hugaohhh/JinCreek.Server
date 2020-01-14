@@ -31,7 +31,7 @@ namespace AdminTests.UnitTests.Controllers
         [Fact]
         public void TestCrud()
         {
-            var controller = new OrganizationsController(_authorizationService, _userRepository);
+            var controller = new OrganizationsController(_authorizationService, _userRepository, null); // TODO: MainDbContext
             var org = new Organization
             {
                 Id = new Guid(),

@@ -49,7 +49,8 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
             var result = Utils.Delete(_client, $"{Url}/{_org1.Id}", token);
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
-            Assert.Empty(result.Content.ReadAsStringAsync().Result);
+            var body = result.Content.ReadAsStringAsync().Result;
+            Assert.Empty(body);
         }
 
         /// <summary>
@@ -62,7 +63,8 @@ namespace AdminTests.IntegrationTests.Organization
             var result = Utils.Delete(_client, $"{Url}/", token);
             //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, result.StatusCode);
-            Assert.Empty(result.Content.ReadAsStringAsync().Result);
+            var body = result.Content.ReadAsStringAsync().Result;
+            Assert.Empty(body);
         }
 
         /// <summary>
@@ -89,9 +91,9 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Delete(_client, $"{Url}/c1788aa7-9308-4661-bb84-dbc04e849e72", token);
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-            //var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            //Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["errors"]?["organization"]);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
+            Assert.NotNull(json["traceId"]);
         }
 
         /// <summary>
@@ -102,11 +104,10 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Delete(_client, $"{Url}/{_org1.Id}", token);
-            //Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            //var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            //Assert.NotNull(json["traceId"]);
-            //Assert.Null(json["errors"]); // 不在
+            Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
+            Assert.Equal(_org1.Id, json["id"]);
         }
     }
 }
