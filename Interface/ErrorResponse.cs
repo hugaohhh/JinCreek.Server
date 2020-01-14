@@ -15,6 +15,10 @@ namespace JinCreek.Server.Interfaces
         /// 多要素認証の合致しないエラー
         /// </summary>
         public static readonly ErrorResponse NotMatchMultiFactor = new ErrorResponse { ErrorCode = "1002", ErrorMessage = "Not Match MultiFactor Info" };
+        /// <summary>
+        /// 多要素認証の合致しないエラー
+        /// </summary>
+        public static readonly ErrorResponse NotMatchAuthId = new ErrorResponse { ErrorCode = "1003", ErrorMessage = "Not Match AuthId Info" };
 
         /// <summary>
         /// エラーコード。

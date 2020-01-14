@@ -1,16 +1,12 @@
-﻿using JinCreek.Server.Common.Repositories;
+﻿using System.Linq;
 using JinCreek.Server.Interfaces;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NSwag.Annotations;
-using System.Net.Mime;
-
+using static JinCreek.Server.Interfaces.ErrorResponse;
 namespace JinCreek.Server.Auth.Controllers
 {
-    [OpenApiTag("認証解除", Description = "認証解除を行う。")]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/deauthentication")]
     [ApiController]
     public class DeauthenticationController : ControllerBase
@@ -30,12 +26,29 @@ namespace JinCreek.Server.Auth.Controllers
             _radiusRepository = radiusRepository;
         }
 
-
         [HttpPost]
-        [SwaggerResponse(StatusCodes.Status200OK, typeof(void), Description = "認証解除成功")]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ValidationProblemDetails), Description = "リクエスト内容不正")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public IActionResult Deauthentication(DeauthenticationRequest deauthenticationRequest)
         {
+            var deviceImei = deauthenticationRequest.DeviceImei;
+            var simMsisdn = deauthenticationRequest.SimMsisdn;
+            var simImsi = deauthenticationRequest.SimImsi;
+            var simIccId = deauthenticationRequest.SimIccId;
+            var account = deauthenticationRequest.Account;
+
+            var simDevice = _authenticationRepository.QuerySimDevice(simMsisdn, simImsi, simIccId, deviceImei);
+            if (simDevice == null)
+            {
+                return Unauthorized(NotMatchSimDevice);
+            }
+
+            var factorCombination = _authenticationRepository.QueryFactorCombination(account,simDevice.Id);
+            if (factorCombination == null)
+            {
+
+            }
             return Ok();
         }
     }

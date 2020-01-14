@@ -11,7 +11,7 @@
     "/api/deauthentication": {
       "post": {
         "tags": [
-          "認証解除"
+          "Deauthentication"
         ],
         "operationId": "Deauthentication_Deauthentication",
         "requestBody": {
@@ -28,14 +28,14 @@
         },
         "responses": {
           "200": {
-            "description": "認証解除成功"
+            "description": ""
           },
           "400": {
-            "description": "リクエスト内容不正",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -46,7 +46,7 @@
     "/api/multi_factor/authentication": {
       "post": {
         "tags": [
-          "多要素認証"
+          "MultiFactorAuthentication"
         ],
         "operationId": "MultiFactorAuthentication_Authentication",
         "requestBody": {
@@ -63,7 +63,7 @@
         },
         "responses": {
           "200": {
-            "description": "認証成功",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,18 +72,8 @@
               }
             }
           },
-          "400": {
-            "description": "リクエスト内容不正",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
           "401": {
-            "description": "認証失敗",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,9 +86,20 @@
       }
     },
     "/api/sim_device/authentication": {
+      "get": {
+        "tags": [
+          "SimDeviceAuthentication"
+        ],
+        "operationId": "SimDeviceAuthentication_InsertTestData",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
       "post": {
         "tags": [
-          "SIM＆端末認証"
+          "SimDeviceAuthentication"
         ],
         "operationId": "SimDeviceAuthentication_Authentication",
         "requestBody": {
@@ -115,7 +116,7 @@
         },
         "responses": {
           "200": {
-            "description": "認証成功",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -124,18 +125,8 @@
               }
             }
           },
-          "400": {
-            "description": "リクエスト内容不正",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
           "401": {
-            "description": "認証失敗",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -150,58 +141,26 @@
   },
   "components": {
     "schemas": {
-      "ValidationProblemDetails": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/ProblemDetails"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "errors": {
-                "type": "object",
-                "nullable": true,
-                "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      "ProblemDetails": {
+      "ErrorResponse": {
         "type": "object",
+        "description": "エラーレスポンス",
         "additionalProperties": false,
+        "required": [
+          "errorCode",
+          "errorMessage"
+        ],
         "properties": {
-          "type": {
+          "errorCode": {
             "type": "string",
-            "nullable": true
+            "description": "エラーコード。",
+            "minLength": 1,
+            "example": "10001"
           },
-          "title": {
+          "errorMessage": {
             "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          },
-          "extensions": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
+            "description": "エラーメッセージ。",
+            "minLength": 1,
+            "example": "Not found record."
           }
         }
       },
@@ -265,29 +224,6 @@
             "additionalProperties": {
               "type": "string"
             }
-          }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "description": "エラーレスポンス",
-        "additionalProperties": false,
-        "required": [
-          "errorCode",
-          "errorMessage"
-        ],
-        "properties": {
-          "errorCode": {
-            "type": "string",
-            "description": "エラーコード。",
-            "minLength": 1,
-            "example": "10001"
-          },
-          "errorMessage": {
-            "type": "string",
-            "description": "エラーメッセージ。",
-            "minLength": 1,
-            "example": "Not found record."
           }
         }
       },
@@ -402,19 +338,5 @@
         }
       }
     }
-  },
-  "tags": [
-    {
-      "name": "認証解除",
-      "description": "認証解除を行う。"
-    },
-    {
-      "name": "多要素認証",
-      "description": "多要素認証を行う。成功時はユーザーに関わるサーバー側に保持する動的な設定項目を返却する。"
-    },
-    {
-      "name": "SIM＆端末認証",
-      "description": "SIM＆端末認証を行う。成功時はログイン可能ユーザ一覧、クライアント(デバイスやSIM)機器に関わるサーバー側に保持する動的な設定項目を返却する。"
-    }
-  ]
+  }
 }

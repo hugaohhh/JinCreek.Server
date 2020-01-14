@@ -4,6 +4,7 @@ using System.Linq;
 using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NLog.LayoutRenderers.Wrappers;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -48,41 +49,84 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext = dbContext;
         }
 
-        public List<SimDevice> QuerySimDevice(string simMsisdn,string simImsi,string simIccId,string deviceImei)
+        public SimDevice QuerySimDevice(string simMsisdn,string simImsi,string simIccId,string deviceImei)
         {
 
-            var list = _dbContext.SimDevice
+            var simDevice = _dbContext.SimDevice
                 .Include(sd => sd.Sim)
                 .Include(sd => sd.Device)
-                .Include(sd=>sd.FactorCombinations)
+                .Include(sd => sd.SimDeviceAuthenticationStateDone)
                 .Where(sd => 
                     sd.Device.DeviceImei == deviceImei
                     && sd.Sim.Imsi == simImsi
                     && sd.Sim.Msisdn == simMsisdn
                     && sd.Sim.IccId == simIccId)
-                .ToList();
+                .FirstOrDefault();
 
-            return list;
+            return simDevice;
         }
 
-        public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup, Device device, Lte lte, SimDevice simDevice)
+        public SimDevice QuerySimDevice(Guid id)
+        {
+            return _dbContext.SimDevice
+                .Include(sd => sd.Sim)
+                .Include(sd => sd.Device)
+                .Include(sd => sd.FactorCombinations)
+                .Include(sd => sd.SimDeviceAuthenticationStateDone)
+                .Where(sd => sd.SimDeviceAuthenticationStateDone.Id == id)
+                .FirstOrDefault();
+
+        }
+
+        public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup, 
+            Device device, Lte lte, SimDevice simDevice,Domain domain,UserGroup userGroup)
         {
             //_dbContext.Organization.Add(organization);
-            _dbContext.AddRange(organization,lte,deviceGroup,simGroup,device,sim,simDevice);
+            _dbContext.AddRange(organization,lte,deviceGroup,simGroup,device,sim,simDevice,domain,userGroup);
             _dbContext.SaveChanges();
         }
 
-        //public int Create(SimDeviceAuthentication simDeviceAuthentication)
-        //{
-        //    _dbContext.SimDeviceAuthentication.Add(simDeviceAuthentication);
-        //    return _dbContext.SaveChanges();
-        //}
+        public void Create(User user)
+        {
+            _dbContext.User.Add(user);
+            _dbContext.SaveChanges();
+        }
 
-        //public int Create(SimDeviceAuthenticationEnd simDeviceAuthenticationEnd)
-        //{
-        //    _dbContext.SimDeviceAuthenticationEnd.Add(simDeviceAuthenticationEnd);
-        //    return _dbContext.SaveChanges();
-        //}
+        public int Create(SimDeviceAuthenticationLogSuccess simDeviceAuthentication)
+        {
+            _dbContext.SimDeviceAuthenticationLogSuccess.Add(simDeviceAuthentication);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(MultiFactorAuthenticationLogSuccess multiFactorAuthenticationLogSuccess)
+        {
+            _dbContext.MultiFactorAuthenticationLogSuccess.Add(multiFactorAuthenticationLogSuccess);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(SimDeviceAuthenticationLogFail simDeviceAuthenticationLogFail)
+        {
+            _dbContext.SimDeviceAuthenticationLogFail.Add(simDeviceAuthenticationLogFail);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(MultiFactorAuthenticationLogFail multiFactorAuthenticationLogFail)
+        {
+            _dbContext.MultiFactorAuthenticationLogFail.Add(multiFactorAuthenticationLogFail);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(SimDeviceAuthenticationStateDone simDeviceAuthenticationEnd)
+        {
+            _dbContext.SimDeviceAuthenticationStateDone.Add(simDeviceAuthenticationEnd);
+            return _dbContext.SaveChanges();
+        }
+
+        public int Create(MultiFactorAuthenticationStateDone multiFactorAuthenticationStateDone)
+        {
+            _dbContext.MultiFactorAuthenticationStateDone.Add(multiFactorAuthenticationStateDone);
+            return _dbContext.SaveChanges();
+        }
 
         public Sim QuerySim(string simMsisdn, string simImsi, string simIccId)
         {
@@ -99,34 +143,74 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.Organization.SingleOrDefault(o => o.Code == organizationcode1);
         }
 
-        public void Create(Domain domain, UserGroup userGroup, AdminUser admin, User user)
-        {
-            _dbContext.AddRange(domain,userGroup,admin,user);
-            _dbContext.SaveChanges();
-        }
-
         public void Create(FactorCombination factorCombination)
         {
             _dbContext.FactorCombination.Add(factorCombination);
             _dbContext.SaveChanges();
         }
 
-        //public List<string> QueryFactorCombination(SimDevice simDevice)
-        //{
-        //    var factorCombinations = _dbContext.FactorCombination
-        //        .Include(f => f.User)
-        //        .Where(f => f.SimDeviceId == simDevice.Id)
-        //        .ToList();
-        //    var canLogonUsers = factorCombinations.Select(f => f.User.AccountName).ToList();
-        //    return canLogonUsers;
-        //}
+        public List<string> QueryLoginUsers(SimDevice simDevice)
+        {
+            var factorCombinations = _dbContext.FactorCombination
+                .Include(f => f.EndUser)
+                .Where(f =>f.SimDeviceId==simDevice.Id
+                            && f.StartDay <= DateTime.Now
+                            && (f.EndDay==null || f.EndDay >= DateTime.Now))
+                .ToList();
+            var canLogonUsers = factorCombinations.Select(f => f.EndUser.AccountName).ToList();
+            return canLogonUsers;
+        }
 
-        //public AuthenticationState QueryAuthenticationStateBySimDevice(SimDevice simDevice)
-        //{
-        //    var simDeviceAuthenticationEnd = _dbContext.SimDeviceAuthenticationEnd
-        //        .Where(s => s.SimDeviceId == simDevice.DeviceId);
 
-        //    return null;
-        //}
+        public FactorCombination QueryFactorCombination(string account, Guid authId)
+        {
+            var factorCombination = _dbContext.FactorCombination
+                .Include(fc => fc.SimDevice)
+                .Include(fc => fc.EndUser)
+                .Include(fc => fc.MultiFactorAuthenticationStateDone)
+                .Include(fc => fc.SimDevice.SimDeviceAuthenticationStateDone)
+                .Include(fc => fc.SimDevice.Sim)
+                .Where(fc => fc.EndUser.AccountName == account
+                             && fc.SimDevice.SimDeviceAuthenticationStateDone.Id == authId
+                             && fc.StartDay <= DateTime.Now
+                             &&(fc.EndDay==null || fc.EndDay >= DateTime.Now))
+                .FirstOrDefault();
+            return factorCombination;
+        }
+
+        public UserGroup GetUserGroup(string usergroup1)
+        {
+            return _dbContext.UserGroup
+                .Include(ug => ug.Domain)
+                .Where(ug => ug.UserGroupName == usergroup1)
+                .FirstOrDefault();
+        }
+
+        public List<EndUser> GetEndUser()
+        {
+            return _dbContext.EndUser.ToList();
+        }
+
+        public AdDevice QueryAdDevice(Guid deviceId)
+        {
+            var adDevice = _dbContext.AdDevice
+                .Include(ad => ad.AdDeviceSettingOfflineWindowsSignIn)
+                .Include(ad => ad.Domain)
+                .Where(ad => ad.Id == deviceId)
+                .SingleOrDefault();
+            return adDevice;
+        }
+
+        public void Update(SimDeviceAuthenticationStateDone simDeviceAuthenticationStateDone)
+        {
+            _dbContext.SimDeviceAuthenticationStateDone.Update(simDeviceAuthenticationStateDone);
+            _dbContext.SaveChanges();
+        }
+
+        public void Update(MultiFactorAuthenticationStateDone multiFactorAuthenticationStateDone)
+        {
+            _dbContext.MultiFactorAuthenticationStateDone.Update(multiFactorAuthenticationStateDone);
+            _dbContext.SaveChanges();
+        }
     }
 }
