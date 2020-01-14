@@ -1,6 +1,6 @@
 ﻿{
   "x-generator": "NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v12.0.0.0))",
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "title": "Admin API",
     "version": "1.0.0"
@@ -12,28 +12,28 @@
           "Authentication"
         ],
         "operationId": "Authentication_Register",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "parameters": [
-          {
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UsersRegisterRequest"
-            },
-            "x-nullable": false
-          }
-        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersRegisterRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "x-nullable": true,
             "description": "",
-            "schema": {
-              "type": "file"
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           }
         }
@@ -45,28 +45,28 @@
           "Authentication"
         ],
         "operationId": "Authentication_Login",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "parameters": [
-          {
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UsersLoginRequest"
-            },
-            "x-nullable": false
-          }
-        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersLoginRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "x-nullable": true,
             "description": "",
-            "schema": {
-              "type": "file"
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           }
         }
@@ -78,28 +78,28 @@
           "Authentication"
         ],
         "operationId": "Authentication_Refresh",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "parameters": [
-          {
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UsersRefreshRequest"
-            },
-            "x-nullable": false
-          }
-        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersRefreshRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "x-nullable": true,
             "description": "",
-            "schema": {
-              "type": "file"
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           }
         }
@@ -111,19 +111,17 @@
           "Organizations"
         ],
         "operationId": "Organizations_GetOrganizations",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Organization"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Organization"
+                  }
+                }
               }
             }
           }
@@ -134,33 +132,27 @@
           "Organizations"
         ],
         "operationId": "Organizations_PostOrganization",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "parameters": [
-          {
-            "name": "organization",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Organization"
-            },
-            "x-nullable": false
-          }
-        ],
+        "requestBody": {
+          "x-name": "organization",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Organization"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Organization"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
             }
           }
         }
@@ -172,26 +164,27 @@
           "Organizations"
         ],
         "operationId": "Organizations_GetOrganization",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Organization"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
             }
           }
         }
@@ -201,35 +194,40 @@
           "Organizations"
         ],
         "operationId": "Organizations_PutOrganization",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
-          },
-          {
-            "name": "organization",
-            "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/Organization"
+              "type": "string",
+              "nullable": true
             },
-            "x-nullable": false
+            "x-position": 1
           }
         ],
+        "requestBody": {
+          "x-name": "organization",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Organization"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
           "200": {
-            "x-nullable": true,
             "description": "",
-            "schema": {
-              "type": "file"
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           }
         }
@@ -239,26 +237,27 @@
           "Organizations"
         ],
         "operationId": "Organizations_DeleteOrganization",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Organization"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
             }
           }
         }
@@ -270,18 +269,16 @@
           "RandomNumber"
         ],
         "operationId": "RandomNumber_Generate",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
             }
           }
         }
@@ -293,19 +290,17 @@
           "Terminals"
         ],
         "operationId": "Terminals_GetTerminals",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Terminal"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Terminal"
+                  }
+                }
               }
             }
           }
@@ -316,33 +311,27 @@
           "Terminals"
         ],
         "operationId": "Terminals_PostTerminal",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "parameters": [
-          {
-            "name": "terminal",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Terminal"
-            },
-            "x-nullable": false
-          }
-        ],
+        "requestBody": {
+          "x-name": "terminal",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Terminal"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Terminal"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Terminal"
+                }
+              }
             }
           }
         }
@@ -354,26 +343,27 @@
           "Terminals"
         ],
         "operationId": "Terminals_GetTerminal",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Terminal"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Terminal"
+                }
+              }
             }
           }
         }
@@ -383,35 +373,40 @@
           "Terminals"
         ],
         "operationId": "Terminals_PutTerminal",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
-          },
-          {
-            "name": "terminal",
-            "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/Terminal"
+              "type": "string",
+              "nullable": true
             },
-            "x-nullable": false
+            "x-position": 1
           }
         ],
+        "requestBody": {
+          "x-name": "terminal",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Terminal"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
           "200": {
-            "x-nullable": true,
             "description": "",
-            "schema": {
-              "type": "file"
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
             }
           }
         }
@@ -421,138 +416,153 @@
           "Terminals"
         ],
         "operationId": "Terminals_DeleteTerminal",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
         "parameters": [
           {
-            "type": "string",
             "name": "id",
             "in": "path",
             "required": true,
-            "x-nullable": true
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "x-nullable": false,
             "description": "",
-            "schema": {
-              "$ref": "#/definitions/Terminal"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Terminal"
+                }
+              }
             }
           }
         }
       }
     }
   },
-  "definitions": {
-    "UsersRegisterRequest": {
-      "type": "object",
-      "required": [
-        "userName",
-        "password"
-      ],
-      "properties": {
-        "userName": {
-          "type": "string",
-          "minLength": 1
-        },
-        "password": {
-          "type": "string",
-          "minLength": 1
+  "components": {
+    "schemas": {
+      "UsersRegisterRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
         }
-      }
-    },
-    "UsersLoginRequest": {
-      "type": "object",
-      "required": [
-        "userName",
-        "password"
-      ],
-      "properties": {
-        "userName": {
-          "type": "string",
-          "minLength": 1
-        },
-        "password": {
-          "type": "string",
-          "minLength": 1
+      },
+      "UsersLoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
         }
-      }
-    },
-    "UsersRefreshRequest": {
-      "type": "object",
-      "required": [
-        "refreshToken"
-      ],
-      "properties": {
-        "accessToken": {
-          "type": "string"
-        },
-        "refreshToken": {
-          "type": "string",
-          "minLength": 1
+      },
+      "UsersRefreshRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
         }
-      }
-    },
-    "Organization": {
-      "type": "object",
-      "required": [
-        "startAt",
-        "endAt",
-        "isActive"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "address": {
-          "type": "string"
-        },
-        "telNo": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "adminTelNo": {
-          "type": "string"
-        },
-        "adminEmail": {
-          "type": "string"
-        },
-        "startAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "endAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "isActive": {
-          "type": "boolean"
+      },
+      "Organization": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "telNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminTelNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
         }
-      }
-    },
-    "Terminal": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "no": {
-          "type": "string"
-        },
-        "modelName": {
-          "type": "string"
-        },
-        "serialNo": {
-          "type": "string"
+      },
+      "Terminal": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "no": {
+            "type": "string",
+            "nullable": true
+          },
+          "modelName": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNo": {
+            "type": "string",
+            "nullable": true
+          }
         }
       }
     }
