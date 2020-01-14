@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JinCreek.Server.Interfaces
 {
+    /// <summary>
+    /// 多要素認証リクエスト
+    /// </summary>
     public class MultiFactorAuthenticationRequest
     {
         /// <summary>
@@ -24,6 +27,9 @@ namespace JinCreek.Server.Interfaces
         public string AuthId { get; set; }
     }
 
+    /// <summary>
+    /// 多要素認証レスポンス
+    /// </summary>
     public class MultiFactorAuthenticationResponse
     {
         /// <summary>

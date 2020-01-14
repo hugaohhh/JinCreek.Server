@@ -2,6 +2,9 @@
 
 namespace JinCreek.Server.Interfaces
 {
+    /// <summary>
+    /// 認証解除リクエスト
+    /// </summary>
     public class DeauthenticationRequest
     {
         /// <summary>

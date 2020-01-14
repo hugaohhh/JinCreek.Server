@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JinCreek.Server.Interfaces
 {
+    /// <summary>
+    /// SIMデバイス認証リクエスト
+    /// </summary>
     public class SimDeviceAuthenticationRequest
     {
         /// <summary>
@@ -52,6 +55,9 @@ namespace JinCreek.Server.Interfaces
         public string DeviceIpAddress { get; set; }
     }
 
+    /// <summary>
+    /// SIMデバイス認証レスポンス
+    /// </summary>
     public class SimDeviceAuthenticationResponse
     {
         /// <summary>
@@ -63,7 +69,9 @@ namespace JinCreek.Server.Interfaces
         [Required]
         public string AuthId { get; set; }
 
-        // 主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定
+        /// <summary>
+        /// 主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定
+        /// </summary>
         public string AssignDeviceIpAddress { get; set; }
 
         /// <summary>
