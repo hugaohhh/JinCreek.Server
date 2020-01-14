@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Xunit;
 
 namespace AdminTests.IntegrationTests.Organization
@@ -27,7 +26,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case1()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-            var result = Get(_client, Url, token);
+            var result = Utils.Get(_client, Url, token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -38,7 +37,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case2()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-            var result = Get(_client, Url, token);
+            var result = Utils.Get(_client, Url, token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -49,7 +48,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case3()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-            var result = Get(_client, Url, token);
+            var result = Utils.Get(_client, Url, token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -60,7 +59,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case4()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-            var result = Get(_client, Url, token);
+            var result = Utils.Get(_client, Url, token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -71,19 +70,11 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case5()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-            var result = Get(_client, Url, token);
+            var result = Utils.Get(_client, Url, token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
             Assert.NotNull(json["errors"]?["id"]);
-        }
-
-        // TODO: 拡張メソッドにする？
-        private static HttpResponseMessage Get(HttpClient client, string url, string bearer)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            return client.SendAsync(request).Result;
         }
     }
 }

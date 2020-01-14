@@ -1,6 +1,6 @@
-using Admin.Data;
-using Admin.Models;
+using Admin.CustomProvider;
 using Admin.Services;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -29,12 +29,17 @@ namespace Admin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDbContext<MainDbContext>(options =>
+                options.UseMySql(
+                    Configuration.GetConnectionString("MainDbConnection")));
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddDefaultTokenProviders();
             services.AddControllers();
+
+            // Identity Services
+            services.AddTransient<IUserStore<ApplicationUser>, CustomUserStore>();
+            services.AddTransient<IRoleStore<ApplicationRole>, CustomRoleStore>();
+            services.AddTransient<DapperUsersTable>();
 
             // Initialize the settings
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -87,7 +92,7 @@ namespace Admin
                 };
             });
 
-            services.AddTransient<IOrganizationRepository, OrganizationRepository>();
+            services.AddTransient<UserRepository>();
             services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
         }
 

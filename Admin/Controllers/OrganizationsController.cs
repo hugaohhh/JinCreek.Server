@@ -1,9 +1,11 @@
-﻿using Admin.Models;
+﻿using System;
+using Admin.Services;
+using JinCreek.Server.Common.Models;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using Admin.Services;
 
 namespace Admin.Controllers
 {
@@ -13,26 +15,27 @@ namespace Admin.Controllers
     public class OrganizationsController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly IOrganizationRepository _organizations;
+        private readonly UserRepository _userRepository;
 
-        public OrganizationsController(IAuthorizationService authorizationService, IOrganizationRepository organizations)
+        public OrganizationsController(IAuthorizationService authorizationService, UserRepository userRepository)
         {
             _authorizationService = authorizationService;
-            _organizations = organizations;
+            _userRepository = userRepository;
         }
 
         // GET: api/Organizations
         [HttpGet]
-        public IEnumerable<Organization> GetOrganizations()
+        [Authorize(Roles = "Administrator")]
+        public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
-            return _organizations.GetAll();
+            return _userRepository.GetOrganization();
         }
 
         // GET: api/Organizations/5
         [HttpGet("{id}")]
-        public ActionResult<Organization> GetOrganization(string id)
+        public ActionResult<Organization> GetOrganization(Guid id)
         {
-            var organization = _organizations.Get(id);
+            var organization = _userRepository.GetOrganization(id);
             if (organization == null)
             {
                 return NotFound();
@@ -48,13 +51,13 @@ namespace Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public IActionResult PutOrganization(string id, Organization organization)
+        public IActionResult PutOrganization(Guid id, Organization organization)
         {
             if (id != organization.Id)
             {
                 return BadRequest();
             }
-            if (_organizations.Get(id) == null)
+            if (_userRepository.GetOrganization(id) == null)
             {
                 return NotFound();
             }
@@ -62,7 +65,7 @@ namespace Admin.Controllers
             {
                 return Forbid();
             }
-            _organizations.Update(organization);
+            _userRepository.Update(organization);
             return NoContent();
         }
 
@@ -78,7 +81,7 @@ namespace Admin.Controllers
             }
             try
             {
-                _organizations.Add(organization);
+                _userRepository.Create(organization);
             }
             catch (DbUpdateException)
             {
@@ -93,9 +96,9 @@ namespace Admin.Controllers
 
         // DELETE: api/Organizations/5
         [HttpDelete("{id}")]
-        public ActionResult<Organization> DeleteOrganization(string id)
+        public ActionResult<Organization> DeleteOrganization(Guid id)
         {
-            var organization = _organizations.Get(id);
+            var organization = _userRepository.GetOrganization(id);
             if (organization == null)
             {
                 return NotFound();
@@ -104,7 +107,7 @@ namespace Admin.Controllers
             {
                 return Forbid();
             }
-            organization = _organizations.Remove(id);
+            organization = _userRepository.Remove(id);
             if (organization == null)
             {
                 return NotFound();
@@ -112,9 +115,21 @@ namespace Admin.Controllers
             return organization;
         }
 
-        private bool OrganizationExists(string id)
+        private bool OrganizationExists(Guid id)
         {
-            return _organizations.Get(id) != null;
+            return _userRepository.GetOrganization(id) != null;
+        }
+
+        public class GetOrganizationsParam
+        {
+            public int Page { get; set; } = 0;
+            public int PageSize { get; set; } = 20;
+            public string Name { get; set; }
+            public DateTime StartDayFrom { get; set; }
+            public DateTime StartDayTo { get; set; }
+            public DateTime EndDayFrom { get; set; }
+            public DateTime EndDayTo { get; set; }
+            public bool IsActive { get; set; }
         }
     }
 }

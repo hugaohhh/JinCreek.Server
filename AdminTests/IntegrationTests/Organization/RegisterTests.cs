@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Xunit;
 
 namespace AdminTests.IntegrationTests.Organization
@@ -41,13 +40,16 @@ namespace AdminTests.IntegrationTests.Organization
             });
         }
 
+        /// <summary>
+        /// 異常：ユーザー管理者
+        /// </summary>
         [Fact]
-        public void Case1()
+        public void Case01()
         {
-            var token = Utils.GetAccessToken(_client, "user0@example.com", "User0#");
+            var token = Utils.GetAccessToken(_client, "user0@example.com", "User0#"); // ユーザー管理者
 
             var obj = NewObject();
-            var result = Post(_client, Url, Utils.CreateHttpContent(obj), token);
+            var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
@@ -55,13 +57,16 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.NotNull(json["traceId"]);
         }
 
+        /// <summary>
+        /// 異常：入力が空
+        /// </summary>
         [Fact]
-        public void Case2()
+        public void Case02()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
 
             var obj = new { };
-            var result = Post(_client, Url, Utils.CreateHttpContent(obj), token);
+            var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
@@ -69,8 +74,11 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.NotNull(json["traceId"]);
         }
 
+        /// <summary>
+        /// 異常：電話番語が数値以外の文字含む
+        /// </summary>
         [Fact]
-        public void Case3()
+        public void Case03()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
 
@@ -79,7 +87,7 @@ namespace AdminTests.IntegrationTests.Organization
 
             static void Run(HttpClient client, string token, JObject obj)
             {
-                var result = Post(client, Url, Utils.CreateHttpContent(obj), token);
+                var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
                 Assert.Equal(HttpStatusCode.Created, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
@@ -93,8 +101,11 @@ namespace AdminTests.IntegrationTests.Organization
             }
         }
 
+        /// <summary>
+        /// 異常：電話番語が9文字以下 or 12文字以上
+        /// </summary>
         [Fact]
-        public void Case4()
+        public void Case04()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
 
@@ -103,7 +114,7 @@ namespace AdminTests.IntegrationTests.Organization
 
             static void Run(HttpClient client, string token, JObject obj)
             {
-                var result = Post(client, Url, Utils.CreateHttpContent(obj), token);
+                var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
                 Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
@@ -113,13 +124,16 @@ namespace AdminTests.IntegrationTests.Organization
             }
         }
 
+        /// <summary>
+        /// 正常
+        /// </summary>
         [Fact]
-        public void Case5()
+        public void Case05()
         {
             var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
 
             var obj = NewObject();
-            var result = Post(_client, Url, Utils.CreateHttpContent(obj), token);
+            var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, result.StatusCode);
@@ -134,15 +148,6 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(obj["startAt"], json["startAt"]);
             Assert.Equal(obj["endAt"], json["endAt"]);
             Assert.Equal(obj["isActive"], json["isActive"]);
-        }
-
-        // TODO: 拡張メソッドにする？
-        private static HttpResponseMessage Post(HttpClient client, string url, HttpContent content, string bearer)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
-            request.Content = content;
-            return client.SendAsync(request).Result;
         }
     }
 }

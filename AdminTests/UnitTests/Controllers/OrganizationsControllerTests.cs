@@ -1,7 +1,7 @@
 ﻿using Admin.Controllers;
-using Admin.Data;
-using Admin.Models;
 using Admin.Services;
+using JinCreek.Server.Common.Models;
+using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,7 @@ namespace AdminTests.UnitTests.Controllers
     public class OrganizationsControllerTests
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly IOrganizationRepository _organizations;
+        private readonly UserRepository _userRepository;
 
         public OrganizationsControllerTests()
         {
@@ -25,14 +25,21 @@ namespace AdminTests.UnitTests.Controllers
             services.AddOptions();
             services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
             _authorizationService = services.BuildServiceProvider().GetRequiredService<IAuthorizationService>();
-            _organizations = new OrganizationRepository(CreateInMemoryDatabaseContext());
+            _userRepository = new UserRepository(CreateInMemoryDatabaseContext());
         }
 
         [Fact]
         public void TestCrud()
         {
-            var controller = new OrganizationsController(_authorizationService, _organizations);
-            var org = new Organization { Id = "5" };
+            var controller = new OrganizationsController(_authorizationService, _userRepository);
+            var org = new Organization
+            {
+                Id = new Guid(),
+                Code = "1",
+                StartDay = DateTime.Now,
+                EndDay = DateTime.Now,
+                IsValid = true,
+            };
 
             {
                 // POST: api/Organizations
@@ -43,23 +50,23 @@ namespace AdminTests.UnitTests.Controllers
 
             // PUT: api/Organizations/5
             Assert.IsType<NoContentResult>(controller.PutOrganization(org.Id, org));
-            Assert.IsType<BadRequestResult>(controller.PutOrganization("6", org));
+            Assert.IsType<BadRequestResult>(controller.PutOrganization(new Guid(), org));
 
             {
                 // GET: api/Organizations
-                IEnumerable<Organization> result = controller.GetOrganizations();
+                IEnumerable<Organization> result = controller.GetOrganizations(null);
                 Assert.IsType<List<Organization>>(result);
                 Assert.Equal(org, ((List<Organization>)result)[0]);
             }
 
             // GET: api/Organizations/5
             Assert.Equal(org, (controller.GetOrganization(org.Id)).Value);
-            ActionResult<Organization> hoge = controller.GetOrganization("6");
+            ActionResult<Organization> hoge = controller.GetOrganization(new Guid());
             Assert.IsType<NotFoundResult>(hoge.Result);
 
             // DELETE: api/Organizations/5
             Assert.Equal(org, (controller.DeleteOrganization(org.Id)).Value);
-            Assert.IsType<NotFoundResult>((controller.DeleteOrganization("6")).Result);
+            Assert.IsType<NotFoundResult>((controller.DeleteOrganization(new Guid())).Result);
 
 
             //// why?
@@ -71,9 +78,9 @@ namespace AdminTests.UnitTests.Controllers
 
         }
 
-        private static ApplicationDbContext CreateInMemoryDatabaseContext()
+        private static MainDbContext CreateInMemoryDatabaseContext()
         {
-            var context = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options);
+            var context = new MainDbContext(new DbContextOptionsBuilder<MainDbContext>().UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options);
             context.Database.EnsureCreated();
             return context;
         }
