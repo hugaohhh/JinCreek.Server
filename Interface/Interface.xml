@@ -64,6 +64,11 @@
             多要素認証の合致しないエラー
             </summary>
         </member>
+        <member name="F:JinCreek.Server.Interfaces.ErrorResponse.NotMatchAuthId">
+            <summary>
+            SIMデバイス認証済みの合致しないがエラー
+            </summary>
+        </member>
         <member name="P:JinCreek.Server.Interfaces.ErrorResponse.ErrorCode">
             <summary>
             エラーコード。

@@ -71,14 +71,17 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<Domain> Domains { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<SimGroup> SimGroups { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<DeviceGroup> DeviceGroups { get; set; }
 
     }

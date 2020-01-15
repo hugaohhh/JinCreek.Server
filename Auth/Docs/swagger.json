@@ -11,7 +11,7 @@
     "/api/deauthentication": {
       "post": {
         "tags": [
-          "Deauthentication"
+          "認証解除"
         ],
         "operationId": "Deauthentication_Deauthentication",
         "requestBody": {
@@ -46,7 +46,7 @@
     "/api/multi_factor/authentication": {
       "post": {
         "tags": [
-          "MultiFactorAuthentication"
+          "多要素認証"
         ],
         "operationId": "MultiFactorAuthentication_Authentication",
         "requestBody": {
@@ -86,20 +86,9 @@
       }
     },
     "/api/sim_device/authentication": {
-      "get": {
-        "tags": [
-          "SimDeviceAuthentication"
-        ],
-        "operationId": "SimDeviceAuthentication_InsertTestData",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      },
       "post": {
         "tags": [
-          "SimDeviceAuthentication"
+          "SIM＆端末認証"
         ],
         "operationId": "SimDeviceAuthentication_Authentication",
         "requestBody": {
@@ -338,5 +327,19 @@
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "認証解除",
+      "description": "認証解除を行う。"
+    },
+    {
+      "name": "多要素認証",
+      "description": "多要素認証を行う。成功時はユーザーに関わるサーバー側に保持する動的な設定項目を返却する。"
+    },
+    {
+      "name": "SIM＆端末認証",
+      "description": "SIM＆端末認証を行う。成功時はログイン可能ユーザ一覧、クライアント(デバイスやSIM)機器に関わるサーバー側に保持する動的な設定項目を返却する。"
+    }
+  ]
 }

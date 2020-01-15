@@ -4,7 +4,6 @@ using System.Linq;
 using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NLog.LayoutRenderers.Wrappers;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -12,24 +11,24 @@ namespace JinCreek.Server.Common.Repositories
     {
         private readonly MainDbContext _dbContext;
 
-        public class EFLoggerProvider : ILoggerProvider
+        public class EfLoggerProvider : ILoggerProvider
         {
-            public ILogger CreateLogger(string categoryName) => new EFLogger(categoryName);
+            public ILogger CreateLogger(string categoryName) => new EfLogger(categoryName);
             public void Dispose() { }
         }
 
-        public class EFLogger : ILogger
+        public class EfLogger : ILogger
         {
-            private readonly string categoryName;
+            private readonly string _categoryName;
 
-            public EFLogger(string categoryName) => this.categoryName = categoryName;
+            public EfLogger(string categoryName) => this._categoryName = categoryName;
 
             public bool IsEnabled(LogLevel logLevel) => true;
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
-                //ef core执行数据库查询时的categoryName为Microsoft.EntityFrameworkCore.Database.Command,日志级别为Information
-                if (categoryName == "Microsoft.EntityFrameworkCore.Database.Command"
+                //ef core がDBを検索するときに categoryNameはMicrosoft.EntityFrameworkCore.Database.CommandとLogLevelはInformationの場合
+                if (_categoryName == "Microsoft.EntityFrameworkCore.Database.Command"
                     && logLevel == LogLevel.Information)
                 {
                     var logContent = formatter(state, exception);
@@ -49,9 +48,8 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext = dbContext;
         }
 
-        public SimDevice QuerySimDevice(string simMsisdn,string simImsi,string simIccId,string deviceImei)
+        public SimDevice GetSimDevice(string simMsisdn,string simImsi,string simIccId,string deviceImei)
         {
-
             var simDevice = _dbContext.SimDevice
                 .Include(sd => sd.Sim)
                 .Include(sd => sd.Device)
@@ -60,13 +58,14 @@ namespace JinCreek.Server.Common.Repositories
                     sd.Device.DeviceImei == deviceImei
                     && sd.Sim.Imsi == simImsi
                     && sd.Sim.Msisdn == simMsisdn
-                    && sd.Sim.IccId == simIccId)
+                    && sd.Sim.IccId == simIccId
+                    && sd.StartDay <= DateTime.Now
+                    &&(sd.EndDay==null || sd.EndDay >= DateTime.Now))
                 .FirstOrDefault();
-
             return simDevice;
         }
 
-        public SimDevice QuerySimDevice(Guid id)
+        public SimDevice GetSimDevice(Guid id)
         {
             return _dbContext.SimDevice
                 .Include(sd => sd.Sim)
@@ -75,13 +74,11 @@ namespace JinCreek.Server.Common.Repositories
                 .Include(sd => sd.SimDeviceAuthenticationStateDone)
                 .Where(sd => sd.SimDeviceAuthenticationStateDone.Id == id)
                 .FirstOrDefault();
-
         }
 
         public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup, 
             Device device, Lte lte, SimDevice simDevice,Domain domain,UserGroup userGroup)
         {
-            //_dbContext.Organization.Add(organization);
             _dbContext.AddRange(organization,lte,deviceGroup,simGroup,device,sim,simDevice,domain,userGroup);
             _dbContext.SaveChanges();
         }
@@ -128,10 +125,17 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public Sim QuerySim(string simMsisdn, string simImsi, string simIccId)
+        public void Create(Deauthentication deauthentication)
+        {
+            _dbContext.Deauthentication.Add(deauthentication);
+            _dbContext.SaveChanges();
+        }
+
+        public Sim GetSim(string simMsisdn, string simImsi, string simIccId)
         {
             return _dbContext.Sim
                 .Include(s=>s.SimDevice)
+                .Include(s => s.SimGroup)
                 .Where(s => s.IccId == simIccId
                             && s.Msisdn == simMsisdn
                             && s.Imsi == simImsi)
@@ -149,7 +153,7 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext.SaveChanges();
         }
 
-        public List<string> QueryLoginUsers(SimDevice simDevice)
+        public List<string> GetLoginUsers(SimDevice simDevice)
         {
             var factorCombinations = _dbContext.FactorCombination
                 .Include(f => f.EndUser)
@@ -161,8 +165,13 @@ namespace JinCreek.Server.Common.Repositories
             return canLogonUsers;
         }
 
-
-        public FactorCombination QueryFactorCombination(string account, Guid authId)
+        /// <summary>
+        /// 多要素認証するときに　account　と　authId　で多要素認証組合せを検索
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="authId"></param>
+        /// <returns></returns>
+        public FactorCombination GetFactorCombination(string account, Guid authId)
         {
             var factorCombination = _dbContext.FactorCombination
                 .Include(fc => fc.SimDevice)
@@ -178,6 +187,23 @@ namespace JinCreek.Server.Common.Repositories
             return factorCombination;
         }
 
+        /// <summary>
+        /// 多要素認証するときに　account　と　authId　で多要素認証組合せを検索
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="simDevice"></param>
+        /// <returns></returns>
+        public FactorCombination GetFactorCombination(string account, SimDevice simDevice)
+        {
+            var factorCombination = _dbContext.FactorCombination
+                .Include(fc => fc.SimDevice)
+                .Include(fc => fc.EndUser)
+                .Include(fc => fc.MultiFactorAuthenticationStateDone)
+                .Where(fc => fc.EndUser.AccountName == account
+                             && fc.SimDevice.Id == simDevice.Id)
+                .FirstOrDefault();
+            return factorCombination;
+        }
         public UserGroup GetUserGroup(string usergroup1)
         {
             return _dbContext.UserGroup
@@ -191,7 +217,7 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.EndUser.ToList();
         }
 
-        public AdDevice QueryAdDevice(Guid deviceId)
+        public AdDevice GetAdDevice(Guid deviceId)
         {
             var adDevice = _dbContext.AdDevice
                 .Include(ad => ad.AdDeviceSettingOfflineWindowsSignIn)
@@ -211,6 +237,20 @@ namespace JinCreek.Server.Common.Repositories
         {
             _dbContext.MultiFactorAuthenticationStateDone.Update(multiFactorAuthenticationStateDone);
             _dbContext.SaveChanges();
+        }
+
+        public int DeleteSimDeviceAuthDone(SimDevice simDevice)
+        {
+            _dbContext.SimDeviceAuthenticationStateDone.Remove(simDevice.SimDeviceAuthenticationStateDone ?? throw new InvalidOperationException());
+            simDevice.SimDeviceAuthenticationStateDone = null;
+            return _dbContext.SaveChanges();
+        }
+            
+        public int DeleteMultiFactorAuthDone(FactorCombination factorCombination)
+        {
+            _dbContext.MultiFactorAuthenticationStateDone.Remove(factorCombination.MultiFactorAuthenticationStateDone ?? throw new InvalidOperationException());
+            factorCombination.MultiFactorAuthenticationStateDone = null;
+            return _dbContext.SaveChanges();
         }
     }
 }

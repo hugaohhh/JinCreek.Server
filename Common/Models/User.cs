@@ -30,6 +30,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<EndUser> EndUsers { get; set; }
     }
 
@@ -55,6 +56,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<FactorCombination> FactorCombinations { get; set; }
 
         // DBアクセスのため自動プロパティを利用

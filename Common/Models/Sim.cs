@@ -58,6 +58,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<SimDeviceAuthenticationLogFail> SimDeviceAuthenticationLogFails { get; set; }
 
     }
@@ -128,6 +129,7 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<Sim> Sims { get; set; }
 
 

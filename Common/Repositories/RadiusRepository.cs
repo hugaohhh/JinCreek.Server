@@ -18,18 +18,16 @@ namespace JinCreek.Server.Common.Repositories
         /// <param name="sim"></param>
         /// <param name="flag">SimDevice 認証がNGとOkの表示</param>
         /// <returns></returns>
-        public int SimDeviceAuthUpdateRadreply(Sim sim,bool flag)
+        public int UpdateRadreply(Sim sim,bool flag)
         {
             var reRadreply = _dbContext.Radreply
                 .Where(r => r.Username == sim.UserName)
                 .FirstOrDefault();
-            reRadreply.Attribute = "Framed-IP-Address";
-
-            if (flag)
+            if (reRadreply != null)
             {
-                reRadreply.Value = sim.SimDevice.Nw2AddressPool;
+                reRadreply.Attribute = "Framed-IP-Address";
+                reRadreply.Value = flag ? sim.SimDevice.Nw2AddressPool : reRadreply.Value;
             }
-            else if (!flag) reRadreply.Value = reRadreply.Value;
             return _dbContext.SaveChanges();
         }
 
@@ -42,20 +40,19 @@ namespace JinCreek.Server.Common.Repositories
         /// <summary>
         /// 多要素認証後の　Radreplyの更新
         /// </summary>
+        /// <param name="simDevice"></param>
         /// <param name="factor">多要素認証失敗するときに　NULLです</param>
         /// <param name="flag"> 多要素 認証がNGとOkの表示</param>
-        public int MultiFactorAuthUpdateRadreply(SimDevice simDevice,FactorCombination factor, bool flag)
+        public int UpdateRadreply(SimDevice simDevice,FactorCombination factor, bool flag)
         {
             var reRadreply = _dbContext.Radreply
                 .Where(r => r.Username == simDevice.Sim.UserName)
                 .FirstOrDefault();
-            reRadreply.Attribute = "Framed-IP-Address";
-            if (flag)
+            if (reRadreply != null)
             {
-                reRadreply.Value = factor.NwAddress;
+                reRadreply.Attribute = "Framed-IP-Address";
+                reRadreply.Value = flag ? factor.NwAddress : reRadreply.Value;
             }
-            else if (!flag) reRadreply.Value = reRadreply.Value;
-
             return _dbContext.SaveChanges();
         }
     }

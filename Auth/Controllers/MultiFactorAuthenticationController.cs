@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Mime;
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Interfaces;
 using JinCreek.Server.Common.Repositories;
@@ -12,6 +12,9 @@ using NSwag.Annotations;
 using static JinCreek.Server.Interfaces.ErrorResponse;
 namespace JinCreek.Server.Auth.Controllers
 {
+    [OpenApiTag("多要素認証", Description = "多要素認証を行う。成功時はユーザーに関わるサーバー側に保持する動的な設定項目を返却する。")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [Route("api/multi_factor/authentication")]
     [ApiController]
     public class MultiFactorAuthenticationController : ControllerBase
@@ -21,7 +24,7 @@ namespace JinCreek.Server.Auth.Controllers
         private readonly AuthenticationRepository _authenticationRepository;
 
         private readonly RadiusRepository _radiusRepository;
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public MultiFactorAuthenticationController(ILogger<MultiFactorAuthenticationController> logger,
             AuthenticationRepository authenticationRepository, RadiusRepository radiusRepository,
@@ -43,33 +46,45 @@ namespace JinCreek.Server.Auth.Controllers
             var account = multiFactorAuthenticationRequest.Account;
             var authId = multiFactorAuthenticationRequest.AuthId;
 
-            var factorCombination = _authenticationRepository.QueryFactorCombination(account, Guid.Parse(authId));
-            string startTime = Configuration.GetSection("Auth:ExpireHour").Value;
+            var factorCombination = _authenticationRepository.GetFactorCombination(account, Guid.Parse(authId));
             if (factorCombination  == null)
             {
-                var simDevice = _authenticationRepository.QuerySimDevice(Guid.Parse(authId));
+                var simDevice = _authenticationRepository.GetSimDevice(Guid.Parse(authId));
                 if (simDevice == null) return Unauthorized(NotMatchAuthId);
-                _radiusRepository.MultiFactorAuthUpdateRadreply(simDevice, null,false);
-
-                var multiFactorAuthenticationLogFail = new MultiFactorAuthenticationLogFail
-                {
-                    SimDevice = simDevice,
-                    ConnectionTime = DateTime.Now
-                };
-                _authenticationRepository.Create(multiFactorAuthenticationLogFail);
+                _radiusRepository.UpdateRadreply(simDevice, null,false);
+                CreateMultiFactorAuthenticationLogFail(simDevice);
                 return Unauthorized(NotMatchMultiFactor);
             }
 
-            _radiusRepository.MultiFactorAuthUpdateRadreply(factorCombination.SimDevice,factorCombination, true);
+            _radiusRepository.UpdateRadreply(factorCombination.SimDevice,factorCombination, true);
+            CreateMultiFactorAuthenticationLogSuccess(factorCombination);
 
-            var multiFactorAuthenticationLogSuccess = new MultiFactorAuthenticationLogSuccess
+            string startTime = Configuration.GetSection("Auth:ExpireHour").Value;
+            // factorCombination によって　認証状態を検索する　すでに登録したら　MultiFactorAuthenticationStateDone　を更新します
+            CreateMultiFactorAuthenticationStateDone(factorCombination,startTime);
+           
+            var multiFactorAuthenticationResponse = CreateMultiFactorAuthenticationResponse(factorCombination);
+            return Ok(multiFactorAuthenticationResponse);
+        }
+
+        private MultiFactorAuthenticationResponse CreateMultiFactorAuthenticationResponse(FactorCombination factorCombination)
+        {
+            var multiFactorAuthenticationResponse = new MultiFactorAuthenticationResponse
             {
-                ConnectionTime = DateTime.Now,
-                FactorCombination = factorCombination
+                UserConfigureDictionary = new Dictionary<string, string>
+                {
+                    {
+                        "is_disconnect_network_screen_lock",
+                        factorCombination.EndUser.IsDisconnectWhenScreenLock.ToString()
+                    }
+                }
             };
-            _authenticationRepository.Create(multiFactorAuthenticationLogSuccess);
-            var multiFactorAuthenticationStateDone = factorCombination.MultiFactorAuthenticationStateDone;
+            return multiFactorAuthenticationResponse;
+        }
 
+        private void CreateMultiFactorAuthenticationStateDone(FactorCombination factorCombination,string startTime)
+        {
+            var multiFactorAuthenticationStateDone = factorCombination.MultiFactorAuthenticationStateDone;
             if (multiFactorAuthenticationStateDone == null)
             {
                 multiFactorAuthenticationStateDone = new MultiFactorAuthenticationStateDone
@@ -79,24 +94,32 @@ namespace JinCreek.Server.Auth.Controllers
                 };
                 _authenticationRepository.Create(multiFactorAuthenticationStateDone);
             }
-            else if (multiFactorAuthenticationStateDone != null)
+            else
             {
                 multiFactorAuthenticationStateDone.TimeLimit =
                     DateTime.Now.AddHours(double.Parse(startTime));
                 _authenticationRepository.Update(multiFactorAuthenticationStateDone);
             }
+        }
 
-            var multiFactorAuthenticationResponse = new MultiFactorAuthenticationResponse
+        private void CreateMultiFactorAuthenticationLogSuccess(FactorCombination factorCombination)
+        {
+            var multiFactorAuthenticationLogSuccess = new MultiFactorAuthenticationLogSuccess
             {
-                UserConfigureDictionary = new Dictionary<string, string>
-                {   
-                    {
-                        "is_disconnect_network_screen_lock",
-                        factorCombination.EndUser.IsDisconnectWhenScreenLock.ToString()
-                    }
-                }
+                ConnectionTime = DateTime.Now,
+                FactorCombination = factorCombination
             };
-            return Ok(multiFactorAuthenticationResponse);
+            _authenticationRepository.Create(multiFactorAuthenticationLogSuccess);
+        }
+
+        private void CreateMultiFactorAuthenticationLogFail(SimDevice simDevice)
+        {
+            var multiFactorAuthenticationLogFail = new MultiFactorAuthenticationLogFail
+            {
+                SimDevice = simDevice,
+                ConnectionTime = DateTime.Now
+            };
+            _authenticationRepository.Create(multiFactorAuthenticationLogFail);
         }
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System.Diagnostics.CodeAnalysis;
 using JinCreek.Server.Common.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -117,7 +116,7 @@ namespace JinCreek.Server.Common.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddProvider(new AuthenticationRepository.EFLoggerProvider());
+            loggerFactory.AddProvider(new AuthenticationRepository.EfLoggerProvider());
             optionsBuilder.UseLoggerFactory(loggerFactory);
             base.OnConfiguring(optionsBuilder);
         }
