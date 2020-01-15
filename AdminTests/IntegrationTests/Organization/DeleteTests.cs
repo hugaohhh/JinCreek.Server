@@ -61,7 +61,6 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Delete(_client, $"{Url}/", token);
-            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Empty(body);
@@ -75,7 +74,6 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Delete(_client, $"{Url}/aaaaaaaaaaaaaaaaaaaa", token);
-            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);

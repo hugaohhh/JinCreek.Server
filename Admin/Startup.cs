@@ -93,7 +93,7 @@ namespace Admin
             });
 
             services.AddTransient<UserRepository>();
-            services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
+            services.AddTransient<IAuthorizationHandler, OrganizationAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

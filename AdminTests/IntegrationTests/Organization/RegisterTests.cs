@@ -75,7 +75,6 @@ namespace AdminTests.IntegrationTests.Organization
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
-            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -94,7 +93,6 @@ namespace AdminTests.IntegrationTests.Organization
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
-                //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
                 Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);
@@ -122,7 +120,6 @@ namespace AdminTests.IntegrationTests.Organization
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
 
-                //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
                 Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);

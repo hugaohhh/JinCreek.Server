@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Admin.Controllers
 {
@@ -82,7 +84,7 @@ namespace Admin.Controllers
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
             {
-                return Forbid();
+                return new ObjectResult(new { traceId = Activity.Current.Id }) { StatusCode = StatusCodes.Status403Forbidden };
             }
             return organization;
         }

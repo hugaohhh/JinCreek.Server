@@ -35,6 +35,11 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
+        public Domain GetDomain(Guid id)
+        {
+            return _dbContext.Domain.Find(id);
+        }
+
         public User GetUser(Guid id)
         {
             return _dbContext.User.Find(id);
