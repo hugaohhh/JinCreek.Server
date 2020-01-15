@@ -180,11 +180,36 @@ namespace Admin.Controllers
             return _userRepository.GetOrganization(id) != null;
         }
 
+        public enum SortKey
+        {
+            Id,
+            Code,
+            Name,
+            Address,
+            DelegatePhone,
+            AdminPhone,
+            AdminMail,
+            StartDay,
+            EndDay,
+            Url,
+            IsValid,
+        }
+
+        public enum OrderKey
+        {
+            Asc,
+            Desc,
+        }
+
         public class GetOrganizationsParam
         {
             [Range(1, int.MaxValue)]
             public int Page { get; set; } = 1;
             public int PageSize { get; set; } = 20;
+
+            public SortKey SortBy { get; set; } = SortKey.Id;
+            public OrderKey OrderBy { get; set; } = OrderKey.Asc;
+
             public string Name { get; set; }
             public DateTime? StartDayFrom { get; set; }
             public DateTime? StartDayTo { get; set; }
