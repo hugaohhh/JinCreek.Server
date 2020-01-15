@@ -104,7 +104,7 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var obj = new
             {
-                id = "hoge",
+                id = "aaaaaaaaaaaaaaaa",
                 name = "org1",
                 address = "address1",
                 delegatePhone = "123456789", // 9文字以下 or 12文字以上
@@ -116,7 +116,7 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["telNo"]); // TODO: 3..12
+            Assert.NotNull(json["errors"]?["$.id"]);
         }
 
         /// <summary>
@@ -130,17 +130,18 @@ namespace AdminTests.IntegrationTests.Organization
             {
                 id = _org1.Id,
                 name = "org1",
-                // address = "address1", // 不在
-                delegatePhone = "1234567890",
+                address = "address1",
+                delegatePhone = "123456789", // 9文字
                 url = "https://example.com",
-                adminPhone = "2345678901",
+                adminPhone = "123456789012", // 12文字
                 adminMail = "admin@example.com",
             };
             var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["telNo"]); // TODO: 3..12
+            Assert.NotNull(json["errors"]?["AdminPhone"]);
+            Assert.NotNull(json["errors"]?["DelegatePhone"]);
         }
 
         /// <summary>
@@ -152,19 +153,19 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var obj = new
             {
-                id = "hoge", // TODO: GUID
+                id = Guid.NewGuid(),
                 name = "org1",
-                // address = "address1", // 不在
-                telno = "1234567890",
+                address = "address1",
+                delegatePhone = "1234567890",
                 url = "https://example.com",
-                admintelno = "2345678901",
-                adminemail = "admin@example.com",
+                adminPhone = "1234567890",
+                adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{obj.id}", Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+            var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["telNo"]); // TODO: 3..12
         }
 
         /// <summary>
