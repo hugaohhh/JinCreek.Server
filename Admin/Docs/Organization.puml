@@ -1,0 +1,45 @@
+'
+' PlantUML
+' https://plantuml.com/
+'
+@startuml
+
+abstract class Microsoft.AspNetCore.Mvc.ControllerBase
+
+class Admin.Controllers.OrganizationsController {
+    ActionResult<IEnumerable<Organization>> GetOrganizations()
+    ActionResult<Organization> GetOrganization(string id)
+    IActionResult PutOrganization(string id, Organization organization)
+    ActionResult<Organization> PostOrganization(Organization organization)
+    ActionResult<Organization> DeleteOrganization(string id)
+}
+
+class Admin.Models.Organization {
+    string Id
+    string Name
+    string Address
+    string TelNo
+    string Url
+    string AdminTelNo
+    string AdminEmail
+    DateTime StartAt
+    DateTime EndAt
+    bool IsActive
+}
+
+interface Admin.Repositories.IOrganizationRepository {
+    void Add(Organization organization)
+    IEnumerable<Organization> GetAll()
+    Organization Get(string key)
+    Organization Remove(string key)
+    void Update(Organization organization)
+}
+
+Admin.Repositories.IOrganizationRepository <|-- Admin.Repositories.OrganizationRepository : implements
+Microsoft.AspNetCore.Mvc.ControllerBase <|-- Admin.Controllers.OrganizationsController : extends
+Admin.Repositories.IOrganizationRepository <.. Admin.Controllers.OrganizationsController
+Admin.Models.Organization <.. Admin.Repositories.OrganizationRepository
+Admin.Models.Organization <.. Admin.Controllers.OrganizationsController
+
+
+@enduml

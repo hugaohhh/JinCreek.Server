@@ -1,0 +1,10 @@
+version: '2'
+services:
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    container_name: mysql
+    hostname: mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes

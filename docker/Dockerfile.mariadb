@@ -1,0 +1,4 @@
+FROM mariadb:10.4-bionic
+ADD mariadb/etc_mysql_conf.d/* /etc/mysql/conf.d/
+RUN chmod 644 /etc/mysql/conf.d/*
+
