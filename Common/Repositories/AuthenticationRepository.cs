@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -48,19 +48,19 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext = dbContext;
         }
 
-        public SimDevice GetSimDevice(string simMsisdn,string simImsi,string simIccId,string deviceImei)
+        public SimDevice GetSimDevice(string simMsisdn, string simImsi, string simIccId, string deviceImei)
         {
             var simDevice = _dbContext.SimDevice
                 .Include(sd => sd.Sim)
                 .Include(sd => sd.Device)
                 .Include(sd => sd.SimDeviceAuthenticationStateDone)
-                .Where(sd => 
+                .Where(sd =>
                     sd.Device.DeviceImei == deviceImei
                     && sd.Sim.Imsi == simImsi
                     && sd.Sim.Msisdn == simMsisdn
                     && sd.Sim.IccId == simIccId
                     && sd.StartDay <= DateTime.Now
-                    &&(sd.EndDay==null || sd.EndDay >= DateTime.Now))
+                    && (sd.EndDay == null || sd.EndDay >= DateTime.Now))
                 .FirstOrDefault();
             return simDevice;
         }
@@ -76,10 +76,10 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
         }
 
-        public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup, 
-            Device device, Lte lte, SimDevice simDevice,Domain domain,UserGroup userGroup)
+        public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup,
+            Device device, Lte lte, SimDevice simDevice, Domain domain, UserGroup userGroup)
         {
-            _dbContext.AddRange(organization,lte,deviceGroup,simGroup,device,sim,simDevice,domain,userGroup);
+            _dbContext.AddRange(organization, lte, deviceGroup, simGroup, device, sim, simDevice, domain, userGroup);
             _dbContext.SaveChanges();
         }
 
@@ -134,7 +134,7 @@ namespace JinCreek.Server.Common.Repositories
         public Sim GetSim(string simMsisdn, string simImsi, string simIccId)
         {
             return _dbContext.Sim
-                .Include(s=>s.SimDevice)
+                .Include(s => s.SimDevice)
                 .Include(s => s.SimGroup)
                 .Where(s => s.IccId == simIccId
                             && s.Msisdn == simMsisdn
@@ -157,10 +157,11 @@ namespace JinCreek.Server.Common.Repositories
         {
             var factorCombinations = _dbContext.FactorCombination
                 .Include(f => f.EndUser)
-                .Where(f =>f.SimDeviceId==simDevice.Id
+                .Where(f => f.SimDeviceId == simDevice.Id
                             && f.StartDay <= DateTime.Now
-                            && (f.EndDay==null || f.EndDay >= DateTime.Now))
+                            && (f.EndDay == null || f.EndDay >= DateTime.Now))
                 .ToList();
+            if (factorCombinations.Count <= 0) return null;
             var canLogonUsers = factorCombinations.Select(f => f.EndUser.AccountName).ToList();
             return canLogonUsers;
         }
@@ -182,7 +183,7 @@ namespace JinCreek.Server.Common.Repositories
                 .Where(fc => fc.EndUser.AccountName == account
                              && fc.SimDevice.SimDeviceAuthenticationStateDone.Id == authId
                              && fc.StartDay <= DateTime.Now
-                             &&(fc.EndDay==null || fc.EndDay >= DateTime.Now))
+                             && (fc.EndDay == null || fc.EndDay >= DateTime.Now))
                 .FirstOrDefault();
             return factorCombination;
         }
@@ -245,7 +246,7 @@ namespace JinCreek.Server.Common.Repositories
             simDevice.SimDeviceAuthenticationStateDone = null;
             return _dbContext.SaveChanges();
         }
-            
+
         public int DeleteMultiFactorAuthDone(FactorCombination factorCombination)
         {
             _dbContext.MultiFactorAuthenticationStateDone.Remove(factorCombination.MultiFactorAuthenticationStateDone ?? throw new InvalidOperationException());

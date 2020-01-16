@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mime;
-using JinCreek.Server.Common.Models;
-using JinCreek.Server.Interfaces;
+﻿using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
+using JinCreek.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
 using static JinCreek.Server.Interfaces.ErrorResponse;
 namespace JinCreek.Server.Auth.Controllers
 {
@@ -19,12 +20,13 @@ namespace JinCreek.Server.Auth.Controllers
     [ApiController]
     public class MultiFactorAuthenticationController : ControllerBase
     {
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private readonly ILogger<MultiFactorAuthenticationController> _logger;
 
         private readonly AuthenticationRepository _authenticationRepository;
 
         private readonly RadiusRepository _radiusRepository;
-        private IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public MultiFactorAuthenticationController(ILogger<MultiFactorAuthenticationController> logger,
             AuthenticationRepository authenticationRepository, RadiusRepository radiusRepository,
@@ -33,36 +35,37 @@ namespace JinCreek.Server.Auth.Controllers
             _logger = logger;
             _authenticationRepository = authenticationRepository;
             _radiusRepository = radiusRepository;
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         [HttpPost]
-        [SwaggerResponse(StatusCodes.Status200OK, typeof(MultiFactorAuthenticationResponse))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, typeof(SimDeviceAuthenticationResponse), Description = "認証成功")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ValidationProblemDetails), Description = "リクエスト内容不正")]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, typeof(ErrorResponse), Description = "認証失敗")]
         public IActionResult Authentication(MultiFactorAuthenticationRequest multiFactorAuthenticationRequest)
         {
-            _logger.LogDebug("hello");
-
             var account = multiFactorAuthenticationRequest.Account;
-            var authId = multiFactorAuthenticationRequest.AuthId;
+            Guid authId = multiFactorAuthenticationRequest.AuthId;
 
-            var factorCombination = _authenticationRepository.GetFactorCombination(account, Guid.Parse(authId));
-            if (factorCombination  == null)
+            var factorCombination = _authenticationRepository.GetFactorCombination(account, authId);
+            if (factorCombination == null)
             {
-                var simDevice = _authenticationRepository.GetSimDevice(Guid.Parse(authId));
-                if (simDevice == null) return Unauthorized(NotMatchAuthId);
-                _radiusRepository.UpdateRadreply(simDevice, null,false);
+                var simDevice = _authenticationRepository.GetSimDevice(authId);
+                if (simDevice == null)
+                {
+                    return Unauthorized(NotMatchAuthId);
+                }
+                _radiusRepository.UpdateRadreply(simDevice, null, false);
                 CreateMultiFactorAuthenticationLogFail(simDevice);
                 return Unauthorized(NotMatchMultiFactor);
             }
 
-            _radiusRepository.UpdateRadreply(factorCombination.SimDevice,factorCombination, true);
+            _radiusRepository.UpdateRadreply(factorCombination.SimDevice, factorCombination, true);
             CreateMultiFactorAuthenticationLogSuccess(factorCombination);
 
-            string startTime = Configuration.GetSection("Auth:ExpireHour").Value;
             // factorCombination によって　認証状態を検索する　すでに登録したら　MultiFactorAuthenticationStateDone　を更新します
-            CreateMultiFactorAuthenticationStateDone(factorCombination,startTime);
-           
+            CreateMultiFactorAuthenticationStateDone(factorCombination);
+
             var multiFactorAuthenticationResponse = CreateMultiFactorAuthenticationResponse(factorCombination);
             return Ok(multiFactorAuthenticationResponse);
         }
@@ -82,8 +85,9 @@ namespace JinCreek.Server.Auth.Controllers
             return multiFactorAuthenticationResponse;
         }
 
-        private void CreateMultiFactorAuthenticationStateDone(FactorCombination factorCombination,string startTime)
+        private void CreateMultiFactorAuthenticationStateDone(FactorCombination factorCombination)
         {
+            string startTime = _configuration.GetSection("Auth:ExpireHour").Value;
             var multiFactorAuthenticationStateDone = factorCombination.MultiFactorAuthenticationStateDone;
             if (multiFactorAuthenticationStateDone == null)
             {

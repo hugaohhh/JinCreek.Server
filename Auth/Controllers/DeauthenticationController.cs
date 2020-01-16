@@ -1,12 +1,12 @@
-﻿using System;
-using System.Net.Mime;
-using JinCreek.Server.Common.Models;
-using JinCreek.Server.Interfaces;
+﻿using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
+using JinCreek.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
+using System;
+using System.Net.Mime;
 using static JinCreek.Server.Interfaces.ErrorResponse;
 namespace JinCreek.Server.Auth.Controllers
 {
@@ -21,7 +21,6 @@ namespace JinCreek.Server.Auth.Controllers
 
         private readonly AuthenticationRepository _authenticationRepository;
 
-
         public DeauthenticationController(ILogger<DeauthenticationController> logger,
             AuthenticationRepository authenticationRepository)
         {
@@ -30,6 +29,8 @@ namespace JinCreek.Server.Auth.Controllers
         }
 
         [HttpPost]
+        [SwaggerResponse(StatusCodes.Status200OK, typeof(SimDeviceAuthenticationResponse), Description = "認証成功")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, typeof(ValidationProblemDetails), Description = "リクエスト内容不正")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesErrorResponseType(typeof(ErrorResponse))]
@@ -59,7 +60,6 @@ namespace JinCreek.Server.Auth.Controllers
             CreateDeauthentication(factorCombination);
             return Ok();
         }
-
         private void CreateDeauthentication(FactorCombination factorCombination)
         {
             var deauthentication = new Deauthentication

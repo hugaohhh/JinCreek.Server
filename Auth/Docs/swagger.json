@@ -28,14 +28,21 @@
         },
         "responses": {
           "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
+            "description": "認証成功",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/SimDeviceAuthenticationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "リクエスト内容不正",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
@@ -63,17 +70,27 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "認証成功",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultiFactorAuthenticationResponse"
+                  "$ref": "#/components/schemas/SimDeviceAuthenticationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "リクエスト内容不正",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
           },
           "401": {
-            "description": "",
+            "description": "認証失敗",
             "content": {
               "application/json": {
                 "schema": {
@@ -105,7 +122,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "認証成功",
             "content": {
               "application/json": {
                 "schema": {
@@ -114,8 +131,18 @@
               }
             }
           },
+          "400": {
+            "description": "リクエスト内容不正",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
-            "description": "",
+            "description": "認証失敗",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,26 +157,98 @@
   },
   "components": {
     "schemas": {
-      "ErrorResponse": {
+      "SimDeviceAuthenticationResponse": {
         "type": "object",
-        "description": "エラーレスポンス",
+        "description": "SIMデバイス認証レスポンス",
         "additionalProperties": false,
         "required": [
-          "errorCode",
-          "errorMessage"
+          "authId"
         ],
         "properties": {
-          "errorCode": {
+          "authId": {
             "type": "string",
-            "description": "エラーコード。",
+            "description": "認証成功時のUUID。",
             "minLength": 1,
-            "example": "10001"
+            "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
           },
-          "errorMessage": {
+          "assignDeviceIpAddress": {
             "type": "string",
-            "description": "エラーメッセージ。",
-            "minLength": 1,
-            "example": "Not found record."
+            "description": "主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定",
+            "nullable": true
+          },
+          "canLogonUsers": {
+            "type": "array",
+            "description": "ログイン可能ユーザー一覧。",
+            "nullable": true,
+            "example": [
+              "JINCREEK\\initialpoint"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "simDeviceConfigureDictionary": {
+            "type": "object",
+            "description": "SIMや端末機器に関わるサーバー側に保持する動的な設定項目。",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetails"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "errors": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },
@@ -201,18 +300,26 @@
           }
         }
       },
-      "MultiFactorAuthenticationResponse": {
+      "ErrorResponse": {
         "type": "object",
-        "description": "多要素認証レスポンス",
+        "description": "エラーレスポンス",
         "additionalProperties": false,
+        "required": [
+          "errorCode",
+          "errorMessage"
+        ],
         "properties": {
-          "userConfigureDictionary": {
-            "type": "object",
-            "description": "ユーザーに関わるサーバー側に保持する動的な設定項目。",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "string"
-            }
+          "errorCode": {
+            "type": "string",
+            "description": "エラーコード。",
+            "minLength": 1,
+            "example": "10001"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "エラーメッセージ。",
+            "minLength": 1,
+            "example": "Not found record."
           }
         }
       },
@@ -234,48 +341,9 @@
           "authId": {
             "type": "string",
             "description": "端末認証成功時の返却値。",
+            "format": "guid",
             "minLength": 1,
             "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
-          }
-        }
-      },
-      "SimDeviceAuthenticationResponse": {
-        "type": "object",
-        "description": "SIMデバイス認証レスポンス",
-        "additionalProperties": false,
-        "required": [
-          "authId"
-        ],
-        "properties": {
-          "authId": {
-            "type": "string",
-            "description": "認証成功時のUUID。",
-            "minLength": 1,
-            "example": "0e4e88ae-c880-11e2-8598-5855cafa776b"
-          },
-          "assignDeviceIpAddress": {
-            "type": "string",
-            "description": "主にWindows端末を想定し、自身のIPアドレスと異なる場合、LTE再接続を試みる。iOS/Androidはサーバー側での対応を予定",
-            "nullable": true
-          },
-          "canLogonUsers": {
-            "type": "array",
-            "description": "ログイン可能ユーザー一覧。",
-            "nullable": true,
-            "example": [
-              "JINCREEK\\initialpoint"
-            ],
-            "items": {
-              "type": "string"
-            }
-          },
-          "simDeviceConfigureDictionary": {
-            "type": "object",
-            "description": "SIMや端末機器に関わるサーバー側に保持する動的な設定項目。",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "string"
-            }
           }
         }
       },

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Interfaces
 {
@@ -15,6 +17,7 @@ namespace JinCreek.Server.Interfaces
         /// "JINCREEK\\initialpoint"
         /// </example>>
         [Required(ErrorMessage = "account_required")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public string Account { get; set; }
 
         /// <summary>
@@ -24,7 +27,8 @@ namespace JinCreek.Server.Interfaces
         /// "0e4e88ae-c880-11e2-8598-5855cafa776b"
         /// </example>>
         [Required(ErrorMessage = "authId_required")]
-        public string AuthId { get; set; }
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public Guid AuthId { get; set; }
     }
 
     /// <summary>
@@ -35,6 +39,7 @@ namespace JinCreek.Server.Interfaces
         /// <summary>
         /// ユーザーに関わるサーバー側に保持する動的な設定項目。
         /// </summary>
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Dictionary<string, string> UserConfigureDictionary { get; set; }
     }
 }
