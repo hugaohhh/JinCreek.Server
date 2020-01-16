@@ -13,6 +13,7 @@ namespace AdminTests.IntegrationTests.Organization
     /// <summary>
     /// 組織削除
     /// </summary>
+    [Collection("Sequential")]
     public class DeleteTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;

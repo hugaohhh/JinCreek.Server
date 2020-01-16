@@ -12,6 +12,7 @@ namespace AdminTests.IntegrationTests.Organization
     /// <summary>
     /// 組織登録
     /// </summary>
+    [Collection("Sequential")]
     public class RegisterTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;

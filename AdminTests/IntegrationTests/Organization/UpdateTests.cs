@@ -12,6 +12,7 @@ namespace AdminTests.IntegrationTests.Organization
     /// <summary>
     /// 組織更新
     /// </summary>
+    [Collection("Sequential")]
     public class UpdateTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;
