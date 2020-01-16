@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Admin.CustomProvider
 {
@@ -15,25 +14,19 @@ namespace Admin.CustomProvider
             _userRepository = userRepository;
         }
 
-        public async Task<IdentityResult> CreateAsync(ApplicationUser applicationUser)
+        public IdentityResult Create(ApplicationUser applicationUser)
         {
-            var superAdminUser = new SuperAdminUser
+            _userRepository.Create(new SuperAdminUser
             {
-                Id = new Guid(), // TODO: ここで生成するの？
+                Id = new Guid(),
                 AccountName = applicationUser.NormalizedUserName,
                 Password = applicationUser.PasswordHash,
-            };
-            _userRepository.Create(superAdminUser);
+            });
 
             return IdentityResult.Success;
         }
 
-        public async Task<IdentityResult> DeleteAsync(ApplicationUser user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ApplicationUser> FindByIdAsync(Guid userId)
+        public ApplicationUser FindById(Guid userId)
         {
             var user = _userRepository.GetUser(userId);
             if (user == null)
@@ -55,7 +48,7 @@ namespace Admin.CustomProvider
             };
         }
 
-        public async Task<ApplicationUser> FindByNameAsync(string userName)
+        public ApplicationUser FindByName(string userName)
         {
             var user = _userRepository.GetUserByName(userName);
             if (user == null)
