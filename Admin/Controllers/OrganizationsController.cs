@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.AspNetCore.Authentication;
+using System.Linq.Expressions;
 
 namespace Admin.Controllers
 {
@@ -41,30 +41,18 @@ namespace Admin.Controllers
         public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
             var query = _context.Organization.Where(a => true);
-            if (param.Name != null)
-            {
-                query = query.Where(a => a.Name == param.Name);
-            }
-            if (param.StartDayFrom != null)
-            {
-                query = query.Where(a => a.StartDay >= param.StartDayFrom);
-            }
-            if (param.StartDayTo != null)
-            {
-                query = query.Where(a => a.StartDay <= param.StartDayTo);
-            }
-            if (param.EndDayFrom != null)
-            {
-                query = query.Where(a => a.EndDay >= param.EndDayFrom);
-            }
-            if (param.EndDayTo != null)
-            {
-                query = query.Where(a => a.EndDay <= param.EndDayTo);
-            }
-            if (param.IsValid != null)
-            {
-                query = query.Where(a => a.IsValid == param.IsValid);
-            }
+            if (param.Name != null) query = query.Where(a => a.Name == param.Name);
+            if (param.StartDayFrom != null) query = query.Where(a => a.StartDay >= param.StartDayFrom);
+            if (param.StartDayTo != null) query = query.Where(a => a.StartDay <= param.StartDayTo);
+            if (param.EndDayFrom != null) query = query.Where(a => a.EndDay >= param.EndDayFrom);
+            if (param.EndDayTo != null) query = query.Where(a => a.EndDay <= param.EndDayTo);
+            if (param.IsValid != null) query = query.Where(a => a.IsValid == param.IsValid);
+
+            // order by
+            if (param.OrderBy == OrderKey.Asc) query = OrderBy(query, param.SortBy.ToString());
+            if (param.OrderBy == OrderKey.Desc) query = OrderByDescending(query, param.SortBy.ToString());
+
+            // paging
             return query.Skip((param.Page - 1) * param.PageSize).Take(param.PageSize).ToList();
         }
 
@@ -216,6 +204,27 @@ namespace Admin.Controllers
             public DateTime? EndDayFrom { get; set; }
             public DateTime? EndDayTo { get; set; }
             public bool? IsValid { get; set; }
+        }
+
+        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
+        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
+        }
+
+        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
         }
     }
 }
