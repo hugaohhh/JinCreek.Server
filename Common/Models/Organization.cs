@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Models
 {
-    public class Organization
+    public class Organization : IValidatableObject
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -87,5 +87,12 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public List<DeviceGroup> DeviceGroups { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (StartDay >= EndDay)
+            {
+                yield return new ValidationResult("EndDay must be greater than StartDay");
+            }
+        }
     }
 }

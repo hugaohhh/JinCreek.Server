@@ -75,8 +75,9 @@ namespace AdminTests.IntegrationTests.Organization
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
         }
 
@@ -92,9 +93,10 @@ namespace AdminTests.IntegrationTests.Organization
             static void Run(HttpClient client, string token, JObject obj)
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
+                var body = result.Content.ReadAsStringAsync().Result;
+                var json = JObject.Parse(body);
 
                 Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-                var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);
                 Assert.NotNull(json["errors"]?["DelegatePhone"]);
                 Assert.NotNull(json["errors"]?["AdminPhone"]);
@@ -119,9 +121,10 @@ namespace AdminTests.IntegrationTests.Organization
             static void Run(HttpClient client, string token, JObject obj)
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
+                var body = result.Content.ReadAsStringAsync().Result;
+                var json = JObject.Parse(body);
 
                 Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-                var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
                 Assert.NotNull(json["traceId"]);
                 Assert.NotNull(json["errors"]?["DelegatePhone"]);
                 Assert.NotNull(json["errors"]?["AdminPhone"]);
@@ -142,11 +145,11 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var obj = NewObject();
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
 
-            // Assert
             Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            //Assert.NotNull(json["traceId"]);
+            Assert.Null(json["traceId"]); // 不在
             Assert.Equal(obj["name"], json["name"]);
             Assert.Equal(obj["address"], json["address"]);
             Assert.Equal(obj["delegatePhone"], json["delegatePhone"]);
