@@ -51,11 +51,13 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Column(TypeName = "DATE")]
         public DateTime StartDay { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Column(TypeName = "DATE")]
         public DateTime EndDay { get; set; }
 
         // DBアクセスのため自動プロパティを利用
