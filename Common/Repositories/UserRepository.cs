@@ -100,5 +100,16 @@ namespace JinCreek.Server.Common.Repositories
             _dbContext.Entry(organization).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
+
+
+        //
+        // Domain
+        //
+
+        public IEnumerable<Domain> GetDomain()
+        {
+            // see https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58512865#58512865
+            return _dbContext.Domain.Include(a => a.Organization).ToList();
+        }
     }
 }

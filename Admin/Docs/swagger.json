@@ -105,6 +105,71 @@
         }
       }
     },
+    "/api/Domains": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Domains/{id}": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomain",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Organizations": {
       "get": {
         "tags": [
@@ -469,95 +534,6 @@
           "refreshToken": {
             "type": "string",
             "minLength": 1
-          }
-        }
-      },
-      "Organization": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "address",
-          "delegatePhone",
-          "adminPhone",
-          "adminMail",
-          "startDay",
-          "endDay",
-          "url",
-          "isValid"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "address": {
-            "type": "string",
-            "minLength": 1
-          },
-          "delegatePhone": {
-            "type": "string",
-            "format": "phone",
-            "maxLength": 11,
-            "minLength": 10
-          },
-          "adminPhone": {
-            "type": "string",
-            "format": "phone",
-            "maxLength": 11,
-            "minLength": 10
-          },
-          "adminMail": {
-            "type": "string",
-            "format": "email",
-            "minLength": 1
-          },
-          "startDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "endDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "minLength": 1
-          },
-          "isValid": {
-            "type": "boolean"
-          },
-          "domains": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Domain"
-            }
-          },
-          "simGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SimGroup"
-            }
-          },
-          "deviceGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/DeviceGroup"
-            }
           }
         }
       },
@@ -976,101 +952,91 @@
           }
         }
       },
-      "Lte": {
+      "Organization": {
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "lteName",
-          "lteAdapter",
-          "softwareRadioState"
+          "name",
+          "address",
+          "delegatePhone",
+          "adminPhone",
+          "adminMail",
+          "startDay",
+          "endDay",
+          "url",
+          "isValid"
         ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "lteName": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
             "type": "string",
             "minLength": 1
           },
-          "lteAdapter": {
+          "address": {
             "type": "string",
             "minLength": 1
           },
-          "devices": {
+          "delegatePhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "domains": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/Device"
+              "$ref": "#/components/schemas/Domain"
             }
           },
-          "softwareRadioState": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Sim": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "msisdn",
-          "imsi",
-          "iccId",
-          "userName",
-          "password",
-          "simGroupId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "msisdn": {
-            "type": "string",
-            "minLength": 1
-          },
-          "imsi": {
-            "type": "string",
-            "minLength": 1
-          },
-          "iccId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "userName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "password": {
-            "type": "string",
-            "minLength": 1
-          },
-          "simGroupId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "simGroup": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimGroup"
-              }
-            ]
-          },
-          "simDevice": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimDevice"
-              }
-            ]
-          },
-          "simDeviceAuthenticationLogFails": {
+          "simGroups": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/SimDeviceAuthenticationLogFail"
+              "$ref": "#/components/schemas/SimGroup"
+            }
+          },
+          "deviceGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroup"
             }
           }
         }
@@ -1148,6 +1114,72 @@
           }
         }
       },
+      "Sim": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "msisdn",
+          "imsi",
+          "iccId",
+          "userName",
+          "password",
+          "simGroupId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "msisdn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "imsi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "iccId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "simGroupId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "simGroup": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimGroup"
+              }
+            ]
+          },
+          "simDevice": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimDevice"
+              }
+            ]
+          },
+          "simDeviceAuthenticationLogFails": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimDeviceAuthenticationLogFail"
+            }
+          }
+        }
+      },
       "SimDeviceAuthenticationLogFail": {
         "allOf": [
           {
@@ -1189,6 +1221,39 @@
             "type": "string",
             "format": "date-time",
             "minLength": 1
+          }
+        }
+      },
+      "Lte": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lteName",
+          "lteAdapter",
+          "softwareRadioState"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "lteName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lteAdapter": {
+            "type": "string",
+            "minLength": 1
+          },
+          "devices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          },
+          "softwareRadioState": {
+            "type": "boolean"
           }
         }
       },
