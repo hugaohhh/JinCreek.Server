@@ -35,20 +35,19 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public int Create(AdminUser adminUser)
+        public Domain GetDomain(Guid id)
         {
-            _dbContext.AdminUser.Add(adminUser);
-            return _dbContext.SaveChanges();
+            return _dbContext.Domain.Find(id);
         }
 
-        public AdminUser GetAdminUser(Guid id)
+        public User GetUser(Guid id)
         {
-            return _dbContext.AdminUser.Find(id);
+            return _dbContext.User.Find(id);
         }
 
-        public AdminUser GetAdminUserByName(string name)
+        public User GetUserByName(string name)
         {
-            return _dbContext.AdminUser.SingleOrDefault(x => x.FirstName == name);
+            return _dbContext.User.SingleOrDefault(x => x.AccountName == name);
         }
 
         public UserGroup GetUserGroup(string userGroupName)
@@ -79,7 +78,9 @@ namespace JinCreek.Server.Common.Repositories
 
         public Organization GetOrganization(Guid id)
         {
-            return _dbContext.Organization.Find(id);
+            var e = _dbContext.Organization.Find(id);
+            if (e != null) _dbContext.Entry(e).State = EntityState.Detached;
+            return e;
         }
 
         public Organization Remove(Guid id)
@@ -98,6 +99,17 @@ namespace JinCreek.Server.Common.Repositories
         {
             _dbContext.Entry(organization).State = EntityState.Modified;
             _dbContext.SaveChanges();
+        }
+
+
+        //
+        // Domain
+        //
+
+        public IEnumerable<Domain> GetDomain()
+        {
+            // see https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58512865#58512865
+            return _dbContext.Domain.Include(a => a.Organization).ToList();
         }
     }
 }

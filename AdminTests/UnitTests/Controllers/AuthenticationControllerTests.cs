@@ -33,7 +33,7 @@ namespace AdminTests.UnitTests.Controllers
 
 
             // setup mock
-            var testUser = new ApplicationUser { UserName = "hoge" };
+            var testUser = new ApplicationUser { UserName = "hoge", Role = "SuperAdminUser" };
 
             var userManager = new Mock<FakeUserManager>();
             userManager.Setup(_ => _.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);

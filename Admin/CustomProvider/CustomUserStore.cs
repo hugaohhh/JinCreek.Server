@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Admin.CustomProvider
 {
-    /// <summary>
-    /// This store is only partially implemented. It supports user creation and find methods.
-    /// </summary>
+    // see https://docs.microsoft.com/ja-jp/aspnet/core/security/authentication/identity-custom-storage-providers?view=aspnetcore-3.1
     public class CustomUserStore : IUserPasswordStore<ApplicationUser>
     {
         private readonly DapperUsersTable _usersTable;
@@ -38,15 +36,9 @@ namespace Admin.CustomProvider
             return Task.FromResult(user.UserName);
         }
 
-        public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-        public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken) => throw new NotImplementedException();
 
         public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
         {
@@ -58,48 +50,36 @@ namespace Admin.CustomProvider
             return Task.FromResult<object>(null);
         }
 
-        public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) throw new ArgumentNullException(nameof(user));
 
-            return await _usersTable.CreateAsync(user);
+            return Task.FromResult(_usersTable.Create(user));
         }
 
-        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-        public async Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null) throw new ArgumentNullException(nameof(user));
+        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) => throw new NotImplementedException();
 
-            return await _usersTable.DeleteAsync(user);
-
-        }
-
-        public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (userId == null) throw new ArgumentNullException(nameof(userId));
-            Guid idGuid;
-            if (!Guid.TryParse(userId, out idGuid))
+            if (!Guid.TryParse(userId, out var idGuid))
             {
                 throw new ArgumentException("Not a valid Guid id", nameof(userId));
             }
 
-            return await _usersTable.FindByIdAsync(idGuid);
-
+            return Task.FromResult(_usersTable.FindById(idGuid));
         }
 
-        public async Task<ApplicationUser> FindByNameAsync(string userName, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<ApplicationUser> FindByNameAsync(string userName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (userName == null) throw new ArgumentNullException(nameof(userName));
 
-            return await _usersTable.FindByNameAsync(userName);
+            return Task.FromResult(_usersTable.FindByName(userName));
         }
 
         public void Dispose()
@@ -119,7 +99,6 @@ namespace Admin.CustomProvider
 
             user.PasswordHash = passwordHash;
             return Task.FromResult<object>(null);
-
         }
 
         public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -130,9 +109,6 @@ namespace Admin.CustomProvider
             return Task.FromResult(user.PasswordHash);
         }
 
-        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken) => throw new NotImplementedException();
     }
 }

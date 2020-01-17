@@ -11,7 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +38,8 @@ namespace Admin
                     Configuration.GetConnectionString("MainDbConnection")));
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             // Identity Services
             services.AddTransient<IUserStore<ApplicationUser>, CustomUserStore>();
@@ -90,10 +95,21 @@ namespace Admin
                 {
                     document.Info.Title = "Admin API";
                 };
+
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                config.OperationProcessors.Add(
+                    new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
 
             services.AddTransient<UserRepository>();
-            services.AddSingleton<IAuthorizationHandler, OrganizationAuthorizationHandler>();
+            services.AddTransient<IAuthorizationHandler, OrganizationAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
