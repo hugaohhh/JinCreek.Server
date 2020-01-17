@@ -38,8 +38,8 @@ namespace AdminTests.IntegrationTests.Organization
             return JObject.FromObject(new
             {
                 code = "code",
-                name = "name",
-                address = "address",
+                name = "name1",
+                address = "address1",
                 delegatePhone = delegatePhone ?? "0123456789",
                 url = url ?? "https://example.com",
                 adminPhone = adminPhone ?? "1123456789",
@@ -80,6 +80,15 @@ namespace AdminTests.IntegrationTests.Organization
             var json = JObject.Parse(body);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             Assert.NotNull(json["traceId"]);
+            Assert.NotNull(json["errors"]?["Name"]);
+            Assert.NotNull(json["errors"]?["Address"]);
+            Assert.NotNull(json["errors"]?["DelegatePhone"]);
+            Assert.NotNull(json["errors"]?["Url"]);
+            Assert.NotNull(json["errors"]?["AdminPhone"]);
+            Assert.NotNull(json["errors"]?["AdminMail"]);
+            Assert.Null(json["errors"]?["StartDay"]);    //入力必須チェックに変更予定
+            Assert.Null(json["errors"]?["EndDay"]);  //入力必須チェックに変更予定
+            Assert.Null(json["errors"]?["IsValid"]); //入力必須チェックに変更予定
         }
 
         /// <summary>
@@ -89,7 +98,10 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case03()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            Run(_client, token, NewObject(delegatePhone: "1234567890a", adminPhone: "2345678901b"));
+            Run(_client, token, NewObject(delegatePhone: "1234567890a", 
+                                          url: "example.com", 
+                                          adminPhone: "2345678901b", 
+                                          adminMail: "admin.example.com")); //TODO 利用開始日、利用終了日、有効の不正値設定予定
 
             static void Run(HttpClient client, string token, JObject obj)
             {
@@ -101,11 +113,11 @@ namespace AdminTests.IntegrationTests.Organization
                 Assert.NotNull(json["traceId"]);
                 Assert.NotNull(json["errors"]?["DelegatePhone"]);
                 Assert.NotNull(json["errors"]?["AdminPhone"]);
-                Assert.Null(json["errors"]?["Url"]);
-                Assert.Null(json["errors"]?["AdminMail"]);
-                Assert.Null(json["errors"]?["StartDay"]);
-                Assert.Null(json["errors"]?["EndDay"]);
-                Assert.Null(json["errors"]?["IsValid"]);
+                Assert.NotNull(json["errors"]?["Url"]);
+                Assert.NotNull(json["errors"]?["AdminMail"]);
+                Assert.Null(json["errors"]?["StartDay"]);   //TODO 不正日付エラーチェック実装予定
+                Assert.Null(json["errors"]?["EndDay"]); //TODO 不正日付エラーチェック実装予定
+                Assert.Null(json["errors"]?["IsValid"]);    //TODO 不正値エラーチェック実装予定
             }
         }
 
