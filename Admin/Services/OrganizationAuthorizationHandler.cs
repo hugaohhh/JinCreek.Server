@@ -37,7 +37,7 @@ namespace Admin.Services
                 // TODO: 一括読み込みする？ see https://docs.microsoft.com/ja-jp/ef/core/querying/related-data
                 var user = (EndUser)_userRepository.GetUser(Guid.Parse(context.User.Identity.Name));
                 var domain = _userRepository.GetDomain(user.DomainId);
-                if (domain?.OrganizationCode == resource.Id)
+                if (domain?.OrganizationCode == resource.Code)
                 {
                     context.Succeed(requirement);
                 }

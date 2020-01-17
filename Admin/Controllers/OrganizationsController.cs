@@ -60,12 +60,12 @@ namespace Admin.Controllers
         /// <summary>
         /// 組織照会
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public ActionResult<Organization> GetOrganization(Guid id)
+        [HttpGet("{code}")]
+        public ActionResult<Organization> GetOrganization(long code)
         {
-            var organization = _userRepository.GetOrganization(id);
+            var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
                 return NotFound();
@@ -83,17 +83,17 @@ namespace Admin.Controllers
         /// <summary>
         /// 組織更新
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="code"></param>
         /// <param name="organization"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult PutOrganization(Guid id, Organization organization)
+        [HttpPut("{code}")]
+        public IActionResult PutOrganization(long code, Organization organization)
         {
-            if (id != organization.Id)
+            if (code != organization.Code)
             {
                 return BadRequest();
             }
-            if (_userRepository.GetOrganization(id) == null)
+            if (_userRepository.GetOrganization(code) == null)
             {
                 return NotFound();
             }
@@ -127,26 +127,26 @@ namespace Admin.Controllers
             }
             catch (DbUpdateException)
             {
-                if (OrganizationExists(organization.Id))
+                if (OrganizationExists(organization.Code))
                 {
                     return Conflict();
                 }
                 throw;
             }
-            return CreatedAtAction("GetOrganization", new { id = organization.Id }, organization);
+            return CreatedAtAction("GetOrganization", new { code = organization.Code }, organization);
         }
 
         // DELETE: api/Organizations/5
         /// <summary>
         /// 組織削除
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{code}")]
         [Authorize(Roles = "SuperAdminUser")]
-        public ActionResult<Organization> DeleteOrganization(Guid id)
+        public ActionResult<Organization> DeleteOrganization(long code)
         {
-            var organization = _userRepository.GetOrganization(id);
+            var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace Admin.Controllers
             {
                 return Forbid();
             }
-            organization = _userRepository.Remove(id);
+            organization = _userRepository.RemoveOrganization(code);
             if (organization == null)
             {
                 return NotFound();
@@ -163,9 +163,9 @@ namespace Admin.Controllers
             return new ObjectResult(organization) { StatusCode = StatusCodes.Status204NoContent };
         }
 
-        private bool OrganizationExists(Guid id)
+        private bool OrganizationExists(long code)
         {
-            return _userRepository.GetOrganization(id) != null;
+            return _userRepository.GetOrganization(code) != null;
         }
 
         public enum SortKey

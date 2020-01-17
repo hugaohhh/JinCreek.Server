@@ -75,16 +75,14 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.Organization.ToList();
         }
 
-        public Organization GetOrganization(Guid id)
+        public Organization GetOrganization(long code)
         {
-            var e = _dbContext.Organization.Find(id);
-            if (e != null) _dbContext.Entry(e).State = EntityState.Detached;
-            return e;
+            return _dbContext.Organization.SingleOrDefault(a => a.Code == code);
         }
 
-        public Organization Remove(Guid id)
+        public Organization RemoveOrganization(long code)
         {
-            var organization = GetOrganization(id);
+            var organization = GetOrganization(code);
             if (organization == null)
             {
                 return null;

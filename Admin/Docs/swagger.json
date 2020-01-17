@@ -333,7 +333,7 @@
         ]
       }
     },
-    "/api/Organizations/{id}": {
+    "/api/Organizations/{code}": {
       "get": {
         "tags": [
           "Organizations"
@@ -341,12 +341,12 @@
         "operationId": "Organizations_GetOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -376,12 +376,12 @@
         "operationId": "Organizations_PutOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -424,12 +424,12 @@
         "operationId": "Organizations_DeleteOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -566,9 +566,9 @@
               "$ref": "#/components/schemas/UserGroup"
             }
           },
-          "organizationId": {
-            "type": "string",
-            "format": "guid"
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "organization": {
             "nullable": true,
@@ -729,7 +729,8 @@
           },
           "endDay": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "multiFactorAuthenticationStateDone": {
             "nullable": true,
@@ -915,7 +916,7 @@
         "required": [
           "version",
           "osType",
-          "organizationId"
+          "organizationCode"
         ],
         "properties": {
           "id": {
@@ -938,10 +939,9 @@
               }
             ]
           },
-          "organizationId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "devices": {
             "type": "array",
@@ -967,13 +967,9 @@
           "isValid"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
           "code": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string",
@@ -1046,7 +1042,7 @@
         "additionalProperties": false,
         "required": [
           "simGroupName",
-          "organizationId",
+          "organizationCode",
           "primaryDns",
           "secondDns",
           "apn",
@@ -1064,10 +1060,9 @@
             "type": "string",
             "minLength": 1
           },
-          "organizationId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "organization": {
             "nullable": true,

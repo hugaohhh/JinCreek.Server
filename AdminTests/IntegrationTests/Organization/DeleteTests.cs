@@ -22,7 +22,9 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly JinCreek.Server.Common.Models.Organization _org1 =
             new JinCreek.Server.Common.Models.Organization
             {
-                Id = Guid.NewGuid(), Code = "1", Name = "org1", StartDay = DateTime.Parse("2020-01-14"),
+                Code = 1,
+                Name = "org1",
+                StartDay = DateTime.Parse("2020-01-14"),
                 EndDay = DateTime.Parse("2021-01-14"), IsValid = true
             };
 
@@ -48,7 +50,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case01()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
-            var result = Utils.Delete(_client, $"{Url}/{_org1.Id}", token);
+            var result = Utils.Delete(_client, $"{Url}/{_org1.Code}", token);
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Empty(body);
@@ -102,11 +104,11 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case05()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Delete(_client, $"{Url}/{_org1.Id}", token);
+            var result = Utils.Delete(_client, $"{Url}/{_org1.Code}", token);
             Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
-            Assert.Equal(_org1.Id, json["id"]);
+            Assert.Equal(_org1.Code, json["code"]);
         }
     }
 }

@@ -22,8 +22,7 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly JinCreek.Server.Common.Models.Organization _org1 =
             new JinCreek.Server.Common.Models.Organization
             {
-                Id = Guid.Parse("372232a1-8196-40bf-896d-c0d597ccf042"),
-                Code = "1",
+                Code = 1,
                 Name = "org1",
                 StartDay = DateTime.Parse("2020-01-14"),
                 EndDay = DateTime.Parse("2021-01-14"),
@@ -32,8 +31,7 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly JinCreek.Server.Common.Models.Organization _org2 =
             new JinCreek.Server.Common.Models.Organization
             {
-                Id = Guid.Parse("76bba3bb-38f9-4a53-a68f-a8b207acf3c4"),
-                Code = "2",
+                Code = 2,
                 Name = "org2",
                 StartDay = DateTime.Parse("2020-01-14"),
                 EndDay = DateTime.Parse("2021-01-14"),
@@ -114,7 +112,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case4()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
-            var result = Utils.Get(_client, $"{Url}/{_org2.Id}", token); // ユーザー管理者2の組織を照会
+            var result = Utils.Get(_client, $"{Url}/{_org2.Code}", token); // ユーザー管理者2の組織を照会
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -128,7 +126,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case5()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
-            var result = Utils.Get(_client, $"{Url}/{_org1.Id}", token);
+            var result = Utils.Get(_client, $"{Url}/{_org1.Code}", token);
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.Null(json["errors"]?["id"]);
