@@ -1,4 +1,5 @@
-﻿using JinCreek.Server.Common.Models;
+﻿using Admin.CustomProvider;
+using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -28,7 +29,7 @@ namespace Admin.Services
             if (requirement.Name == Operations.Read.Name)
             {
                 var role = context.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role)?.Value;
-                if (role == "SuperAdminUser") // TODO: extract const
+                if (role == Roles.SuperAdminUser)
                 {
                     context.Succeed(requirement);
                     return Task.CompletedTask;
@@ -44,7 +45,19 @@ namespace Admin.Services
             }
             if (requirement.Name == Operations.Update.Name)
             {
-                context.Succeed(requirement);
+                var role = context.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role)?.Value;
+                if (role == Roles.SuperAdminUser)
+                {
+                    context.Succeed(requirement);
+                    return Task.CompletedTask;
+                }
+
+                var user = (EndUser)_userRepository.GetUser(Guid.Parse(context.User.Identity.Name));
+                var domain = _userRepository.GetDomain(user.DomainId);
+                if (domain?.OrganizationCode == resource.Code)
+                {
+                    context.Succeed(requirement);
+                }
             }
             if (requirement.Name == Operations.Delete.Name)
             {

@@ -50,30 +50,22 @@ namespace AdminTests.IntegrationTests.Organization
             // Arrange
             using var scope = factory.Services.GetService<IServiceScopeFactory>().CreateScope();
             var context = scope.ServiceProvider.GetService<MainDbContext>();
-            context.Organization.RemoveRange();
+            context.Organization.RemoveRange(context.Organization);
+            context.Domain.RemoveRange(context.Domain);
+            context.User.RemoveRange(context.User);
+            context.SaveChanges();
             context.Organization.Add(_org1);
             context.Organization.Add(_org2);
-            context.Domain.RemoveRange();
             context.Domain.Add(domain1);
             context.Domain.Add(domain2);
-            context.User.RemoveRange();
             context.User.Add(user0);
             context.User.Add(user1);
             context.User.Add(user2);
             context.SaveChanges();
-
-            //// Arrange
-            //using var scope = factory.Services.GetService<IServiceScopeFactory>().CreateScope();
-            //var context = scope.ServiceProvider.GetService<MainDbContext>();
-            //context.Organization.Add(_org1);
-            //if (context.User.Count(user => true) > 0) return;
-            //context.User.Add(new SuperAdminUser { AccountName = "USER0", Password = Utils.HashPassword("user0") });
-            //context.User.Add(new AdminUser { AccountName = "USER1", Password = Utils.HashPassword("user1") });
-            //context.SaveChanges();
         }
 
         /// <summary>
-        /// 異常：全て不在
+        /// 異常：入力が空
         /// </summary>
         [Fact]
         public void Case01()
@@ -85,16 +77,16 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["Url"]);
-            Assert.NotNull(json["errors"]?["Name"]);
-            Assert.NotNull(json["errors"]?["Address"]);
-            Assert.NotNull(json["errors"]?["AdminMail"]);
-            Assert.NotNull(json["errors"]?["AdminPhone"]);
-            Assert.NotNull(json["errors"]?["DelegatePhone"]);
+            //Assert.NotNull(json["errors"]?["Url"]);
+            //Assert.NotNull(json["errors"]?["Name"]);
+            //Assert.NotNull(json["errors"]?["Address"]);
+            //Assert.NotNull(json["errors"]?["AdminMail"]);
+            //Assert.NotNull(json["errors"]?["AdminPhone"]);
+            //Assert.NotNull(json["errors"]?["DelegatePhone"]);
         }
 
         /// <summary>
-        /// 異常：不正な形式
+        /// 異常：コードが数字以外
         /// </summary>
         [Fact]
         public void Case02()
@@ -102,6 +94,32 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
+                code = "a", // 
+                name = "org1",
+                address = "address1",
+                delegatePhone = "1234567890",
+                url = "https://example.com",
+                adminPhone = "2345678901",
+                adminMail = "admin@example.com",
+            };
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
+            Assert.NotNull(json["traceId"]);
+            Assert.NotNull(json["errors"]?["code"]);
+        }
+
+        /// <summary>
+        /// 異常：不正な形式
+        /// </summary>
+        [Fact]
+        public void Case03()
+        {
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
+            var obj = new
+            {
+                code = 1,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890a", // 数字以外の文字含む
@@ -114,39 +132,14 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["errors"]?["AdminPhone"]);
-            //Assert.NotNull(json["errors"]?["DelegatePhone"]);
-            //Assert.NotNull(json["errors"]?["AdminMail"]);
+            Assert.NotNull(json["errors"]?["DelegatePhone"]);
+            Assert.NotNull(json["errors"]?["Url"]);
+            Assert.NotNull(json["errors"]?["AdminPhone"]);
+            Assert.NotNull(json["errors"]?["AdminMail"]);
         }
 
         /// <summary>
         /// 異常：不正な形式
-        /// </summary>
-        [Fact]
-        public void Case03()
-        {
-            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
-            var obj = new
-            {
-                name = "org1",
-                address = "address1",
-                delegatePhone = "123456789", // 9文字以下 or 12文字以上
-                url = "https://example.com",
-                adminPhone = "2345678901b", // 数字以外の文字含む
-                adminMail = "admin@example.com",
-            };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
-            //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            var body = result.Content.ReadAsStringAsync().Result;
-            var json = JObject.Parse(body);
-            Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["AdminPhone"]);
-            Assert.NotNull(json["errors"]?["DelegatePhone"]);
-        }
-
-        /// <summary>
-        /// 異常：DBに組織が不在
         /// </summary>
         [Fact]
         public void Case04()
@@ -155,6 +148,32 @@ namespace AdminTests.IntegrationTests.Organization
             var obj = new
             {
                 code = 1,
+                name = "org1",
+                address = "address1",
+                delegatePhone = "123456789", // 9文字以下 or 12文字以上
+                url = "https://example.com",
+                adminPhone = "123456789012", // 9文字以下 or 12文字以上
+                adminMail = "admin@example.com",
+            };
+            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
+            Assert.NotNull(json["traceId"]);
+            Assert.NotNull(json["errors"]?["DelegatePhone"]);
+            Assert.NotNull(json["errors"]?["AdminPhone"]);
+        }
+
+        /// <summary>
+        /// 異常：DBに組織が不在
+        /// </summary>
+        [Fact]
+        public void Case05()
+        {
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
+            var obj = new
+            {
+                code = 3,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890",
@@ -173,36 +192,37 @@ namespace AdminTests.IntegrationTests.Organization
         /// 異常：DBに組織が存在（他組織）
         /// </summary>
         [Fact]
-        public void Case05()
+        public void Case06()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                name = "org1",
+                code = 2,
+                name = "org2",
                 // address = "address1", // 不在
-                telno = "1234567890",
-                url = "https://example.com",
                 delegatePhone = "1234567890",
+                url = "https://example.com",
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
+            Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
+            var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["telNo"]); // TODO: 3..12
+            Assert.NotNull(json["errors"]?["role"]);
         }
 
         /// <summary>
         /// 正常：DBに組織が存在（自組織）
         /// </summary>
         [Fact]
-        public void Case06()
+        public void Case07()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                Code = "1",
+                code = 1,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890",
@@ -210,12 +230,18 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            //var body = result.Content.ReadAsStringAsync().Result;
-            //var json = JObject.Parse(body);
-            //Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["errors"]?["telNo"]); // TODO: 3..12
+            var json = JObject.Parse(body);
+            Assert.Null(json["traceId"]); // 不在
+            Assert.Equal(obj.code, json["code"]);
+            Assert.Equal(obj.name, json["name"]);
+            Assert.Equal(obj.address, json["address"]);
+            Assert.Equal(obj.delegatePhone, json["delegatePhone"]);
+            Assert.Equal(obj.url, json["url"]);
+            Assert.Equal(obj.adminPhone, json["adminPhone"]);
+            Assert.Equal(obj.adminMail, json["adminMail"]);
         }
     }
 }

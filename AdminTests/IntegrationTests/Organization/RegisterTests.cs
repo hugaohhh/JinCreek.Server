@@ -37,9 +37,9 @@ namespace AdminTests.IntegrationTests.Organization
         {
             return JObject.FromObject(new
             {
-                code = "code",
-                name = "name",
-                address = "address",
+                code = 1,
+                name = "name1",
+                address = "address1",
                 delegatePhone = delegatePhone ?? "0123456789",
                 url = url ?? "https://example.com",
                 adminPhone = adminPhone ?? "1123456789",

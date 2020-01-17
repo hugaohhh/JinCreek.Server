@@ -1,4 +1,5 @@
-﻿using Admin.Services;
+﻿using Admin.CustomProvider;
+using Admin.Services;
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace Admin.Controllers
 {
@@ -37,11 +39,11 @@ namespace Admin.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = "SuperAdminUser")] // TODO: extract constant
+        [Authorize(Roles = Roles.SuperAdminUser)]
         public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
             var query = _context.Organization.Where(a => true);
-            if (param.Name != null) query = query.Where(a => a.Name == param.Name);
+            if (param.Name != null) query = query.Where(a => a.Name.Contains(param.Name));
             if (param.StartDayFrom != null) query = query.Where(a => a.StartDay >= param.StartDayFrom);
             if (param.StartDayTo != null) query = query.Where(a => a.StartDay <= param.StartDayTo);
             if (param.EndDayFrom != null) query = query.Where(a => a.EndDay >= param.EndDayFrom);
@@ -72,7 +74,7 @@ namespace Admin.Controllers
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
             {
-                return new ObjectResult(new { traceId = Activity.Current.Id }) { StatusCode = StatusCodes.Status403Forbidden };
+                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
             }
             return organization;
         }
@@ -84,26 +86,68 @@ namespace Admin.Controllers
         /// 組織更新
         /// </summary>
         /// <param name="code"></param>
-        /// <param name="organization"></param>
+        /// <param name="param"></param>
         /// <returns></returns>
         [HttpPut("{code}")]
-        public IActionResult PutOrganization(long code, Organization organization)
+        public IActionResult PutOrganization(long code, PutOrganizationParam param)
         {
-            if (code != organization.Code)
+            if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
             {
-                return BadRequest();
+                return BadRequest(new { traceId = Activity.Current.Id });
             }
-            if (_userRepository.GetOrganization(code) == null)
+
+            var role = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role)?.Value;
+            if (role == Roles.AdminUser && (param.StartDay != null || param.EndDay != null || param.IsValid != null))
+            {
+                // ユーザー管理者が利用開始日、利用終了日、有効を指定するのはエラー
+                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
+            }
+
+            var organization = _userRepository.GetOrganization(code);
+            if (organization == null)
             {
                 return NotFound();
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
             {
-                return Forbid();
+                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
             }
+
+            organization.Code = param.Code ?? organization.Code;
+            organization.Name = param.Name ?? organization.Name;
+            organization.Address = param.Address ?? organization.Address;
+            organization.DelegatePhone = param.DelegatePhone ?? organization.DelegatePhone;
+            organization.Url = param.Url ?? organization.Url;
+            organization.AdminPhone = param.AdminPhone ?? organization.AdminPhone;
+            organization.AdminMail = param.AdminMail ?? organization.AdminMail;
+            organization.StartDay = param.StartDay ?? organization.StartDay;
+            organization.EndDay = param.EndDay ?? organization.EndDay;
+            organization.IsValid = param.IsValid ?? organization.IsValid;
+
             _userRepository.Update(organization);
-            return Ok();
+            return Ok(organization);
         }
+
+        public class PutOrganizationParam
+        {
+            public long? Code { get; set; }
+            public string Name { get; set; }
+            public string Address { get; set; }
+            [Phone]
+            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+            public string DelegatePhone { get; set; }
+            [Url]
+            public string Url { get; set; }
+            [Phone]
+            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+            public string AdminPhone { get; set; }
+            [EmailAddress]
+            public string AdminMail { get; set; }
+            public DateTime? StartDay { get; set; }
+            public DateTime? EndDay { get; set; }
+            public bool? IsValid { get; set; }
+        }
+
 
         // POST: api/Organizations
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -170,7 +214,6 @@ namespace Admin.Controllers
 
         public enum SortKey
         {
-            Id,
             Code,
             Name,
             Address,
@@ -195,7 +238,7 @@ namespace Admin.Controllers
             public int Page { get; set; } = 1;
             public int PageSize { get; set; } = 20;
 
-            public SortKey SortBy { get; set; } = SortKey.Id;
+            public SortKey SortBy { get; set; } = SortKey.Code;
             public OrderKey OrderBy { get; set; } = OrderKey.Asc;
 
             public string Name { get; set; }
