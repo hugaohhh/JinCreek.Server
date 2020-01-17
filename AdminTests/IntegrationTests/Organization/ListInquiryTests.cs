@@ -29,11 +29,11 @@ namespace AdminTests.IntegrationTests.Organization
             if (context.User.Count(user => true) > 0) return;
             context.User.Add(new SuperAdminUser { AccountName = "USER0", Password = Utils.HashPassword("user0") });
             context.User.Add(new AdminUser { AccountName = "USER1", Password = Utils.HashPassword("user1") });
-            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "1", Name = "org1", StartDay = DateTime.Parse("2020-01-14"), EndDay = DateTime.Parse("2021-01-14"), IsValid = true, });
-            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "2", Name = "org2", StartDay = DateTime.Parse("2020-01-15"), EndDay = DateTime.Parse("2021-01-15"), IsValid = true, });
-            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "3", Name = "org3", StartDay = DateTime.Parse("2020-01-16"), EndDay = DateTime.Parse("2021-01-16"), IsValid = true, });
-            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "4", Name = "org4", StartDay = DateTime.Parse("2020-01-17"), EndDay = DateTime.Parse("2021-01-17"), IsValid = true, });
-            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Id = Guid.NewGuid(), Code = "5", Name = "org5", StartDay = DateTime.Parse("2020-01-18"), EndDay = DateTime.Parse("2021-01-18"), IsValid = false, });
+            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Code = 1, Name = "org1", StartDay = DateTime.Parse("2020-01-14"), EndDay = DateTime.Parse("2021-01-14"), IsValid = true, });
+            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Code = 2, Name = "org2", StartDay = DateTime.Parse("2020-01-15"), EndDay = DateTime.Parse("2021-01-15"), IsValid = true, });
+            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Code = 3, Name = "org3", StartDay = DateTime.Parse("2020-01-16"), EndDay = DateTime.Parse("2021-01-16"), IsValid = true, });
+            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Code = 4, Name = "org4", StartDay = DateTime.Parse("2020-01-17"), EndDay = DateTime.Parse("2021-01-17"), IsValid = true, });
+            context.Organization.Add(new JinCreek.Server.Common.Models.Organization { Code = 5, Name = "org5", StartDay = DateTime.Parse("2020-01-18"), EndDay = DateTime.Parse("2021-01-18"), IsValid = false, });
             context.SaveChanges();
         }
 

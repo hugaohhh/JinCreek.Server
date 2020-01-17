@@ -21,8 +21,7 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly JinCreek.Server.Common.Models.Organization _org1 =
             new JinCreek.Server.Common.Models.Organization
             {
-                Id = Guid.Parse("372232a1-8196-40bf-896d-c0d597ccf042"),
-                Code = "1",
+                Code = 1,
                 Name = "org1",
                 StartDay = DateTime.Parse("2020-01-14"),
                 EndDay = DateTime.Parse("2021-01-14"),
@@ -31,8 +30,7 @@ namespace AdminTests.IntegrationTests.Organization
         private readonly JinCreek.Server.Common.Models.Organization _org2 =
             new JinCreek.Server.Common.Models.Organization
             {
-                Id = Guid.Parse("76bba3bb-38f9-4a53-a68f-a8b207acf3c4"),
-                Code = "2",
+                Code = 2,
                 Name = "org2",
                 StartDay = DateTime.Parse("2020-01-14"),
                 EndDay = DateTime.Parse("2021-01-14"),
@@ -82,7 +80,7 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new { };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -104,7 +102,6 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                id = "hoge", // 数字以外
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890a", // 数字以外の文字含む
@@ -112,7 +109,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901b", // 数字以外の文字含む
                 adminMail = "piyo", // "xxx@xxx"形式でない
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -131,7 +128,6 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                id = _org1.Id,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "123456789", // 9文字以下 or 12文字以上
@@ -139,7 +135,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901b", // 数字以外の文字含む
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             //Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
@@ -158,7 +154,7 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                id = Guid.Parse("1f262dc0-531e-4901-904c-fa8e9887a659"),
+                code = 1,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890",
@@ -166,7 +162,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{obj.id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -182,7 +178,6 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                id = "hoge", // TODO: GUID
                 name = "org1",
                 // address = "address1", // 不在
                 telno = "1234567890",
@@ -191,7 +186,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
@@ -208,7 +203,6 @@ namespace AdminTests.IntegrationTests.Organization
             var obj = new
             {
                 Code = "1",
-                id = _org1.Id,
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890",
@@ -216,7 +210,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Id}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             //var body = result.Content.ReadAsStringAsync().Result;
             //var json = JObject.Parse(body);
