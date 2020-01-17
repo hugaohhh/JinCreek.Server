@@ -764,7 +764,8 @@
           },
           "endDay": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "authPeriod": {
             "type": "integer",

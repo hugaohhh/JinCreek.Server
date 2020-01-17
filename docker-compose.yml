@@ -34,6 +34,8 @@ services:
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
 #      - MYSQL_DATABASE=mdb
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - TZ=Asia/Tokyo   
   nginx:
     build:
       context: ./docker

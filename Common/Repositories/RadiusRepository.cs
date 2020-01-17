@@ -37,6 +37,12 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
+        public Radreply GetRadreply(string username)
+        {
+            return _dbContext.Radreply
+                .Where(r => r.Username == username).FirstOrDefault();
+        }
+
         /// <summary>
         /// 多要素認証後の　Radreplyの更新
         /// </summary>
