@@ -66,7 +66,6 @@ namespace JinCreek.Server.Common.Repositories
 
         public void Create(Organization organization)
         {
-            organization.Id = Guid.NewGuid();
             _dbContext.Organization.Add(organization);
             _dbContext.SaveChanges();
         }

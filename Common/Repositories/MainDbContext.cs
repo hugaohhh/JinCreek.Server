@@ -123,27 +123,18 @@ namespace JinCreek.Server.Common.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Organization>()
-                .HasAlternateKey(c => c.Code)
-                .HasName("Organization_Code_UQ");
-
             modelBuilder.Entity<User>()
                 .HasAlternateKey(u => u.AccountName)
                 .HasName("User_AccountName_UQ");
 
             //modelBuilder.Entity<DeviceGroup>()
             //    .HasAlternateKey(dg => new {
-            //        dg.OrganizationId, dg.OsType, dg.Version
+            //        dg.OrganizationCode, dg.OsType, dg.Version
             //    }).HasName("DeviceGroup_Code_UQ");
 
             modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
             {
                 authenticationLog.Property(ac => ac.Id).HasValueGenerator<GuidValueGenerator>();
-            });
-
-            modelBuilder.Entity<Organization>(organization =>
-            {
-                organization.Property(o => o.Id).HasValueGenerator<GuidValueGenerator>();
             });
 
             modelBuilder.Entity<Domain>(domain =>
@@ -275,7 +266,7 @@ namespace JinCreek.Server.Common.Repositories
             modelBuilder.Entity<DeviceGroup>()
                 .HasOne(dg => dg.Organization)
                 .WithMany(o => o.DeviceGroups)
-                .HasForeignKey(dg => dg.OrganizationId);
+                .HasForeignKey(dg => dg.OrganizationCode);
 
             modelBuilder.Entity<Sim>()
                 .HasOne(s => s.SimGroup)
@@ -285,7 +276,7 @@ namespace JinCreek.Server.Common.Repositories
             modelBuilder.Entity<SimGroup>()
                 .HasOne(sg => sg.Organization)
                 .WithMany(o => o.SimGroups)
-                .HasForeignKey(sg => sg.OrganizationId);
+                .HasForeignKey(sg => sg.OrganizationCode);
 
             modelBuilder.Entity<SimDevice>()
                 .HasOne(sad => sad.Sim)
@@ -300,7 +291,7 @@ namespace JinCreek.Server.Common.Repositories
             modelBuilder.Entity<Domain>()
                 .HasOne(c => c.Organization)
                 .WithMany(c => c.Domains)
-                .HasForeignKey(d => d.OrganizationId);
+                .HasForeignKey(d => d.OrganizationCode);
 
             modelBuilder.Entity<EndUser>()
                 .HasOne(d => d.Domain)

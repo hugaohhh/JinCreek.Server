@@ -142,9 +142,9 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
         }
 
-        public Organization GetOrganization(string organizationcode1)
+        public Organization GetOrganization(long code)
         {
-            return _dbContext.Organization.SingleOrDefault(o => o.Code == organizationcode1);
+            return _dbContext.Organization.SingleOrDefault(o => o.Code == code);
         }
 
         public void Create(FactorCombination factorCombination)
