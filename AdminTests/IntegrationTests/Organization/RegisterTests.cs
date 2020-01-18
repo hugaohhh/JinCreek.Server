@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using JinCreek.Server.Common.Models;
+using JinCreek.Server.Common.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Xunit;
@@ -8,6 +12,7 @@ namespace AdminTests.IntegrationTests.Organization
     /// <summary>
     /// 組織登録
     /// </summary>
+    [Collection("Sequential")]
     public class RegisterTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;
@@ -18,25 +23,30 @@ namespace AdminTests.IntegrationTests.Organization
             _client = factory.CreateClient();
 
             // Arrange
-            Utils.RegisterUser(_client, "user0@example.com", "User0#"); // TODO: ユーザー管理者にする
-            Utils.RegisterUser(_client, "user1@example.com", "User1#"); // TODO: スーパー管理者にする
+            using var scope = factory.Services.GetService<IServiceScopeFactory>().CreateScope();
+            var context = scope.ServiceProvider.GetService<MainDbContext>();
+            if (context.User.Count(user => true) > 0) return;
+            context.User.Add(new SuperAdminUser { AccountName = "USER0", Password = Utils.HashPassword("user0") });
+            context.User.Add(new AdminUser { AccountName = "USER1", Password = Utils.HashPassword("user1") });
+            context.SaveChanges();
         }
 
         // TODO: Theory (https://xunit.net/docs/getting-started/netfx/visual-studio#write-first-theory) にできない？
-        private static JObject NewObject(string telNo = null, string url = null, string adminTelNo = null,
-            string adminEmail = null, string startAt = null, string endAt = null)
+        private static JObject NewObject(string delegatePhone = null, string url = null, string adminPhone = null,
+            string adminMail = null, string startDay = null, string endDay = null)
         {
             return JObject.FromObject(new
             {
-                name = "Name",
-                address = "Address",
-                telNo = telNo ?? "0123456789",
+                code = "code",
+                name = "name",
+                address = "address",
+                delegatePhone = delegatePhone ?? "0123456789",
                 url = url ?? "https://example.com",
-                adminTelNo = adminTelNo ?? "1123456789",
-                adminEmail = adminEmail ?? "admin@example.com",
-                startAt = startAt ?? "2020-01-08",
-                endAt = endAt ?? "2021-01-08",
-                isActive = true,
+                adminPhone = adminPhone ?? "1123456789",
+                adminMail = adminMail ?? "admin@example.com",
+                startDay = startDay ?? "2020-01-08",
+                endDay = endDay ?? "2021-01-08",
+                isValid = true,
             });
         }
 
@@ -46,15 +56,13 @@ namespace AdminTests.IntegrationTests.Organization
         [Fact]
         public void Case01()
         {
-            var token = Utils.GetAccessToken(_client, "user0@example.com", "User0#"); // ユーザー管理者
-
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
             var obj = NewObject();
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            Assert.NotNull(json["traceId"]);
+            Assert.Empty(result.Content.ReadAsStringAsync().Result);
         }
 
         /// <summary>
@@ -63,14 +71,14 @@ namespace AdminTests.IntegrationTests.Organization
         [Fact]
         public void Case02()
         {
-            var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-
+            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var obj = new { };
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             Assert.NotNull(json["traceId"]);
         }
 
@@ -80,24 +88,24 @@ namespace AdminTests.IntegrationTests.Organization
         [Fact]
         public void Case03()
         {
-            var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-
-            Run(_client, token, NewObject(telNo: "1234567890a"));
-            Run(_client, token, NewObject(adminTelNo: "1234567890a"));
+            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
+            Run(_client, token, NewObject(delegatePhone: "1234567890a", adminPhone: "2345678901b"));
 
             static void Run(HttpClient client, string token, JObject obj)
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
+                var body = result.Content.ReadAsStringAsync().Result;
+                var json = JObject.Parse(body);
 
-                Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-                var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+                Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 Assert.NotNull(json["traceId"]);
-                Assert.NotNull(json["errors"]?["telNo"]);
-                Assert.NotNull(json["errors"]?["url"]);
-                Assert.NotNull(json["errors"]?["adminEmail"]);
-                Assert.NotNull(json["errors"]?["startAt"]);
-                Assert.NotNull(json["errors"]?["endAt"]);
-                Assert.NotNull(json["errors"]?["isActive"]);
+                Assert.NotNull(json["errors"]?["DelegatePhone"]);
+                Assert.NotNull(json["errors"]?["AdminPhone"]);
+                Assert.Null(json["errors"]?["Url"]);
+                Assert.Null(json["errors"]?["AdminMail"]);
+                Assert.Null(json["errors"]?["StartDay"]);
+                Assert.Null(json["errors"]?["EndDay"]);
+                Assert.Null(json["errors"]?["IsValid"]);
             }
         }
 
@@ -107,20 +115,25 @@ namespace AdminTests.IntegrationTests.Organization
         [Fact]
         public void Case04()
         {
-            var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-
-            Run(_client, token, NewObject(telNo: "123456789", adminTelNo: "123456789")); // 9文字
-            Run(_client, token, NewObject(telNo: "123456789012", adminTelNo: "123456789012")); // 12文字
+            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
+            Run(_client, token, NewObject(delegatePhone: "123456789", adminPhone: "123456789")); // 9文字
+            Run(_client, token, NewObject(delegatePhone: "123456789012", adminPhone: "123456789012")); // 12文字
 
             static void Run(HttpClient client, string token, JObject obj)
             {
                 var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
+                var body = result.Content.ReadAsStringAsync().Result;
+                var json = JObject.Parse(body);
 
-                Assert.Equal(HttpStatusCode.UnprocessableEntity, result.StatusCode);
-                var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
+                Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
                 Assert.NotNull(json["traceId"]);
-                Assert.NotNull(json["errors"]?["telNo"]);
-                Assert.NotNull(json["errors"]?["adminTelNo"]);
+                Assert.NotNull(json["errors"]?["DelegatePhone"]);
+                Assert.NotNull(json["errors"]?["AdminPhone"]);
+                Assert.Null(json["errors"]?["Url"]);
+                Assert.Null(json["errors"]?["AdminMail"]);
+                Assert.Null(json["errors"]?["StartDay"]);
+                Assert.Null(json["errors"]?["EndDay"]);
+                Assert.Null(json["errors"]?["IsValid"]);
             }
         }
 
@@ -130,24 +143,23 @@ namespace AdminTests.IntegrationTests.Organization
         [Fact]
         public void Case05()
         {
-            var token = Utils.GetAccessToken(_client, "user1@example.com", "User1#");
-
+            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var obj = NewObject();
             var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
 
-            // Assert
             Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-            var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
-            Assert.NotNull(json["traceId"]);
+            Assert.Null(json["traceId"]); // 不在
             Assert.Equal(obj["name"], json["name"]);
             Assert.Equal(obj["address"], json["address"]);
-            Assert.Equal(obj["telNo"], json["telNo"]);
+            Assert.Equal(obj["delegatePhone"], json["delegatePhone"]);
             Assert.Equal(obj["url"], json["url"]);
-            Assert.Equal(obj["adminTelNo"], json["adminTelNo"]);
-            Assert.Equal(obj["adminEmail"], json["adminEmail"]);
-            Assert.Equal(obj["startAt"], json["startAt"]);
-            Assert.Equal(obj["endAt"], json["endAt"]);
-            Assert.Equal(obj["isActive"], json["isActive"]);
+            Assert.Equal(obj["adminPhone"], json["adminPhone"]);
+            Assert.Equal(obj["adminMail"], json["adminMail"]);
+            Assert.Equal(obj["startDay"], json["startDay"]);
+            Assert.Equal(obj["endDay"], json["endDay"]);
+            Assert.Equal(obj["isValid"], json["isValid"]);
         }
     }
 }

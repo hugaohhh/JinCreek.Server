@@ -6,17 +6,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Models
 {
-    public class Organization
+    public class Organization : IValidatableObject
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Key]
-        public Guid Id { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column(TypeName = "VARCHAR(255) BINARY")]
-        public string Code { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Code { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -33,18 +29,23 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Phone]
+        [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string DelegatePhone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Phone]
+        [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string AdminPhone { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [EmailAddress]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string AdminMail { get; set; }
 
@@ -63,6 +64,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Url]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Url { get; set; }
 
@@ -86,5 +88,12 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<DeviceGroup> DeviceGroups { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (StartDay >= EndDay)
+            {
+                yield return new ValidationResult("EndDay must be greater than StartDay");
+            }
+        }
     }
 }

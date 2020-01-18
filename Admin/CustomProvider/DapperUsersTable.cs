@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Admin.CustomProvider
 {
@@ -15,53 +14,59 @@ namespace Admin.CustomProvider
             _userRepository = userRepository;
         }
 
-        public async Task<IdentityResult> CreateAsync(ApplicationUser applicationUser)
+        public IdentityResult Create(ApplicationUser applicationUser)
         {
-            var adminUser = new AdminUser
+            _userRepository.Create(new SuperAdminUser
             {
-                Id = new Guid(), // TODO: ここで生成するの？
-                FirstName = applicationUser.NormalizedUserName,
+                Id = new Guid(),
+                AccountName = applicationUser.NormalizedUserName,
                 Password = applicationUser.PasswordHash,
-                DomainId = Guid.Parse("0e92ce58-9790-4261-82ff-9e1679d4f398"), // TODO: generalize
-                UserGroupId = Guid.Parse("8df0cf70-25bc-4668-8c47-1b0166761c72") // TODO: generalize
-            };
-            _userRepository.Create(adminUser);
+            });
+
             return IdentityResult.Success;
         }
 
-        public async Task<IdentityResult> DeleteAsync(ApplicationUser user)
+        public ApplicationUser FindById(Guid userId)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ApplicationUser> FindByIdAsync(Guid userId)
-        {
-            var adminUser = _userRepository.GetAdminUser(userId);
-            if (adminUser == null)
+            var user = _userRepository.GetUser(userId);
+            if (user == null)
             {
                 return null;
             }
 
             return new ApplicationUser
             {
-                Id = adminUser.Id,
-                Name = adminUser.FirstName
+                Id = user.Id,
+                Name = user.AccountName,
+                Role = user.GetType().Name,
+                PasswordHash = user.GetType() switch
+                {
+                    var type when type == typeof(AdminUser) => ((AdminUser)user).Password,
+                    var type when type == typeof(SuperAdminUser) => ((SuperAdminUser)user).Password,
+                    _ => "",
+                },
             };
         }
 
-        public async Task<ApplicationUser> FindByNameAsync(string userName)
+        public ApplicationUser FindByName(string userName)
         {
-            var adminUser = _userRepository.GetAdminUserByName(userName);
-            if (adminUser == null)
+            var user = _userRepository.GetUserByName(userName);
+            if (user == null)
             {
                 return null;
             }
 
             return new ApplicationUser
             {
-                Id = adminUser.Id,
-                Name = adminUser.FirstName,
-                PasswordHash = adminUser.Password
+                Id = user.Id,
+                Name = user.AccountName,
+                Role = user.GetType().Name,
+                PasswordHash = user.GetType() switch
+                {
+                    var type when type == typeof(AdminUser) => ((AdminUser)user).Password,
+                    var type when type == typeof(SuperAdminUser) => ((SuperAdminUser)user).Password,
+                    _ => "",
+                },
             };
         }
     }

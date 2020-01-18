@@ -105,6 +105,71 @@
         }
       }
     },
+    "/api/Domains": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Domains/{id}": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomain",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Organizations": {
       "get": {
         "tags": [
@@ -117,7 +182,9 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0
             },
             "x-position": 1
           },
@@ -131,57 +198,78 @@
             "x-position": 2
           },
           {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderKey"
+            },
+            "x-position": 4
+          },
+          {
             "name": "Name",
             "in": "query",
             "schema": {
               "type": "string",
               "nullable": true
             },
-            "x-position": 3
+            "x-position": 5
           },
           {
             "name": "StartDayFrom",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "nullable": true
             },
-            "x-position": 4
+            "x-position": 6
           },
           {
             "name": "StartDayTo",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "nullable": true
             },
-            "x-position": 5
+            "x-position": 7
           },
           {
             "name": "EndDayFrom",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "nullable": true
             },
-            "x-position": 6
+            "x-position": 8
           },
           {
             "name": "EndDayTo",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "nullable": true
             },
-            "x-position": 7
+            "x-position": 9
           },
           {
-            "name": "IsActive",
+            "name": "IsValid",
             "in": "query",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "nullable": true
             },
-            "x-position": 8
+            "x-position": 10
           }
         ],
         "responses": {
@@ -198,7 +286,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -228,10 +323,17 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
       }
     },
-    "/api/Organizations/{id}": {
+    "/api/Organizations/{code}": {
       "get": {
         "tags": [
           "Organizations"
@@ -239,12 +341,12 @@
         "operationId": "Organizations_GetOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -260,7 +362,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -269,12 +376,12 @@
         "operationId": "Organizations_PutOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -303,7 +410,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -312,12 +424,12 @@
         "operationId": "Organizations_DeleteOrganization",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int64"
             },
             "x-position": 1
           }
@@ -333,7 +445,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
       }
     },
     "/api/RandomNumber/Generate": {
@@ -354,7 +473,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     }
   },
@@ -413,89 +537,6 @@
           }
         }
       },
-      "Organization": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "address",
-          "delegatePhone",
-          "adminPhone",
-          "adminMail",
-          "startDay",
-          "endDay",
-          "url",
-          "isValid"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "address": {
-            "type": "string",
-            "minLength": 1
-          },
-          "delegatePhone": {
-            "type": "string",
-            "minLength": 1
-          },
-          "adminPhone": {
-            "type": "string",
-            "minLength": 1
-          },
-          "adminMail": {
-            "type": "string",
-            "minLength": 1
-          },
-          "startDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "endDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "url": {
-            "type": "string",
-            "minLength": 1
-          },
-          "isValid": {
-            "type": "boolean"
-          },
-          "domains": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Domain"
-            }
-          },
-          "simGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SimGroup"
-            }
-          },
-          "deviceGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/DeviceGroup"
-            }
-          }
-        }
-      },
       "Domain": {
         "type": "object",
         "additionalProperties": false,
@@ -525,9 +566,9 @@
               "$ref": "#/components/schemas/UserGroup"
             }
           },
-          "organizationId": {
-            "type": "string",
-            "format": "guid"
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "organization": {
             "nullable": true,
@@ -876,7 +917,7 @@
         "required": [
           "version",
           "osType",
-          "organizationId"
+          "organizationCode"
         ],
         "properties": {
           "id": {
@@ -899,10 +940,9 @@
               }
             ]
           },
-          "organizationId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "devices": {
             "type": "array",
@@ -913,36 +953,160 @@
           }
         }
       },
-      "Lte": {
+      "Organization": {
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "lteName",
-          "lteAdapter",
-          "softwareRadioState"
+          "name",
+          "address",
+          "delegatePhone",
+          "adminPhone",
+          "adminMail",
+          "startDay",
+          "endDay",
+          "url",
+          "isValid"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "delegatePhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "domains": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Domain"
+            }
+          },
+          "simGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimGroup"
+            }
+          },
+          "deviceGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroup"
+            }
+          }
+        }
+      },
+      "SimGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "simGroupName",
+          "organizationCode",
+          "primaryDns",
+          "secondDns",
+          "apn",
+          "nasAddress",
+          "nw1AddressPool",
+          "nw1AddressRange",
+          "serverAddress"
         ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "lteName": {
+          "simGroupName": {
             "type": "string",
             "minLength": 1
           },
-          "lteAdapter": {
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "organization": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Organization"
+              }
+            ]
+          },
+          "primaryDns": {
             "type": "string",
             "minLength": 1
           },
-          "devices": {
+          "secondDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nasAddress": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1AddressPool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1AddressRange": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serverAddress": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sims": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/Device"
+              "$ref": "#/components/schemas/Sim"
             }
-          },
-          "softwareRadioState": {
-            "type": "boolean"
           }
         }
       },
@@ -1012,79 +1176,6 @@
           }
         }
       },
-      "SimGroup": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "simGroupName",
-          "organizationId",
-          "primaryDns",
-          "secondDns",
-          "apn",
-          "nasAddress",
-          "nw1AddressPool",
-          "nw1AddressRange",
-          "serverAddress"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "simGroupName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "organizationId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "organization": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Organization"
-              }
-            ]
-          },
-          "primaryDns": {
-            "type": "string",
-            "minLength": 1
-          },
-          "secondDns": {
-            "type": "string",
-            "minLength": 1
-          },
-          "apn": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nasAddress": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nw1AddressPool": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nw1AddressRange": {
-            "type": "string",
-            "minLength": 1
-          },
-          "serverAddress": {
-            "type": "string",
-            "minLength": 1
-          },
-          "sims": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Sim"
-            }
-          }
-        }
-      },
       "SimDeviceAuthenticationLogFail": {
         "allOf": [
           {
@@ -1126,6 +1217,39 @@
             "type": "string",
             "format": "date-time",
             "minLength": 1
+          }
+        }
+      },
+      "Lte": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lteName",
+          "lteAdapter",
+          "softwareRadioState"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "lteName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lteAdapter": {
+            "type": "string",
+            "minLength": 1
+          },
+          "devices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          },
+          "softwareRadioState": {
+            "type": "boolean"
           }
         }
       },
@@ -1409,7 +1533,62 @@
             "format": "guid"
           }
         }
+      },
+      "SortKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Id",
+          "Code",
+          "Name",
+          "Address",
+          "DelegatePhone",
+          "AdminPhone",
+          "AdminMail",
+          "StartDay",
+          "EndDay",
+          "Url",
+          "IsValid"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "OrderKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
       }
     }
-  }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
 }
