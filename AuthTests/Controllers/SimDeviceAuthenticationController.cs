@@ -108,11 +108,11 @@ namespace JinCreek.Server.AuthTests.Controllers
         private UserGroup _userGroup;
         private SimGroup _simGroup;
         private Radreply _radreply;
-        public void InsertTestDataCaseXx()
+
+        private void InsertTestDataCaseXx()
         {
             _organization = new Organization
             {
-                Code = "OrganizationCode1",
                 Name = "OrganizationName1",
                 Address = "OrganizationAddress1",
                 DelegatePhone = "123465789",
@@ -173,7 +173,7 @@ namespace JinCreek.Server.AuthTests.Controllers
             RadiusRepository.Create(_radreply);
         }
 
-        public void InsertTestDataCase21()
+        private void InsertTestDataCase21()
         {
             InsertTestDataCaseXx();
             var admin = new AdminUser
@@ -275,7 +275,8 @@ namespace JinCreek.Server.AuthTests.Controllers
             var testRadreply = RadiusRepository.GetRadreply(simDeviceAuthenticationStateDone.SimDevice.Sim.UserName);
             Assert.Equal(simDeviceAuthenticationStateDone.SimDevice.Nw2AddressPool, testRadreply.Value);
         }
-        public void DbTestCase13()
+
+        private void DbTestCase13()
         {
             var request = new SimDeviceAuthenticationRequest()
             {
@@ -300,7 +301,7 @@ namespace JinCreek.Server.AuthTests.Controllers
             Assert.Empty(list);
         }
 
-        public void InsertTestDataCase13_1()
+        private void InsertTestDataCase13_1()
         {
             InsertTestDataCaseXx();
             var device = new AdDevice
@@ -349,7 +350,8 @@ namespace JinCreek.Server.AuthTests.Controllers
             InsertTestDataCase13_1();
             DbTestCase13();
         }
-        public void InsertTestDataCase13_2()
+
+        private void InsertTestDataCase13_2()
         {
             InsertTestDataCaseXx();
             var admin = new AdminUser
@@ -434,7 +436,7 @@ namespace JinCreek.Server.AuthTests.Controllers
             DbTestCase13();
         }
 
-        public void InsertTestDataCase13_3()
+        private void InsertTestDataCase13_3()
         {
             InsertTestDataCaseXx();
             var admin = new AdminUser
