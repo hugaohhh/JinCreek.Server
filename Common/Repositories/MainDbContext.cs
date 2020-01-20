@@ -128,11 +128,11 @@ namespace JinCreek.Server.Common.Repositories
                 {
                     sg.OrganizationCode,
                     sg.SimGroupName
-                }).HasName("SimGroup_Code_SimGroupName_UQ");
+                }).HasName("UQ_SimGroup_Code_SimGroupName");
 
             modelBuilder.Entity<Sim>()
                 .HasAlternateKey(s => s.Msisdn)
-                .HasName("Sim_Msisdn_UQ");
+                .HasName("UQ_Sim_Msisdn");
 
 
             modelBuilder.Entity<DeviceGroup>()
@@ -141,24 +141,24 @@ namespace JinCreek.Server.Common.Repositories
                     dg.OrganizationCode,
                     dg.Os,
                     dg.Version
-                }).HasName("DeviceGroup_Code_Os_Version_UQ");
+                }).HasName("UQ_DeviceGroup_Code_Os_Version");
 
             modelBuilder.Entity<Device>()
                 .HasAlternateKey(d => d.DeviceName)
-                .HasName("Device_DeviceName_UQ");
+                .HasName("UQ_Device_DeviceName");
 
             modelBuilder.Entity<Lte>()
                 .HasAlternateKey(l => l.LteName)
-                .HasName("Lte_LteName_UQ");
+                .HasName("UQ_Lte_LteName");
 
             modelBuilder.Entity<Domain>()
                 .HasAlternateKey(d => d.DomainName)
-                .HasName("Domain_DomainName_UQ");
+                .HasName("UQ_Domain_DomainName");
 
 
             modelBuilder.Entity<User>()
                 .HasAlternateKey(u => u.AccountName)
-                .HasName("User_AccountName_UQ");
+                .HasName("UQ_User_AccountName");
 
             modelBuilder.Entity<UserGroup>()
                 .HasAlternateKey(ug => new
@@ -166,7 +166,7 @@ namespace JinCreek.Server.Common.Repositories
                     ug.DomainId,
                     ug.UserGroupName
                 })
-                .HasName("UserGroup_UserGroupName_UQ");
+                .HasName("UQ_UserGroup_UserGroupName");
 
 
             modelBuilder.Entity<SimDevice>()
@@ -175,7 +175,7 @@ namespace JinCreek.Server.Common.Repositories
                     sd.SimId,
                     sd.DeviceId
                 })
-                .HasName("SimDevice_SimId_DeviceId_UQ");
+                .HasName("UQ_SimDevice_SimId_DeviceId");
 
             modelBuilder.Entity<FactorCombination>()
                 .HasAlternateKey(mf => new
@@ -183,7 +183,7 @@ namespace JinCreek.Server.Common.Repositories
                     mf.SimDeviceId,
                     mf.EndUserId
                 })
-                .HasName("MultiFactor_SimDeviceId_EndUserId_UQ");
+                .HasName("UQ_MultiFactor_SimDeviceId_EndUserId");
 
 
             modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
@@ -353,11 +353,23 @@ namespace JinCreek.Server.Common.Repositories
                 .HasForeignKey(u => u.DomainId);
 
             modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("UserType")
+                .HasDiscriminator<string>("UserDiscriminator")
                 .HasValue<AdminUser>("admin")
                 .HasValue<GeneralUser>("general")
                 .HasValue<SuperAdminUser>("superAdmin");
 
+            modelBuilder.Entity<AuthenticationLog>()
+                .HasDiscriminator<string>("AuthenticationLogDiscriminator")
+                .HasValue<SimDeviceAuthenticationLogSuccess>("simDeviceSuccess")
+                .HasValue<SimDeviceAuthenticationLogFail>("simDeviceFail")
+                .HasValue<MultiFactorAuthenticationLogSuccess>("multiFactorSuccess")
+                .HasValue<MultiFactorAuthenticationLogFail>("multiFactorFail")
+                .HasValue<DeauthenticationAuthenticationLogSuccess>("deauthSuccess");
+
+            modelBuilder.Entity<AuthenticationState>()
+                .HasDiscriminator<string>("AuthenticationStateDiscriminator")
+                .HasValue<SimDeviceAuthenticationStateDone>("simDeviceDone")
+                .HasValue<MultiFactorAuthenticationStateDone>("multiFactorDone");
 
             modelBuilder.Entity<EndUser>()
                 .HasOne(u => u.UserGroup)

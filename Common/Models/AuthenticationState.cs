@@ -18,19 +18,6 @@ namespace JinCreek.Server.Common.Models
         public DateTime TimeLimit { get; set; }
     }
 
-    //多要素認証済み
-    public class MultiFactorAuthenticationStateDone : AuthenticationState
-    {
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid FactorCombinationId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public FactorCombination FactorCombination { get; set; }
-    }
-
     //SIM & 端末認証済み 
     public class SimDeviceAuthenticationStateDone : AuthenticationState
     {
@@ -42,5 +29,18 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
+    }
+
+    //多要素認証済み
+    public class MultiFactorAuthenticationStateDone : AuthenticationState
+    {
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        public Guid FactorCombinationId { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public FactorCombination FactorCombination { get; set; }
     }
 }
