@@ -21,7 +21,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
+        [Column(TypeName = "VARCHAR(128) BINARY")]
         public string Msisdn { get; set; }
 
         // DBアクセスのため自動プロパティを利用
@@ -78,7 +78,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "VARCHAR(512) BINARY")]
+        [Column(TypeName = "VARCHAR(128) BINARY")]
         public string SimGroupName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
