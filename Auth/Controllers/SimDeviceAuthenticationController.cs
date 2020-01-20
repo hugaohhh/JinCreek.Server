@@ -82,7 +82,7 @@ namespace JinCreek.Server.Auth.Controllers
             };
             // AdDevice がある場合　AdDeviceSettingOfflineWindowsSignIn　を設置します　逆にない場合　設置しない
             AdDevice adDevice = _authenticationRepository.GetAdDevice(simDevice.Device.Id);
-            if (adDevice != null)
+            if (adDevice != null && adDevice.AdDeviceSettingOfflineWindowsSignIn != null)
             {
                 simDeviceAuthenticationResponse.SimDeviceConfigureDictionary
                     = new Dictionary<string, string>

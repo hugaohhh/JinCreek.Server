@@ -31,10 +31,10 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public int Create(Radreply radreply)
+        public Radreply GetRadreply(string username)
         {
-            _dbContext.Radreply.Add(radreply);
-            return _dbContext.SaveChanges();
+            return _dbContext.Radreply
+                .Where(r => r.Username == username).FirstOrDefault();
         }
 
         /// <summary>

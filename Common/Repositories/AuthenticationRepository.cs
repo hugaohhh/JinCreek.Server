@@ -76,19 +76,6 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
         }
 
-        public void Create(Organization organization, SimGroup simGroup, Sim sim, DeviceGroup deviceGroup,
-            Device device, Lte lte, SimDevice simDevice, Domain domain, UserGroup userGroup)
-        {
-            _dbContext.AddRange(organization, lte, deviceGroup, simGroup, device, sim, simDevice, domain, userGroup);
-            _dbContext.SaveChanges();
-        }
-
-        public void Create(User user)
-        {
-            _dbContext.User.Add(user);
-            _dbContext.SaveChanges();
-        }
-
         public int Create(SimDeviceAuthenticationLogSuccess simDeviceAuthentication)
         {
             _dbContext.SimDeviceAuthenticationLogSuccess.Add(simDeviceAuthentication);
@@ -140,17 +127,6 @@ namespace JinCreek.Server.Common.Repositories
                             && s.Msisdn == simMsisdn
                             && s.Imsi == simImsi)
                 .FirstOrDefault();
-        }
-
-        public Organization GetOrganization(long code)
-        {
-            return _dbContext.Organization.SingleOrDefault(o => o.Code == code);
-        }
-
-        public void Create(FactorCombination factorCombination)
-        {
-            _dbContext.FactorCombination.Add(factorCombination);
-            _dbContext.SaveChanges();
         }
 
         public List<string> GetLoginUsers(SimDevice simDevice)
@@ -205,18 +181,6 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
             return factorCombination;
         }
-        public UserGroup GetUserGroup(string usergroup1)
-        {
-            return _dbContext.UserGroup
-                .Include(ug => ug.Domain)
-                .Where(ug => ug.UserGroupName == usergroup1)
-                .FirstOrDefault();
-        }
-
-        public List<EndUser> GetEndUser()
-        {
-            return _dbContext.EndUser.ToList();
-        }
 
         public AdDevice GetAdDevice(Guid deviceId)
         {
@@ -227,7 +191,6 @@ namespace JinCreek.Server.Common.Repositories
                 .SingleOrDefault();
             return adDevice;
         }
-
         public void Update(SimDeviceAuthenticationStateDone simDeviceAuthenticationStateDone)
         {
             _dbContext.SimDeviceAuthenticationStateDone.Update(simDeviceAuthenticationStateDone);
@@ -253,5 +216,6 @@ namespace JinCreek.Server.Common.Repositories
             factorCombination.MultiFactorAuthenticationStateDone = null;
             return _dbContext.SaveChanges();
         }
+
     }
 }

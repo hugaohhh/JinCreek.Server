@@ -69,10 +69,10 @@ namespace JinCreek.Server.Common.Repositories
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.Ports)
-                    .HasColumnName("ports")
-                    .HasColumnType("int(5)")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Ports)
+                //    .HasColumnName("ports")
+                //    .HasColumnType("int(5)")
+                //    .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Secret)
                     .IsRequired()
@@ -162,20 +162,20 @@ namespace JinCreek.Server.Common.Repositories
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.Acctinputoctets)
-                    .HasColumnName("acctinputoctets")
-                    .HasColumnType("bigint(20)")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctinputoctets)
+                //    .HasColumnName("acctinputoctets")
+                //    .HasColumnType("bigint(20)")
+                //    .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Acctinterval)
-                    .HasColumnName("acctinterval")
-                    .HasColumnType("int(12)")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctinterval)
+                //    .HasColumnName("acctinterval")
+                //    .HasColumnType("int(12)")
+                //    .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Acctoutputoctets)
-                    .HasColumnName("acctoutputoctets")
-                    .HasColumnType("bigint(20)")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctoutputoctets)
+                //    .HasColumnName("acctoutputoctets")
+                //    .HasColumnType("bigint(20)")
+                //    .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Acctsessionid)
                     .IsRequired()
@@ -185,20 +185,20 @@ namespace JinCreek.Server.Common.Repositories
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.Acctsessiontime)
-                    .HasColumnName("acctsessiontime")
-                    .HasColumnType("int(12) unsigned")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctsessiontime)
+                //    .HasColumnName("acctsessiontime")
+                //    .HasColumnType("int(12) unsigned")
+                //    .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Acctstarttime)
-                    .HasColumnName("acctstarttime")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctstarttime)
+                //    .HasColumnName("acctstarttime")
+                //    .HasColumnType("datetime")
+                //    .HasDefaultValueSql("'NULL'");
 
-                entity.Property(e => e.Acctstoptime)
-                    .HasColumnName("acctstoptime")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctstoptime)
+                //    .HasColumnName("acctstoptime")
+                //    .HasColumnType("datetime")
+                //    .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Acctterminatecause)
                     .IsRequired()
@@ -216,10 +216,10 @@ namespace JinCreek.Server.Common.Repositories
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.Acctupdatetime)
-                    .HasColumnName("acctupdatetime")
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("'NULL'");
+                //entity.Property(e => e.Acctupdatetime)
+                //    .HasColumnName("acctupdatetime")
+                //    .HasColumnType("datetime")
+                //    .HasDefaultValueSql("'NULL'");
 
                 entity.Property(e => e.Calledstationid)
                     .IsRequired()
@@ -374,7 +374,8 @@ namespace JinCreek.Server.Common.Repositories
                     .IsRequired()
                     .HasColumnName("op")
                     .HasColumnType("char(2)")
-                    .HasDefaultValueSql("'''=='''")
+                    //.HasDefaultValueSql("'''=='''")
+                    .HasDefaultValueSql("'=='")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
@@ -426,7 +427,8 @@ namespace JinCreek.Server.Common.Repositories
                     .IsRequired()
                     .HasColumnName("op")
                     .HasColumnType("char(2)")
-                    .HasDefaultValueSql("'''=='''")
+                    //.HasDefaultValueSql("'''=='''")
+                    .HasDefaultValueSql("'=='")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
@@ -470,7 +472,8 @@ namespace JinCreek.Server.Common.Repositories
                     .IsRequired()
                     .HasColumnName("op")
                     .HasColumnType("char(2)")
-                    .HasDefaultValueSql("'''='''")
+                    //.HasDefaultValueSql("'''='''")
+                    .HasDefaultValueSql("'='")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
@@ -494,7 +497,7 @@ namespace JinCreek.Server.Common.Repositories
                 entity.Property(e => e.Authdate)
                     .HasColumnName("authdate")
                     .HasColumnType("timestamp(6)")
-                    .HasDefaultValueSql("'current_timestamp(6)'")
+                    .HasDefaultValueSql("current_timestamp(6)")
                     .ValueGeneratedOnAddOrUpdate();
 
                 entity.Property(e => e.Pass)
@@ -545,7 +548,8 @@ namespace JinCreek.Server.Common.Repositories
                     .IsRequired()
                     .HasColumnName("op")
                     .HasColumnType("char(2)")
-                    .HasDefaultValueSql("'''='''")
+                    //.HasDefaultValueSql("'''='''")
+                    .HasDefaultValueSql("'='")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 

@@ -363,6 +363,7 @@
             "description": "IMEI。機器の識別番号",
             "maxLength": 15,
             "minLength": 0,
+            "pattern": "^[0-9]*$",
             "example": "352555093320000"
           },
           "simIccId": {
@@ -370,6 +371,7 @@
             "description": "ICCID。SIMカードに割り当てられるシリアル番号。",
             "maxLength": 19,
             "minLength": 0,
+            "pattern": "^[0-9]*$",
             "example": "8981100005819480000"
           },
           "simImsi": {
@@ -377,6 +379,7 @@
             "description": "IMSI。携帯電話事業者と契約する際に発行される加入者識別番号。",
             "maxLength": 15,
             "minLength": 0,
+            "pattern": "^[0-9]*$",
             "example": "440103213100000"
           },
           "simMsisdn": {
@@ -384,6 +387,7 @@
             "description": "MSISDN。携帯電話網への加入を一意に識別する番号",
             "maxLength": 15,
             "minLength": 0,
+            "pattern": "^[0-9]*$",
             "example": "02017911000"
           },
           "deviceIpAddress": {
