@@ -57,7 +57,7 @@ namespace AdminTests.IntegrationTests.Organization
         }
 
         /// <summary>
-        /// IDがない
+        /// codeがない
         /// </summary>
         [Fact]
         public void Case02()
@@ -72,7 +72,7 @@ namespace AdminTests.IntegrationTests.Organization
         }
 
         /// <summary>
-        /// IDが数字以外
+        /// codeが数字以外
         /// </summary>
         [Fact]
         public void Case03()
@@ -82,7 +82,7 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["id"]); 
+            Assert.NotNull(json["errors"]?["code"]);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case04()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Delete(_client, $"{Url}/c1788aa7-9308-4661-bb84-dbc04e849e72", token);
+            var result = Utils.Delete(_client, $"{Url}/3", token);
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);

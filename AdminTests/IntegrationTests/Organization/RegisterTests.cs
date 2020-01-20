@@ -37,7 +37,7 @@ namespace AdminTests.IntegrationTests.Organization
         {
             return JObject.FromObject(new
             {
-                code = "code",
+                code = 1,
                 name = "name1",
                 address = "address1",
                 delegatePhone = delegatePhone ?? "0123456789",
@@ -98,9 +98,9 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case03()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            Run(_client, token, NewObject(delegatePhone: "1234567890a", 
-                                          url: "example.com", 
-                                          adminPhone: "2345678901b", 
+            Run(_client, token, NewObject(delegatePhone: "1234567890a",
+                                          url: "example.com",
+                                          adminPhone: "2345678901b",
                                           adminMail: "admin.example.com")); //TODO 利用開始日、利用終了日、有効の不正値設定予定
 
             static void Run(HttpClient client, string token, JObject obj)

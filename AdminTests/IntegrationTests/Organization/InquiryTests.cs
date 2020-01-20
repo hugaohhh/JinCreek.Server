@@ -88,7 +88,7 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["id"]);
+            Assert.NotNull(json["errors"]?["code"]);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case2()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
-            var result = Utils.Get(_client, $"{Url}/c1788aa7-9308-4661-bb84-dbc04e849e72", token);
+            var result = Utils.Get(_client, $"{Url}/3", token);
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);

@@ -105,34 +105,6 @@
         }
       }
     },
-    "/api/Domains": {
-      "get": {
-        "tags": [
-          "Domains"
-        ],
-        "operationId": "Domains_GetDomains",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Domain"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
     "/api/Domains/{id}": {
       "get": {
         "tags": [
@@ -158,6 +130,82 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Domains": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderKey"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain"
+                  }
                 }
               }
             }
@@ -201,7 +249,7 @@
             "name": "SortBy",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/SortKey"
+              "$ref": "#/components/schemas/SortKey2"
             },
             "x-position": 3
           },
@@ -209,7 +257,7 @@
             "name": "OrderBy",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/OrderKey"
+              "$ref": "#/components/schemas/OrderKey2"
             },
             "x-position": 4
           },
@@ -387,11 +435,11 @@
           }
         ],
         "requestBody": {
-          "x-name": "organization",
+          "x-name": "param",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Organization"
+                "$ref": "#/components/schemas/PutOrganizationParam"
               }
             }
           },
@@ -1538,6 +1586,29 @@
         "description": "",
         "x-enumNames": [
           "Id",
+          "DomainName"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "OrderKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "SortKey2": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
           "Code",
           "Name",
           "Address",
@@ -1559,11 +1630,10 @@
           6,
           7,
           8,
-          9,
-          10
+          9
         ]
       },
-      "OrderKey": {
+      "OrderKey2": {
         "type": "integer",
         "description": "",
         "x-enumNames": [
@@ -1574,6 +1644,63 @@
           0,
           1
         ]
+      },
+      "PutOrganizationParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "delegatePhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10,
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10,
+            "nullable": true
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isValid": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
       }
     },
     "securitySchemes": {

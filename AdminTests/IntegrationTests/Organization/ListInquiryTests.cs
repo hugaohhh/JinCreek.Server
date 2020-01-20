@@ -58,8 +58,8 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Get(_client, Url, token);
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var array = JArray.Parse(body);
             //var json = JObject.Parse(body);
             //Assert.NotNull(json["traceId"]);
