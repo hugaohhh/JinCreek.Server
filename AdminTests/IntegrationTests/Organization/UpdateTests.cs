@@ -16,7 +16,7 @@ namespace AdminTests.IntegrationTests.Organization
     public class UpdateTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;
-        private const string Url = "/api/organizations";
+        private const string Url = "/api/organizations/mine";
 
         private readonly JinCreek.Server.Common.Models.Organization _org1 =
             new JinCreek.Server.Common.Models.Organization
@@ -72,7 +72,7 @@ namespace AdminTests.IntegrationTests.Organization
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new { };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -102,7 +102,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -127,7 +127,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901b", // 数字以外の文字含む
                 adminMail = "piyo", // "xxx@xxx"形式でない
             };
-            var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -155,7 +155,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "123456789012", // 9文字以下 or 12文字以上
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
@@ -181,9 +181,9 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
-            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             var body = result.Content.ReadAsStringAsync().Result;
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
 
@@ -206,7 +206,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
             var json = JObject.Parse(body);
@@ -231,7 +231,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminPhone = "2345678901",
                 adminMail = "admin@example.com",
             };
-            var result = Utils.Put(_client, $"{Url}/{obj.code}", Utils.CreateJsonContent(obj), token);
+            var result = Utils.Put(_client, Url, Utils.CreateJsonContent(obj), token);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var json = JObject.Parse(body);

@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Authentication/Register": {
+    "/api/authentication/register": {
       "post": {
         "tags": [
           "Authentication"
@@ -39,7 +39,7 @@
         }
       }
     },
-    "/api/Authentication/Login": {
+    "/api/authentication/login": {
       "post": {
         "tags": [
           "Authentication"
@@ -72,7 +72,7 @@
         }
       }
     },
-    "/api/Authentication/Refresh": {
+    "/api/authentication/refresh": {
       "post": {
         "tags": [
           "Authentication"
@@ -105,7 +105,7 @@
         }
       }
     },
-    "/api/Domains/{id}": {
+    "/api/domains/{id}": {
       "get": {
         "tags": [
           "Domains"
@@ -142,7 +142,7 @@
         ]
       }
     },
-    "/api/Domains": {
+    "/api/domains": {
       "get": {
         "tags": [
           "Domains"
@@ -218,7 +218,7 @@
         ]
       }
     },
-    "/api/Organizations": {
+    "/api/organizations": {
       "get": {
         "tags": [
           "Organizations"
@@ -241,7 +241,9 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
             },
             "x-position": 2
           },
@@ -381,12 +383,73 @@
         ]
       }
     },
-    "/api/Organizations/{code}": {
+    "/api/organizations/mine": {
       "get": {
         "tags": [
           "Organizations"
         ],
         "operationId": "Organizations_GetOrganization",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_PutOrganization",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutOrganizationParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/organizations/{code}": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganization2",
         "parameters": [
           {
             "name": "code",
@@ -421,7 +484,7 @@
         "tags": [
           "Organizations"
         ],
-        "operationId": "Organizations_PutOrganization",
+        "operationId": "Organizations_PutOrganization2",
         "parameters": [
           {
             "name": "code",
@@ -439,7 +502,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PutOrganizationParam"
+                "$ref": "#/components/schemas/PutOrganizationAdminParam"
               }
             }
           },
@@ -461,7 +524,9 @@
         },
         "security": [
           {
-            "JWT": []
+            "JWT": [
+              "SuperAdminUser"
+            ]
           }
         ]
       },
@@ -1685,22 +1750,35 @@
             "type": "string",
             "format": "email",
             "nullable": true
-          },
-          "startDay": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endDay": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "isValid": {
-            "type": "boolean",
-            "nullable": true
           }
         }
+      },
+      "PutOrganizationAdminParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutOrganizationParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "startDay": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "endDay": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "isValid": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
+          }
+        ]
       }
     },
     "securitySchemes": {

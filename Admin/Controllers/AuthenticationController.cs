@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Admin.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -32,7 +32,7 @@ namespace Admin.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]UsersRegisterRequest request)
         {
             var result = await _userManager.CreateAsync(new ApplicationUser { UserName = request.UserName }, request.Password);
@@ -43,7 +43,7 @@ namespace Admin.Controllers
             return Ok();
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UsersLoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
@@ -65,7 +65,7 @@ namespace Admin.Controllers
             });
         }
 
-        [HttpPost("Refresh")]
+        [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody]UsersRefreshRequest request)
         {
             var tokenValidationParameters = new TokenValidationParameters

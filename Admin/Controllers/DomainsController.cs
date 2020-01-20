@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/domains")]
     [ApiController]
     [Authorize]
     public class DomainsController : ControllerBase
@@ -72,6 +72,28 @@ namespace Admin.Controllers
             return query.Skip((param.Page - 1) * param.PageSize).Take(param.PageSize).ToList();
         }
 
+        // TODO: move
+        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
+        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
+        }
+
+        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
+        }
+
         public enum SortKey
         {
             Id,
@@ -94,29 +116,6 @@ namespace Admin.Controllers
             public OrderKey OrderBy { get; set; } = OrderKey.Asc;
 
             public long? OrganizationCode { get; set; }
-        }
-
-
-        // TODO: move
-        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
-        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
-        }
-
-        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
         }
     }
 }
