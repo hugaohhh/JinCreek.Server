@@ -62,21 +62,13 @@ namespace Admin.Controllers
         /// 組織照会
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = Roles.AdminUser)]
         [HttpGet("mine")]
         public ActionResult<Organization> GetOrganization()
         {
             var user = (EndUser)_userRepository.GetUser(Guid.Parse(User.Identity.Name));
             var domain = _userRepository.GetDomain(user.DomainId);
-            var organization = _userRepository.GetOrganization(domain.OrganizationCode);
-            if (organization == null)
-            {
-                return NotFound();
-            }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
-            {
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
-            }
-            return organization;
+            return GetOrganization(domain.OrganizationCode);
         }
 
         // GET: api/organizations/5
@@ -85,13 +77,14 @@ namespace Admin.Controllers
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdminUser)]
         [HttpGet("{code}")]
         public ActionResult<Organization> GetOrganization(long code)
         {
             var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
-                return NotFound();
+                return NotFound(new { traceId = Activity.Current.Id });
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
             {
@@ -106,6 +99,7 @@ namespace Admin.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.AdminUser)]
         [HttpPut("mine")]
         public IActionResult PutOrganization(PutOrganizationParam param)
         {
@@ -119,11 +113,7 @@ namespace Admin.Controllers
             var organization = _userRepository.GetOrganization(domain.OrganizationCode);
             if (organization == null)
             {
-                return NotFound();
-            }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
-            {
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
+                return NotFound(new { traceId = Activity.Current.Id });
             }
 
             organization.Code = param.Code ?? organization.Code;
@@ -159,11 +149,7 @@ namespace Admin.Controllers
             var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
-                return NotFound();
-            }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
-            {
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
+                return NotFound(new { traceId = Activity.Current.Id });
             }
 
             organization.Code = param.Code ?? organization.Code;

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Net;
+using System.Net.Http;
 using Xunit;
 
 namespace AdminTests.IntegrationTests.DomainTests
@@ -16,7 +15,7 @@ namespace AdminTests.IntegrationTests.DomainTests
     public class ListInquiryTests : IClassFixture<CustomWebApplicationFactory<Admin.Startup>>
     {
         private readonly HttpClient _client;
-        private const string Url = "/api/domains";
+        private const string Url = "/api/domains/mine";
 
         public ListInquiryTests(CustomWebApplicationFactory<Admin.Startup> factory)
         {
@@ -44,159 +43,91 @@ namespace AdminTests.IntegrationTests.DomainTests
         }
 
         /// <summary>
-        /// 異常：ユーザー管理者が組織コードを指定する
+        /// ページ：不在、ページサイズ：不在、ソート：不在
         /// </summary>
         [Fact]
         public void Case01()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=2", token);
+            var result = Utils.Get(_client, $"{Url}", token);
             var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             // TODO: impl bellow
         }
 
         /// <summary>
-        /// 正常：ユーザー管理者が組織コードを指定しない
+        /// ページ：0以下、ページサイズ：存在、ソート：不在
         /// </summary>
         [Fact]
         public void Case02()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
-            var result = Utils.Get(_client, $"{Url}", token);
+            var result = Utils.Get(_client, $"{Url}?page=0&pageSize=2", token);
             var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             // TODO: impl bellow
         }
 
-
         /// <summary>
-        /// 異常：スーパー管理者が組織コードを指定してない
+        /// ページ：中間ページ、ページサイズ：不在、ソート：ドメイン名昇順
         /// </summary>
         [Fact]
         public void Case03()
         {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}", token);
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
+            var result = Utils.Get(_client, $"{Url}?page=2&sortBy=domainName&orderBy=asc", token);
             var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             // TODO: impl bellow
         }
 
         /// <summary>
-        /// 異常：スーパー管理者が組織コードに数字以外を指定している
+        /// ページ：最終ページ、ページサイズ：存在、ソート：ドメイン名降順
         /// </summary>
         [Fact]
         public void Case04()
         {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=a", token);
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
+            var result = Utils.Get(_client, $"{Url}?page=21&pageSize=2&sortBy=domainName&orderBy=desc", token);
             var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             // TODO: impl bellow
         }
 
-
         /// <summary>
-        /// 異常：DBに組織がない場合
+        /// ページ：最終ページ、ページサイズ：不在、ソート：不在
         /// </summary>
         [Fact]
         public void Case05()
         {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1", token);
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
+            var result = Utils.Get(_client, $"{Url}?page=3", token);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             // TODO: impl bellow
         }
 
         /// <summary>
-        /// 正常：DBに組織がある場合
+        /// ページ：最終ページ超過、ページサイズ：不在、ソート：不在
         /// </summary>
         [Fact]
         public void Case06()
         {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1", token);
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
+            var result = Utils.Get(_client, $"{Url}?page=4", token);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             // TODO: impl bellow
         }
 
-
         /// <summary>
-        /// 正常：ページ数が不正（0以下）・1ページ当たり表示件数あり
+        /// ページ：不在、ページサイズ：不在、ソート：不在
         /// </summary>
         [Fact]
         public void Case07()
         {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1&page=0&pageSize=10", token);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-            // TODO: impl bellow
-        }
-
-        /// <summary>
-        /// 正常：ページ数が中間ページ・1ページ当たり表示件数なし・ドメイン名の昇順でソート
-        /// </summary>
-        [Fact]
-        public void Case08()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1&page=2&sortBy=domainName&orderBy=asc", token);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            // TODO: impl bellow
-        }
-
-        /// <summary>
-        /// 正常：ページ数が最終ページ・1ページ当たり表示件数あり・ドメイン名の降順でソート
-        /// </summary>
-        [Fact]
-        public void Case09()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1&page=3&pageSize=10&sortBy=domainName&orderBy=desc", token);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            // TODO: impl bellow
-        }
-
-        /// <summary>
-        /// 正常：ページ数が最終ページ・1ページ当たり表示件数なし
-        /// </summary>
-        [Fact]
-        public void Case10()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1&page=2", token);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            // TODO: impl bellow
-        }
-
-        /// <summary>
-        /// 正常：ページ数が最終ページ超過
-        /// </summary>
-        [Fact]
-        public void Case11()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1&page=3", token);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            // TODO: impl bellow
-        }
-
-        /// <summary>
-        /// 正常：ページ数指定なし
-        /// </summary>
-        [Fact]
-        public void Case12()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?organizationCode=1", token);
+            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者
+            var result = Utils.Get(_client, $"{Url}", token);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             // TODO: impl bellow
