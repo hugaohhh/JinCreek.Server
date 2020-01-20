@@ -90,6 +90,7 @@ namespace JinCreek.Server.AuthTests
                 Value = "Nw1Address"
             };
             _radiusDbContext.Radreply.Add(radreply);
+            _radiusDbContext.SaveChanges();
         }
 
         //////////////////////////////
@@ -107,6 +108,7 @@ namespace JinCreek.Server.AuthTests
         public Radreply GetRadreply(string username)
         {
             return _radiusDbContext.Radreply
+                .AsNoTracking()
                 .Where(r => r.Username == username).FirstOrDefault();
         }
 
