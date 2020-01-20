@@ -123,14 +123,68 @@ namespace JinCreek.Server.Common.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SimGroup>()
+                .HasAlternateKey(sg => new
+                {
+                    sg.OrganizationCode,
+                    sg.SimGroupName
+                }).HasName("SimGroup_Code_SimGroupName_UQ");
+
+            modelBuilder.Entity<Sim>()
+                .HasAlternateKey(s => s.Msisdn)
+                .HasName("Sim_Msisdn_UQ");
+
+
+            modelBuilder.Entity<DeviceGroup>()
+                .HasAlternateKey(dg => new
+                {
+                    dg.OrganizationCode,
+                    dg.Os,
+                    dg.Version
+                }).HasName("DeviceGroup_Code_Os_Version_UQ");
+
+            modelBuilder.Entity<Device>()
+                .HasAlternateKey(d => d.DeviceName)
+                .HasName("Device_DeviceName_UQ");
+
+            modelBuilder.Entity<Lte>()
+                .HasAlternateKey(l => l.LteName)
+                .HasName("Lte_LteName_UQ");
+
+            modelBuilder.Entity<Domain>()
+                .HasAlternateKey(d => d.DomainName)
+                .HasName("Domain_DomainName_UQ");
+
+
             modelBuilder.Entity<User>()
                 .HasAlternateKey(u => u.AccountName)
                 .HasName("User_AccountName_UQ");
 
-            //modelBuilder.Entity<DeviceGroup>()
-            //    .HasAlternateKey(dg => new {
-            //        dg.OrganizationCode, dg.Os, dg.Version
-            //    }).HasName("DeviceGroup_Code_UQ");
+            modelBuilder.Entity<UserGroup>()
+                .HasAlternateKey(ug => new
+                {
+                    ug.DomainId,
+                    ug.UserGroupName
+                })
+                .HasName("UserGroup_UserGroupName_UQ");
+
+
+            modelBuilder.Entity<SimDevice>()
+                .HasAlternateKey(sd => new
+                {
+                    sd.SimId,
+                    sd.DeviceId
+                })
+                .HasName("SimDevice_SimId_DeviceId_UQ");
+
+            modelBuilder.Entity<FactorCombination>()
+                .HasAlternateKey(mf => new
+                {
+                    mf.SimDeviceId,
+                    mf.EndUserId
+                })
+                .HasName("MultiFactor_SimDeviceId_EndUserId_UQ");
+
 
             modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
             {

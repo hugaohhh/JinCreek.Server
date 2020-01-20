@@ -20,7 +20,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
+        [Column(TypeName = "VARCHAR(512) BINARY")]
         public string DomainName { get; set; }
 
 
