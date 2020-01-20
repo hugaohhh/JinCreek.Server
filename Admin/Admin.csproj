@@ -32,6 +32,6 @@
   </ItemGroup>
 
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
-    <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Admin.dll /output:Docs\swagger.json" />
+    <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Admin.dll /output:Docs/swagger.json" />
   </Target>
 </Project>

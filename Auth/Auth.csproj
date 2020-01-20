@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
-    <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Auth.dll /output:Docs\swagger.json" />
+    <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Auth.dll /output:Docs/swagger.json" />
     <!-- 
     <Exec Command="$(NSwagExe_Core31) aspnetcore2openapi /assembly:$(TargetDir)Auth.dll /output:auth-openapi.json" />
     -->
