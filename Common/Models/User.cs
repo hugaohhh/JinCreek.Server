@@ -21,7 +21,7 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "VARCHAR(512) BINARY")]
+        [Column(TypeName = "VARCHAR(128) BINARY")]
         public string UserGroupName { get; set; }
 
 
@@ -45,17 +45,13 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Column(TypeName = "VARCHAR(128) BINARY")]
         public string AccountName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string LastName { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string FirstName { get; set; }
+        public string Name { get; set; }
     }
 
     public abstract class EndUser : User
