@@ -55,7 +55,7 @@ namespace JinCreek.Server.Common.Repositories
                 .Include(sd => sd.Device)
                 .Include(sd => sd.SimDeviceAuthenticationStateDone)
                 .Where(sd =>
-                    sd.Device.DeviceImei == deviceImei
+                    sd.Device.Imei == deviceImei
                     && sd.Sim.Imsi == simImsi
                     && sd.Sim.Msisdn == simMsisdn
                     && sd.Sim.IccId == simIccId
@@ -125,9 +125,9 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public void Create(Deauthentication deauthentication)
+        public void Create(DeauthenticationAuthenticationLogSuccess deauthenticationAuthenticationLogSuccess)
         {
-            _dbContext.Deauthentication.Add(deauthentication);
+            _dbContext.Deauthentication.Add(deauthenticationAuthenticationLogSuccess);
             _dbContext.SaveChanges();
         }
 

@@ -16,6 +16,11 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        public Guid SimGroupId { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Msisdn { get; set; }
 
@@ -43,10 +48,6 @@ namespace JinCreek.Server.Common.Models
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Password { get; set; }
 
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid SimGroupId { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -60,7 +61,6 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<SimDeviceAuthenticationLogFail> SimDeviceAuthenticationLogFails { get; set; }
-
     }
 
     public class SimGroup
@@ -73,29 +73,19 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
+        public long OrganizationCode { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "VARCHAR(512) BINARY")]
         public string SimGroupName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        public long OrganizationCode { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public Organization Organization { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string PrimaryDns { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string SecondDns { get; set; }
+        public string Nw1IpAddressPool { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -107,31 +97,52 @@ namespace JinCreek.Server.Common.Models
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string NasAddress { get; set; }
+        public string NasIpAddress { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string Nw1AddressPool { get; set; }
+        public string Nw1IpAddressRange { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string Nw1AddressRange { get; set; }
+        public string PrimaryDns { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string ServerAddress { get; set; }
+        public string SecondaryDns { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Nw1PrimaryDns { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Nw1SecondaryDns { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string AuthServerIpAddress { get; set; }
+
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public Organization Organization { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<Sim> Sims { get; set; }
-
-
     }
 }

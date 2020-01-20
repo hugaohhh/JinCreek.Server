@@ -23,9 +23,9 @@ namespace JinCreek.Server.AuthTests.Controllers
 
             public TestDataClass()
             {
-                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "", SimIccId = "1" }, 200, new ValidationProblemDetails(){Status = 200} });
-                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "1", SimIccId = "2" }, 200, new ErrorResponse(){ErrorCode = "1111", ErrorMessage = "aaaa"} });
-                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "", SimIccId = "3" }, 400, new SimDeviceAuthenticationResponse(){AuthId = "hoge"} });
+                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { Imei = "", SimIccId = "1" }, 200, new ValidationProblemDetails(){Status = 200} });
+                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { Imei = "1", SimIccId = "2" }, 200, new ErrorResponse(){ErrorCode = "1111", ErrorMessage = "aaaa"} });
+                //_testData.Add(new object[] { new SimDeviceAuthenticationRequest() { Imei = "", SimIccId = "3" }, 400, new SimDeviceAuthenticationResponse(){AuthId = "hoge"} });
                 _testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "", SimIccId = "1" }, HttpStatusCode.BadRequest });
                 _testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "1", SimIccId = "2" }, HttpStatusCode.BadRequest });
                 _testData.Add(new object[] { new SimDeviceAuthenticationRequest() { DeviceImei = "", SimIccId = "3" }, HttpStatusCode.BadRequest });
@@ -66,7 +66,6 @@ namespace JinCreek.Server.AuthTests.Controllers
         {
             var org = new Organization()
             {
-                Code = "1234",
                 Name = "a",
                 Address = "b",
                 DelegatePhone = "0",
@@ -90,11 +89,11 @@ namespace JinCreek.Server.AuthTests.Controllers
             };
 
             var acualRessult = PostSimDeviceAuthentication(request);
-            var acualOrganization = UserRepository.GetOrganization(org.Id);
+            var acualOrganization = UserRepository.GetOrganization(org.Code);
 
 
             Assert.Equal(HttpStatusCode.Unauthorized, acualRessult.StatusCode);
-            Assert.Equal(org.Id, acualOrganization.Id);
+            Assert.Equal(org.Code, acualOrganization.Code);
         }
 
         [Fact(DisplayName = "DBテストCaseYy")]
@@ -102,7 +101,6 @@ namespace JinCreek.Server.AuthTests.Controllers
         {
             var org = new Organization()
             {
-                Code = "1234",
                 Name = "a",
                 Address = "b",
                 DelegatePhone = "0",
@@ -126,11 +124,11 @@ namespace JinCreek.Server.AuthTests.Controllers
             };
 
             var acualRessult = PostSimDeviceAuthentication(request);
-            var acualOrganization = UserRepository.GetOrganization(org.Id);
+            var acualOrganization = UserRepository.GetOrganization(org.Code);
 
 
             Assert.Equal(HttpStatusCode.Unauthorized, acualRessult.StatusCode);
-            Assert.Equal(org.Id, acualOrganization.Id);
+            Assert.Equal(org.Code, acualOrganization.Code);
         }
     }
 }

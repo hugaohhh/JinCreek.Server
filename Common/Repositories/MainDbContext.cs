@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JinCreek.Server.Common.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System.Diagnostics.CodeAnalysis;
-using JinCreek.Server.Common.Models;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -58,7 +58,7 @@ namespace JinCreek.Server.Common.Repositories
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<Deauthentication> Deauthentication { get; set; }
+        public DbSet<DeauthenticationAuthenticationLogSuccess> Deauthentication { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -96,7 +96,7 @@ namespace JinCreek.Server.Common.Repositories
         // DbSetアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AdminUser> AdminUser { get; set; }
-        
+
         //DbSetアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<GeneralUser> GeneralUser { get; set; }
@@ -123,14 +123,68 @@ namespace JinCreek.Server.Common.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SimGroup>()
+                .HasAlternateKey(sg => new
+                {
+                    sg.OrganizationCode,
+                    sg.SimGroupName
+                }).HasName("UQ_SimGroup_Code_SimGroupName");
+
+            modelBuilder.Entity<Sim>()
+                .HasAlternateKey(s => s.Msisdn)
+                .HasName("UQ_Sim_Msisdn");
+
+
+            modelBuilder.Entity<DeviceGroup>()
+                .HasAlternateKey(dg => new
+                {
+                    dg.OrganizationCode,
+                    dg.Os,
+                    dg.Version
+                }).HasName("UQ_DeviceGroup_Code_Os_Version");
+
+            modelBuilder.Entity<Device>()
+                .HasAlternateKey(d => d.DeviceName)
+                .HasName("UQ_Device_DeviceName");
+
+            modelBuilder.Entity<Lte>()
+                .HasAlternateKey(l => l.LteName)
+                .HasName("UQ_Lte_LteName");
+
+            modelBuilder.Entity<Domain>()
+                .HasAlternateKey(d => d.DomainName)
+                .HasName("UQ_Domain_DomainName");
+
+
             modelBuilder.Entity<User>()
                 .HasAlternateKey(u => u.AccountName)
-                .HasName("User_AccountName_UQ");
+                .HasName("UQ_User_AccountName");
 
-            //modelBuilder.Entity<DeviceGroup>()
-            //    .HasAlternateKey(dg => new {
-            //        dg.OrganizationCode, dg.OsType, dg.Version
-            //    }).HasName("DeviceGroup_Code_UQ");
+            modelBuilder.Entity<UserGroup>()
+                .HasAlternateKey(ug => new
+                {
+                    ug.DomainId,
+                    ug.UserGroupName
+                })
+                .HasName("UQ_UserGroup_UserGroupName");
+
+
+            modelBuilder.Entity<SimDevice>()
+                .HasAlternateKey(sd => new
+                {
+                    sd.SimId,
+                    sd.DeviceId
+                })
+                .HasName("UQ_SimDevice_SimId_DeviceId");
+
+            modelBuilder.Entity<FactorCombination>()
+                .HasAlternateKey(mf => new
+                {
+                    mf.SimDeviceId,
+                    mf.EndUserId
+                })
+                .HasName("UQ_MultiFactor_SimDeviceId_EndUserId");
+
 
             modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
             {
@@ -203,7 +257,7 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(fc => fc.MultiFactorAuthenticationLogSuccesses)
                 .HasForeignKey(fc => fc.FactorCombinationId);
 
-            modelBuilder.Entity<Deauthentication>()
+            modelBuilder.Entity<DeauthenticationAuthenticationLogSuccess>()
                 .HasOne(da => da.FactorCombination)
                 .WithMany(fc => fc.Deauthentications)
                 .HasForeignKey(fc => fc.FactorCombinationId);
@@ -299,11 +353,23 @@ namespace JinCreek.Server.Common.Repositories
                 .HasForeignKey(u => u.DomainId);
 
             modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("UserType")
+                .HasDiscriminator<string>("UserDiscriminator")
                 .HasValue<AdminUser>("admin")
                 .HasValue<GeneralUser>("general")
                 .HasValue<SuperAdminUser>("superAdmin");
 
+            modelBuilder.Entity<AuthenticationLog>()
+                .HasDiscriminator<string>("AuthenticationLogDiscriminator")
+                .HasValue<SimDeviceAuthenticationLogSuccess>("simDeviceSuccess")
+                .HasValue<SimDeviceAuthenticationLogFail>("simDeviceFail")
+                .HasValue<MultiFactorAuthenticationLogSuccess>("multiFactorSuccess")
+                .HasValue<MultiFactorAuthenticationLogFail>("multiFactorFail")
+                .HasValue<DeauthenticationAuthenticationLogSuccess>("deauthSuccess");
+
+            modelBuilder.Entity<AuthenticationState>()
+                .HasDiscriminator<string>("AuthenticationStateDiscriminator")
+                .HasValue<SimDeviceAuthenticationStateDone>("simDeviceDone")
+                .HasValue<MultiFactorAuthenticationStateDone>("multiFactorDone");
 
             modelBuilder.Entity<EndUser>()
                 .HasOne(u => u.UserGroup)
@@ -343,7 +409,7 @@ namespace JinCreek.Server.Common.Repositories
             modelBuilder.Entity<MultiFactorAuthenticationLogSuccess>()
                 .HasBaseType<AuthenticationLog>();
 
-            modelBuilder.Entity<Deauthentication>()
+            modelBuilder.Entity<DeauthenticationAuthenticationLogSuccess>()
                 .HasBaseType<AuthenticationLog>();
 
             modelBuilder.Entity<SimDeviceAuthenticationStateDone>()

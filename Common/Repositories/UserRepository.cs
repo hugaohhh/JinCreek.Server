@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JinCreek.Server.Common.Repositories

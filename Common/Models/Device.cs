@@ -13,29 +13,32 @@ namespace JinCreek.Server.Common.Models
         [Key]
         public Guid Id { get; set; }
 
+        // 名前
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
+        [Column(TypeName = "VARCHAR(512) BINARY")]
         public string DeviceName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string DeviceImei { get; set; }
+        public string ManageNumber { get; set; }
 
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string ManagerNumber { get; set; }
-
+        // 機種名
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
         public string Type { get; set; }
+
+        // 製造番号
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Imei { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -44,12 +47,13 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DeviceGroup DeviceGroup { get; set; }
+        [Required]
+        public Guid LteId { get; set; }
+
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid LteId { get; set; }
+        public DeviceGroup DeviceGroup { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -58,7 +62,6 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public SimDevice SimDevice { get; set; }
-
     }
 
     public class DeviceGroup
@@ -71,14 +74,20 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string Version { get; set; }
+        public long OrganizationCode { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string OsType { get; set; }
+        [Column(TypeName = "VARCHAR(256) BINARY")]
+        public string Os { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        [Column(TypeName = "VARCHAR(256) BINARY")]
+        public string Version { get; set; }
+
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -86,14 +95,8 @@ namespace JinCreek.Server.Common.Models
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public long OrganizationCode { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
         public List<Device> Devices { get; set; }
-
     }
 
     public class Lte
@@ -106,25 +109,24 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
-        [Column(TypeName = "LONGTEXT BINARY")]
+        [Column(TypeName = "VARCHAR(256) BINARY")]
         public string LteName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         [Column(TypeName = "LONGTEXT BINARY")]
-        public string LteAdapter { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
-        public List<Device> Devices { get; set; }
+        public string NwAdapterName { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
         public bool SoftwareRadioState { get; set; }
 
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
+        public List<Device> Devices { get; set; }
     }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
@@ -132,17 +134,17 @@ namespace JinCreek.Server.Common.Models
     {
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
+        public Guid DomainId { get; set; }
+
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Domain Domain { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        public Guid DomainId { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public AdDeviceSettingOfflineWindowsSignIn AdDeviceSettingOfflineWindowsSignIn { get; set; }
-
     }
 
     public class AdDeviceSettingOfflineWindowsSignIn
@@ -164,7 +166,5 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public Guid AdDeviceId { get; set; }
-
     }
-
 }

@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Models;
+using System.Linq;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -18,7 +18,7 @@ namespace JinCreek.Server.Common.Repositories
         /// <param name="sim"></param>
         /// <param name="flag">SimDevice 認証がNGとOkの表示</param>
         /// <returns></returns>
-        public int UpdateRadreply(Sim sim,bool flag)
+        public int UpdateRadreply(Sim sim, bool flag)
         {
             var reRadreply = _dbContext.Radreply
                 .Where(r => r.Username == sim.UserName)
@@ -26,7 +26,7 @@ namespace JinCreek.Server.Common.Repositories
             if (reRadreply != null)
             {
                 reRadreply.Attribute = "Framed-IP-Address";
-                reRadreply.Value = flag ? sim.SimDevice.Nw2AddressPool : reRadreply.Value;
+                reRadreply.Value = flag ? sim.SimDevice.Nw2IpAddressPool : reRadreply.Value;
             }
             return _dbContext.SaveChanges();
         }
@@ -43,7 +43,7 @@ namespace JinCreek.Server.Common.Repositories
         /// <param name="simDevice"></param>
         /// <param name="factor">多要素認証失敗するときに　NULLです</param>
         /// <param name="flag"> 多要素 認証がNGとOkの表示</param>
-        public int UpdateRadreply(SimDevice simDevice,FactorCombination factor, bool flag)
+        public int UpdateRadreply(SimDevice simDevice, FactorCombination factor, bool flag)
         {
             var reRadreply = _dbContext.Radreply
                 .Where(r => r.Username == simDevice.Sim.UserName)
@@ -51,7 +51,7 @@ namespace JinCreek.Server.Common.Repositories
             if (reRadreply != null)
             {
                 reRadreply.Attribute = "Framed-IP-Address";
-                reRadreply.Value = flag ? factor.NwAddress : reRadreply.Value;
+                reRadreply.Value = flag ? factor.NwIpAddress : reRadreply.Value;
             }
             return _dbContext.SaveChanges();
         }
