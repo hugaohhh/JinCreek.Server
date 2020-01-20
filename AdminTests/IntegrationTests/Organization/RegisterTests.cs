@@ -33,7 +33,7 @@ namespace AdminTests.IntegrationTests.Organization
 
         // TODO: Theory (https://xunit.net/docs/getting-started/netfx/visual-studio#write-first-theory) にできない？
         private static JObject NewObject(string delegatePhone = null, string url = null, string adminPhone = null,
-            string adminMail = null, string startDay = null, string endDay = null)
+            string adminMail = null, string startDay = null, string endDay = null, string isValid = null)
         {
             return JObject.FromObject(new
             {
@@ -46,7 +46,7 @@ namespace AdminTests.IntegrationTests.Organization
                 adminMail = adminMail ?? "admin@example.com",
                 startDay = startDay ?? "2020-01-08",
                 endDay = endDay ?? "2021-01-08",
-                isValid = true,
+                isValid = isValid ?? "true",
             });
         }
 
@@ -86,9 +86,9 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.NotNull(json["errors"]?["Url"]);
             Assert.NotNull(json["errors"]?["AdminPhone"]);
             Assert.NotNull(json["errors"]?["AdminMail"]);
-            Assert.Null(json["errors"]?["StartDay"]);    //TODO 入力必須チェックに変更予定
-            Assert.Null(json["errors"]?["EndDay"]);  //TODO 入力必須チェックに変更予定
-            Assert.Null(json["errors"]?["IsValid"]); //TODO 入力必須チェックに変更予定
+            Assert.NotNull(json["errors"]?["StartDay"]);
+            Assert.NotNull(json["errors"]?["EndDay"]);
+            Assert.NotNull(json["errors"]?["IsValid"]);
         }
 
         /// <summary>
@@ -98,27 +98,46 @@ namespace AdminTests.IntegrationTests.Organization
         public void Case03()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            Run(_client, token, NewObject(delegatePhone: "1234567890a",
-                                          url: "example.com",
-                                          adminPhone: "2345678901b",
-                                          adminMail: "admin.example.com")); //TODO 利用開始日、利用終了日、有効の不正値設定予定
+            var obj = NewObject(delegatePhone: "1234567890a", url: "example.com", adminPhone: "2345678901b",
+                adminMail: "admin.example.com", startDay: "2020-00-32", endDay: "2020-13-00", isValid: "hoge");
+            var result = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
+            var body = result.Content.ReadAsStringAsync().Result;
+            var json = JObject.Parse(body);
 
-            static void Run(HttpClient client, string token, JObject obj)
-            {
-                var result = Utils.Post(client, Url, Utils.CreateJsonContent(obj), token);
-                var body = result.Content.ReadAsStringAsync().Result;
-                var json = JObject.Parse(body);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.NotNull(json["traceId"]);
+            Assert.Null(json["errors"]?["DelegatePhone"]);
+            Assert.Null(json["errors"]?["AdminPhone"]);
+            Assert.Null(json["errors"]?["Url"]);
+            Assert.Null(json["errors"]?["AdminMail"]);
+            Assert.NotNull(json["errors"]?["startDay"]);
+            Assert.NotNull(json["errors"]?["endDay"]);
+            Assert.NotNull(json["errors"]?["isValid"]);
+            // ↑型変換エラーが先に出る。 see https://dev.azure.com/initialpoint/JinCreek.Server/_workitems/edit/11/
+        }
 
-                Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-                Assert.NotNull(json["traceId"]);
-                Assert.NotNull(json["errors"]?["DelegatePhone"]);
-                Assert.NotNull(json["errors"]?["AdminPhone"]);
-                Assert.NotNull(json["errors"]?["Url"]);
-                Assert.NotNull(json["errors"]?["AdminMail"]);
-                Assert.Null(json["errors"]?["StartDay"]);   //TODO 不正日付エラーチェック実装予定
-                Assert.Null(json["errors"]?["EndDay"]); //TODO 不正日付エラーチェック実装予定
-                Assert.Null(json["errors"]?["IsValid"]);    //TODO 不正値エラーチェック実装予定
-            }
+        /// <summary>
+        /// Case03の型変換エラー以外：
+        /// </summary>
+        [Fact]
+        public void Case03B()
+        {
+            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
+            var obj = NewObject(delegatePhone: "1234567890a", url: "example.com", adminPhone: "2345678901b",
+                adminMail: "admin.example.com");
+            var result1 = Utils.Post(_client, Url, Utils.CreateJsonContent(obj), token);
+            var body1 = result1.Content.ReadAsStringAsync().Result;
+            var json1 = JObject.Parse(body1);
+
+            Assert.Equal(HttpStatusCode.BadRequest, result1.StatusCode);
+            Assert.NotNull(json1["traceId"]);
+            Assert.NotNull(json1["errors"]?["DelegatePhone"]);
+            Assert.NotNull(json1["errors"]?["AdminPhone"]);
+            Assert.NotNull(json1["errors"]?["Url"]);
+            Assert.NotNull(json1["errors"]?["AdminMail"]);
+            Assert.Null(json1["errors"]?["startDay"]);
+            Assert.Null(json1["errors"]?["endDay"]);
+            Assert.Null(json1["errors"]?["isValid"]);
         }
 
         /// <summary>
