@@ -15,6 +15,7 @@ namespace JinCreek.Server.AuthTests
         private DeviceGroup _deviceGroup;
         private Domain _domain;
         private UserGroup _userGroup;
+        private Lte _lte;
 
         public AuthControllerTestRepository(MainDbContext mainDbContext, RadiusDbContext radiusDbContext)
         {
@@ -70,13 +71,13 @@ namespace JinCreek.Server.AuthTests
                 Domain = _domain,
                 UserGroupName = "UserGroup1"
             };
-
-
-            _mainDbContext.Organization.Add(organization);
-            _mainDbContext.DeviceGroup.Add(_deviceGroup);
-            _mainDbContext.SimGroup.Add(_simGroup);
-            _mainDbContext.Domain.Add(_domain);
-            _mainDbContext.UserGroup.Add(_userGroup);
+            _lte = new Lte
+            {
+                LteName = "Lte1",
+                LteAdapter = "LteAdapter1",
+                SoftwareRadioState = true
+            };
+            _mainDbContext.AddRange(organization,_deviceGroup,_domain,_userGroup,_lte);
             _mainDbContext.SaveChanges();
         }
 
@@ -98,6 +99,7 @@ namespace JinCreek.Server.AuthTests
         public SimDeviceAuthenticationStateDone GetSimDeviceAuthenticationStateDone(Guid id)
         {
             return _mainDbContext.SimDeviceAuthenticationStateDone
+                .AsNoTracking()
                 .Include(sd => sd.SimDevice)
                 .Include(sd => sd.SimDevice.Sim)
                 .FirstOrDefault(sd => sd.Id == id);
@@ -117,26 +119,17 @@ namespace JinCreek.Server.AuthTests
         private SimDevice SetUpInsertDataForCase13()
         {
             // Device
-            var lte = new Lte
-            {
-                LteName = "Lte1",
-                LteAdapter = "LteAdapter1",
-                SoftwareRadioState = true
-            };
-
             var device = new AdDevice
             {
                 DeviceName = "Device1",
                 DeviceImei = "352555093320000",
                 ManagerNumber = "DeviceManager1",
                 Type = "DeviceType1",
-                Lte = lte,
+                Lte = _lte,
                 DeviceGroup = _deviceGroup,
                 Domain = _domain
             };
-            _mainDbContext.Lte.Add(lte);
-            _mainDbContext.AdDevice.Add(device);
-
+            _mainDbContext.Device.Add(device);
 
             // Sim
             var sim = new Sim
@@ -163,7 +156,7 @@ namespace JinCreek.Server.AuthTests
             var simDeviceAuthenticationStateDone = new SimDeviceAuthenticationStateDone
             {
                 SimDevice = simDevice,
-                TimeLimit = DateTime.Now.AddHours(1.00)
+                TimeLimit = DateTime.Now.AddHours(-1.00)
             };
             _mainDbContext.SimDevice.Add(simDevice);
             _mainDbContext.SimDeviceAuthenticationStateDone.Add(simDeviceAuthenticationStateDone);
@@ -174,13 +167,10 @@ namespace JinCreek.Server.AuthTests
 
         public void SetUpInsertDataForCase131()
         {
-            var simDevice = SetUpInsertDataForCase13();
+            SetUpInsertDataForCase13();
         }
-
-        public void SetUpInsertDataForCase132()
+        public void CreateUser2(SimDevice simDevice)
         {
-            var simDevice = SetUpInsertDataForCase13();
-
             var admin = new AdminUser
             {
                 Domain = _userGroup.Domain,
@@ -201,7 +191,6 @@ namespace JinCreek.Server.AuthTests
             _mainDbContext.AdminUser.Add(admin);
             _mainDbContext.GeneralUser.Add(general);
 
-
             var factorCombination = new FactorCombination
             {
                 SimDevice = simDevice,
@@ -212,10 +201,59 @@ namespace JinCreek.Server.AuthTests
             };
             var factorCombination2 = new FactorCombination
             {
+
                 SimDevice = simDevice,
                 EndUser = general,
                 StartDay = DateTime.Now.AddHours(-6.00),
                 EndDay = DateTime.Now.AddHours(-6.00),
+                NwAddress = "NwAddress"
+            };
+            _mainDbContext.FactorCombination.Add(factorCombination);
+            _mainDbContext.FactorCombination.Add(factorCombination2);
+            _mainDbContext.SaveChanges();
+        }
+        public void SetUpInsertDataForCase132()
+        {
+            var simDevice = SetUpInsertDataForCase13();
+            CreateUser2(simDevice);
+        }
+
+        public void CreateUser3(SimDevice simDevice)
+        {
+            var admin = new AdminUser
+            {
+                Domain = _userGroup.Domain,
+                UserGroup = _userGroup,
+                LastName = "管理人",
+                FirstName = "一郎",
+                Password = "password",
+                AccountName = "AccountUser1"
+            };
+            var general = new GeneralUser
+            {
+                Domain = _userGroup.Domain,
+                UserGroup = _userGroup,
+                LastName = "一般",
+                FirstName = "次郎",
+                AccountName = "AccountUser2"
+            };
+            _mainDbContext.AdminUser.Add(admin);
+            _mainDbContext.GeneralUser.Add(general);
+
+            var factorCombination = new FactorCombination
+            {
+                SimDevice = simDevice,
+                EndUser = admin,
+                StartDay = DateTime.Now.AddHours(6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
+                NwAddress = "NwAddress",
+            };
+            var factorCombination2 = new FactorCombination
+            {
+                SimDevice = simDevice,
+                EndUser = general,
+                StartDay = DateTime.Now.AddHours(6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
                 NwAddress = "NwAddress"
             };
             _mainDbContext.FactorCombination.Add(factorCombination);
@@ -226,7 +264,253 @@ namespace JinCreek.Server.AuthTests
         public void SetUpInsertDataForCase133()
         {
             var simDevice = SetUpInsertDataForCase13();
+            CreateUser3(simDevice);
+        }
 
+   
+
+        public void SetUpInsertDataForCase15()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            _mainDbContext.Sim.Add(sim);
+            _mainDbContext.SaveChanges();
+        }
+
+        public void SetUpInsertDataForCase16()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
+                AuthPeriod = 1
+            };
+            _mainDbContext.AddRange(sim,device,simDevice);
+            _mainDbContext.SaveChanges();
+        }
+        public void SetUpInsertDataForCase17()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                EndDay = DateTime.Now.AddHours(-6.00),
+                AuthPeriod = 1
+            };
+            _mainDbContext.AddRange(sim, device, simDevice);
+            _mainDbContext.SaveChanges();
+        }
+        public SimDevice SetUpInsertDataForCase18()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                AuthPeriod = 1
+            };
+            _mainDbContext.AddRange(sim, device, simDevice);
+            _mainDbContext.SaveChanges();
+            return simDevice;
+        }
+
+        public void SetUpInsertDataForCase181()
+        {
+            SetUpInsertDataForCase18();
+        }
+        public void SetUpInsertDataForCase182()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser2(simDevice);
+        }
+        public void SetUpInsertDataForCase183()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser3(simDevice);
+        }
+
+        public SimDevice SetUpInsertDataForCase19()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
+                AuthPeriod = 1
+            };
+            _mainDbContext.AddRange(sim, device, simDevice);
+            _mainDbContext.SaveChanges();
+            return simDevice;
+        }
+
+        public void SetUpInsertDataForCase191()
+        {
+            SetUpInsertDataForCase19();
+        }
+        public void SetUpInsertDataForCase192()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser2(simDevice);
+        }
+        public void SetUpInsertDataForCase193()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser3(simDevice);
+        }
+
+        public SimDevice SetUpInsertDataForCase20()
+        {
+            // Sim
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var adDeviceSettingOfflineWindowsSignIn = new AdDeviceSettingOfflineWindowsSignIn
+            {
+                AdDevice = device,
+                WindowsSignInListCacheDays = 1
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
+                AuthPeriod = 1
+            };
+            _mainDbContext.AddRange(sim, device, simDevice,adDeviceSettingOfflineWindowsSignIn);
+            _mainDbContext.SaveChanges();
+            return simDevice;
+        }
+        public void SetUpInsertDataForCase201()
+        {
+            SetUpInsertDataForCase19();
+        }
+        public void SetUpInsertDataForCase202()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser2(simDevice);
+        }
+        public void SetUpInsertDataForCase203()
+        {
+            var simDevice = SetUpInsertDataForCase18();
+            CreateUser3(simDevice);
+        }
+
+        public void CreateUser5(SimDevice simDevice)
+        {
             var admin = new AdminUser
             {
                 Domain = _userGroup.Domain,
@@ -244,28 +528,94 @@ namespace JinCreek.Server.AuthTests
                 FirstName = "次郎",
                 AccountName = "AccountUser2"
             };
-            _mainDbContext.AdminUser.Add(admin);
-            _mainDbContext.GeneralUser.Add(general);
-
             var factorCombination = new FactorCombination
             {
                 SimDevice = simDevice,
                 EndUser = admin,
-                StartDay = DateTime.Now.AddHours(6.00),
-                EndDay = DateTime.Now.AddHours(6.00),
-                NwAddress = "NwAddress",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                NwAddress = "NwAddress"
             };
-            var factorCombination2 = new FactorCombination
+            _mainDbContext.AddRange(general,admin,factorCombination);
+            _mainDbContext.SaveChanges();
+        }
+        public void CreateUser6(SimDevice simDevice)
+        {
+            var admin = new AdminUser
+            {
+                Domain = _userGroup.Domain,
+                UserGroup = _userGroup,
+                LastName = "管理人",
+                FirstName = "一郎",
+                Password = "password",
+                AccountName = "AccountUser1"
+            };
+            var general = new GeneralUser
+            {
+                Domain = _userGroup.Domain,
+                UserGroup = _userGroup,
+                LastName = "一般",
+                FirstName = "次郎",
+                AccountName = "AccountUser2"
+            };
+            var factorCombination = new FactorCombination
             {
                 SimDevice = simDevice,
-                EndUser = general,
-                StartDay = DateTime.Now.AddHours(6.00),
+                EndUser = admin,
+                StartDay = DateTime.Now.AddHours(-6.00),
                 EndDay = DateTime.Now.AddHours(6.00),
                 NwAddress = "NwAddress"
             };
-            _mainDbContext.FactorCombination.Add(factorCombination);
-            _mainDbContext.FactorCombination.Add(factorCombination2);
+            _mainDbContext.AddRange(general, admin, factorCombination);
             _mainDbContext.SaveChanges();
+        }
+        public SimDevice SetUpInsertDataForCase21()
+        {
+            var device = new AdDevice
+            {
+                DeviceName = "Device1",
+                DeviceImei = "352555093320000",
+                ManagerNumber = "DeviceManager1",
+                Type = "DeviceType1",
+                Lte = _lte,
+                DeviceGroup = _deviceGroup,
+                Domain = _domain
+            };
+            var sim = new Sim
+            {
+                Msisdn = "02017911000",
+                Imsi = "440103213100000",
+                IccId = "8981100005819480000",
+                SimGroup = _simGroup,
+                Password = "123456",
+                UserName = "user1"
+            };
+            var simDevice = new SimDevice
+            {
+                Sim = sim,
+                Device = device,
+                Nw2AddressPool = "Nw2Address",
+                StartDay = DateTime.Now.AddHours(-6.00),
+                EndDay = DateTime.Now.AddHours(6.00),
+                AuthPeriod = 1,
+            };
+            var adDeviceSettingOfflineWindowsSignIn = new AdDeviceSettingOfflineWindowsSignIn
+            {
+                AdDevice = device,
+                WindowsSignInListCacheDays = 1
+            };
+            _mainDbContext.AddRange(sim,device, simDevice, adDeviceSettingOfflineWindowsSignIn);
+            _mainDbContext.SaveChanges();
+            return simDevice;
+        }
+        public void SetUpInsertDataForCase211()
+        {
+            var simDevice = SetUpInsertDataForCase21();
+            CreateUser5(simDevice);
+        }
+        public void SetUpInsertDataForCase212()
+        {
+            var simDevice = SetUpInsertDataForCase21();
+            CreateUser6(simDevice);
         }
     }
 }

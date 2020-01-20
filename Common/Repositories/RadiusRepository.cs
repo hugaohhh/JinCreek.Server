@@ -31,12 +31,6 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public int Create(Radreply radreply)
-        {
-            _dbContext.Radreply.Add(radreply);
-            return _dbContext.SaveChanges();
-        }
-
         public Radreply GetRadreply(string username)
         {
             return _dbContext.Radreply

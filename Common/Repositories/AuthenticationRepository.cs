@@ -76,61 +76,6 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
         }
 
-        public void Create(Organization organization)
-        {
-            _dbContext.Organization.Add(organization);
-            _dbContext.SaveChanges();
-        }
-        public void Create(SimGroup simGroup)
-        {
-            _dbContext.SimGroup.Add(simGroup);
-            _dbContext.SaveChanges();
-        }
-        public void Create(DeviceGroup deviceGroup)
-        {
-            _dbContext.DeviceGroup.Add(deviceGroup);
-            _dbContext.SaveChanges();
-        }
-        public void Create(Device device)
-        {
-            _dbContext.Device.Add(device);
-            _dbContext.SaveChanges();
-        }
-        public void Create(Lte lte)
-        {
-            _dbContext.Lte.Add(lte);
-            _dbContext.SaveChanges();
-        }
-        public void Create(Sim sim)
-        {
-            _dbContext.Sim.Add(sim);
-            _dbContext.SaveChanges();
-        }
-        public void Create(SimDevice simDevice)
-        {
-            _dbContext.SimDevice.Add(simDevice);
-            _dbContext.SaveChanges();
-        }
-        public void Create(Domain domain)
-        {
-            _dbContext.Domain.Add(domain);
-            _dbContext.SaveChanges();
-        }
-        public void Create(UserGroup userGroup)
-        {
-            _dbContext.UserGroup.Add(userGroup);
-            _dbContext.SaveChanges();
-        }
-        public void Create(AdDeviceSettingOfflineWindowsSignIn adDeviceSettingOfflineWindowsSignIn)
-        {
-            _dbContext.AdDeviceSettingOfflineWindowsSignIn.Add(adDeviceSettingOfflineWindowsSignIn);
-            _dbContext.SaveChanges();
-        }
-        public void Create(User user)
-        {
-            _dbContext.User.Add(user);
-            _dbContext.SaveChanges();
-        }
         public int Create(SimDeviceAuthenticationLogSuccess simDeviceAuthentication)
         {
             _dbContext.SimDeviceAuthenticationLogSuccess.Add(simDeviceAuthentication);
@@ -182,17 +127,6 @@ namespace JinCreek.Server.Common.Repositories
                             && s.Msisdn == simMsisdn
                             && s.Imsi == simImsi)
                 .FirstOrDefault();
-        }
-
-        public Organization GetOrganization(long code)
-        {
-            return _dbContext.Organization.SingleOrDefault(o => o.Code == code);
-        }
-
-        public void Create(FactorCombination factorCombination)
-        {
-            _dbContext.FactorCombination.Add(factorCombination);
-            _dbContext.SaveChanges();
         }
 
         public List<string> GetLoginUsers(SimDevice simDevice)
@@ -247,13 +181,6 @@ namespace JinCreek.Server.Common.Repositories
                 .FirstOrDefault();
             return factorCombination;
         }
-        public UserGroup GetUserGroup(string usergroup1)
-        {
-            return _dbContext.UserGroup
-                .Include(ug => ug.Domain)
-                .Where(ug => ug.UserGroupName == usergroup1)
-                .FirstOrDefault();
-        }
 
         public AdDevice GetAdDevice(Guid deviceId)
         {
@@ -264,7 +191,6 @@ namespace JinCreek.Server.Common.Repositories
                 .SingleOrDefault();
             return adDevice;
         }
-
         public void Update(SimDeviceAuthenticationStateDone simDeviceAuthenticationStateDone)
         {
             _dbContext.SimDeviceAuthenticationStateDone.Update(simDeviceAuthenticationStateDone);
@@ -291,12 +217,5 @@ namespace JinCreek.Server.Common.Repositories
             return _dbContext.SaveChanges();
         }
 
-        public SimDeviceAuthenticationStateDone GetSimDeviceAuthenticationDone(Guid id)
-        {
-            return _dbContext.SimDeviceAuthenticationStateDone
-                .Include(sd => sd.SimDevice)
-                .Include(sd => sd.SimDevice.Sim)
-                .FirstOrDefault(sd => sd.Id == id);
-        }
     }
 }
