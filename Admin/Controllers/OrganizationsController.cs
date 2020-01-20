@@ -12,11 +12,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
 
 namespace Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/organizations")]
     [ApiController]
     [Authorize]
     public class OrganizationsController : ControllerBase
@@ -32,7 +31,7 @@ namespace Admin.Controllers
             _context = context;
         }
 
-        // GET: api/Organizations
+        // GET: api/organizations
         /// <summary>
         /// 組織一覧照会
         /// </summary>
@@ -58,19 +57,34 @@ namespace Admin.Controllers
             return query.Skip((param.Page - 1) * param.PageSize).Take(param.PageSize).ToList();
         }
 
-        // GET: api/Organizations/5
+        // GET: api/organizations/mine
+        /// <summary>
+        /// 組織照会
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.AdminUser)]
+        [HttpGet("mine")]
+        public ActionResult<Organization> GetOrganization()
+        {
+            var user = (EndUser)_userRepository.GetUser(Guid.Parse(User.Identity.Name));
+            var domain = _userRepository.GetDomain(user.DomainId);
+            return GetOrganization(domain.OrganizationCode);
+        }
+
+        // GET: api/organizations/5
         /// <summary>
         /// 組織照会
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdminUser)]
         [HttpGet("{code}")]
         public ActionResult<Organization> GetOrganization(long code)
         {
             var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
-                return NotFound();
+                return NotFound(new { traceId = Activity.Current.Id });
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
             {
@@ -79,7 +93,42 @@ namespace Admin.Controllers
             return organization;
         }
 
-        // PUT: api/Organizations/5
+        // PUT: api/organizations/mine
+        /// <summary>
+        /// 組織更新
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.AdminUser)]
+        [HttpPut("mine")]
+        public IActionResult PutOrganization(PutOrganizationParam param)
+        {
+            if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
+            {
+                return BadRequest(new { traceId = Activity.Current.Id });
+            }
+
+            var user = (EndUser)_userRepository.GetUser(Guid.Parse(User.Identity.Name));
+            var domain = _userRepository.GetDomain(user.DomainId);
+            var organization = _userRepository.GetOrganization(domain.OrganizationCode);
+            if (organization == null)
+            {
+                return NotFound(new { traceId = Activity.Current.Id });
+            }
+
+            organization.Code = param.Code ?? organization.Code;
+            organization.Name = param.Name ?? organization.Name;
+            organization.Address = param.Address ?? organization.Address;
+            organization.DelegatePhone = param.DelegatePhone ?? organization.DelegatePhone;
+            organization.Url = param.Url ?? organization.Url;
+            organization.AdminPhone = param.AdminPhone ?? organization.AdminPhone;
+            organization.AdminMail = param.AdminMail ?? organization.AdminMail;
+
+            _userRepository.Update(organization);
+            return Ok(organization);
+        }
+
+        // PUT: api/organizations/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         /// <summary>
@@ -88,8 +137,9 @@ namespace Admin.Controllers
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdminUser)]
         [HttpPut("{code}")]
-        public IActionResult PutOrganization(long code, PutOrganizationParam param)
+        public IActionResult PutOrganization(long code, PutOrganizationAdminParam param)
         {
             if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
             {
@@ -108,21 +158,10 @@ namespace Admin.Controllers
                 });
             }
 
-            var role = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role)?.Value;
-            if (role == Roles.AdminUser && (param.StartDay != null || param.EndDay != null || param.IsValid != null))
-            {
-                // ユーザー管理者が利用開始日、利用終了日、有効を指定するのはエラー
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
-            }
-
             var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
-                return NotFound(new { traceId = Activity.Current.Id, errors = new { Organization = "not found" } });
-            }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
-            {
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
+                return NotFound(new { traceId = Activity.Current.Id });
             }
 
             organization.Code = param.Code ?? organization.Code;
@@ -140,28 +179,8 @@ namespace Admin.Controllers
             return Ok(organization);
         }
 
-        public class PutOrganizationParam
-        {
-            public long? Code { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
-            [Phone]
-            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
-            public string DelegatePhone { get; set; }
-            [Url]
-            public string Url { get; set; }
-            [Phone]
-            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
-            public string AdminPhone { get; set; }
-            [EmailAddress]
-            public string AdminMail { get; set; }
-            public DateTime? StartDay { get; set; }
-            public DateTime? EndDay { get; set; }
-            public bool? IsValid { get; set; }
-        }
 
-
-        // POST: api/Organizations
+        // POST: api/organizations
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         /// <summary>
@@ -169,8 +188,8 @@ namespace Admin.Controllers
         /// </summary>
         /// <param name="organization"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdminUser)]
         [HttpPost]
-        [Authorize(Roles = "SuperAdminUser")]
         public ActionResult<Organization> PostOrganization(Organization organization)
         {
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Create).Result.Succeeded)
@@ -192,14 +211,14 @@ namespace Admin.Controllers
             return CreatedAtAction("GetOrganization", new { code = organization.Code }, organization);
         }
 
-        // DELETE: api/Organizations/5
+        // DELETE: api/organizations/5
         /// <summary>
         /// 組織削除
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdminUser)]
         [HttpDelete("{code}")]
-        [Authorize(Roles = "SuperAdminUser")]
         public ActionResult<Organization> DeleteOrganization(long code)
         {
             var organization = _userRepository.GetOrganization(code);
@@ -219,9 +238,57 @@ namespace Admin.Controllers
             return new ObjectResult(organization) { StatusCode = StatusCodes.Status204NoContent };
         }
 
+
+
+
         private bool OrganizationExists(long code)
         {
             return _userRepository.GetOrganization(code) != null;
+        }
+
+        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
+        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
+        }
+
+        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
+        {
+            var parameter = Expression.Parameter(typeof(TSource), "x");
+            Expression property = Expression.Property(parameter, propertyName);
+            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
+                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
+                    new object[] { source, Expression.Lambda(property, parameter) });
+        }
+
+        public class PutOrganizationParam
+        {
+            public long? Code { get; set; }
+            public string Name { get; set; }
+            public string Address { get; set; }
+            [Phone]
+            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+            public string DelegatePhone { get; set; }
+            [Url]
+            public string Url { get; set; }
+            [Phone]
+            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+            public string AdminPhone { get; set; }
+            [EmailAddress]
+            public string AdminMail { get; set; }
+        }
+
+        public class PutOrganizationAdminParam : PutOrganizationParam
+        {
+            public DateTime? StartDay { get; set; }
+            public DateTime? EndDay { get; set; }
+            public bool? IsValid { get; set; }
         }
 
         public enum SortKey
@@ -248,6 +315,7 @@ namespace Admin.Controllers
         {
             [Range(1, int.MaxValue)]
             public int Page { get; set; } = 1;
+            [Range(1, 1000)]
             public int PageSize { get; set; } = 20;
 
             public SortKey SortBy { get; set; } = SortKey.Code;
@@ -259,27 +327,6 @@ namespace Admin.Controllers
             public DateTime? EndDayFrom { get; set; }
             public DateTime? EndDayTo { get; set; }
             public bool? IsValid { get; set; }
-        }
-
-        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
-        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
-        }
-
-        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
         }
     }
 }

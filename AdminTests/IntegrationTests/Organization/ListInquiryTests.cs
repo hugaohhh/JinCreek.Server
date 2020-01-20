@@ -149,44 +149,17 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal("3", array[2]["code"]);
         }
 
-        /// <summary>
-        /// 有効フィルター：有効
-        /// </summary>
-        [Fact]
-        public void Case08()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?isvalid=true", token);
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            var body = result.Content.ReadAsStringAsync().Result;
-            var array = JArray.Parse(body);
-            Assert.Equal(4, array.Count);
-            Assert.Equal("1", array[0]["code"]);
-            Assert.Equal("2", array[1]["code"]);
-            Assert.Equal("3", array[2]["code"]);
-            Assert.Equal("4", array[3]["code"]);
-        }
 
-        /// <summary>
-        /// 有効フィルター：無効
-        /// </summary>
-        [Fact]
-        public void Case09()
-        {
-            var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
-            var result = Utils.Get(_client, $"{Url}?isvalid=false", token);
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            var body = result.Content.ReadAsStringAsync().Result;
-            var array = JArray.Parse(body);
-            Assert.Single(array);
-            Assert.Equal("5", array[0]["code"]);
-        }
+        //
+        // case 08～19: ListInquiryTest08_19
+        //
+
 
         /// <summary>
         /// 全フィルター
         /// </summary>
         [Fact]
-        public void Case10()
+        public void Case20()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Get(_client, $"{Url}?name=org3&startdayfrom=2020-01-15&startdayto=2020-01-16&enddayfrom=2021-01-16&enddayto=2021-01-17&isvalid=true", token);
@@ -201,7 +174,7 @@ namespace AdminTests.IntegrationTests.Organization
         /// 全フィルター
         /// </summary>
         [Fact]
-        public void Case11()
+        public void Case21()
         {
             var token = Utils.GetAccessToken(_client, "user0", "user0"); // スーパー管理者
             var result = Utils.Get(_client, $"{Url}?name=org3&startdayfrom=2020-01-15&startdayto=2020-01-16&enddayfrom=2021-01-16&enddayto=2021-01-17&isvalid=true", token);
