@@ -114,8 +114,7 @@ CREATE TABLE `AdDeviceSettingOfflineWindowsSignIn` (
 CREATE TABLE `User` (
     `Id` char(36) NOT NULL,
     `AccountName` VARCHAR(128) BINARY NOT NULL,
-    `LastName` LONGTEXT BINARY NULL,
-    `FirstName` LONGTEXT BINARY NULL,
+    `Name` LONGTEXT BINARY NULL,
     `UserDiscriminator` longtext CHARACTER SET utf8mb4 NOT NULL,
     `DomainId` char(36) NULL,
     `UserGroupId` char(36) NULL,
@@ -220,6 +219,6 @@ CREATE INDEX `IX_User_DomainId` ON `User` (`DomainId`);
 CREATE INDEX `IX_User_UserGroupId` ON `User` (`UserGroupId`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20200120074018_IntialCreate', '3.1.0');
+VALUES ('20200120074803_IntialCreate', '3.1.0');
 
 

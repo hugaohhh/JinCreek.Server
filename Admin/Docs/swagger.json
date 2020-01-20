@@ -1330,11 +1330,7 @@
             "type": "string",
             "minLength": 1
           },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "firstName": {
+          "name": {
             "type": "string",
             "nullable": true
           }
