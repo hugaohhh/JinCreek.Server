@@ -63,24 +63,24 @@ namespace AdminTests.IntegrationTests.Organization
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// 異常：IDがない
-        /// </summary>
-        [Fact]
-        public void Case1()
-        {
-            var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
-            var result = Utils.Get(_client, $"{Url}/", token);
-            Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
-            var body = result.Content.ReadAsStringAsync().Result;
-            Assert.Empty(body);
-        }
+        ///// <summary>
+        ///// 異常：IDがない      //組織一覧照会で実施しているためテストケースを除外
+        ///// </summary>
+        //[Fact]
+        //public void Case1()
+        //{
+        //    var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
+        //    var result = Utils.Get(_client, $"{Url}/", token);
+        //    Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
+        //    var body = result.Content.ReadAsStringAsync().Result;
+        //    Assert.Empty(body);
+        //}
 
         /// <summary>
         /// 異常：IDが数字以外
         /// </summary>
         [Fact]
-        public void Case2()
+        public void Case1()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var result = Utils.Get(_client, $"{Url}/aaaaaaaaaaaaaaaaaaaa", token);
@@ -95,7 +95,7 @@ namespace AdminTests.IntegrationTests.Organization
         /// 異常：組織が不在
         /// </summary>
         [Fact]
-        public void Case3()
+        public void Case2()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var result = Utils.Get(_client, $"{Url}/c1788aa7-9308-4661-bb84-dbc04e849e72", token);
@@ -109,7 +109,7 @@ namespace AdminTests.IntegrationTests.Organization
         /// 異常：他組織
         /// </summary>
         [Fact]
-        public void Case4()
+        public void Case3()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var result = Utils.Get(_client, $"{Url}/{_org2.Code}", token); // ユーザー管理者2の組織を照会
@@ -123,7 +123,7 @@ namespace AdminTests.IntegrationTests.Organization
         /// 正常
         /// </summary>
         [Fact]
-        public void Case5()
+        public void Case4()
         {
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var result = Utils.Get(_client, $"{Url}/{_org1.Code}", token);

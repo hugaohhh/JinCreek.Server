@@ -167,6 +167,7 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
+
         }
 
         /// <summary>

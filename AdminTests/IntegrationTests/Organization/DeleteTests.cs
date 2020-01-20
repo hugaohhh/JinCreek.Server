@@ -67,6 +67,8 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.MethodNotAllowed, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             Assert.Empty(body);
+            var json = JObject.Parse(body);
+            Assert.NotNull(json["traceId"]);
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var json = JObject.Parse(result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(json["traceId"]);
-            Assert.NotNull(json["errors"]?["id"]);
+            Assert.NotNull(json["errors"]?["id"]); 
         }
 
         /// <summary>
