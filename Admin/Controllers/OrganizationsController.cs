@@ -93,7 +93,19 @@ namespace Admin.Controllers
         {
             if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
             {
-                return BadRequest(new { traceId = Activity.Current.Id });
+                return BadRequest(new { traceId = Activity.Current.Id, errors = new
+                {
+                    Url = "required",
+                    Name = "required",
+                    Address = "required",
+                    AdminMail = "required",
+                    AdminPhone = "required",
+                    DelegatePhone = "required",
+                    StartDay = "required",
+                    EndDay = "required",
+                    IsValid = "required",
+                }
+                });
             }
 
             var role = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Role)?.Value;
@@ -106,7 +118,7 @@ namespace Admin.Controllers
             var organization = _userRepository.GetOrganization(code);
             if (organization == null)
             {
-                return NotFound();
+                return NotFound(new { traceId = Activity.Current.Id, errors = new { Organization = "not found" } });
             }
             if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Update).Result.Succeeded)
             {

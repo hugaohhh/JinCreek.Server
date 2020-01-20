@@ -77,12 +77,12 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["errors"]?["Url"]);
-            //Assert.NotNull(json["errors"]?["Name"]);
-            //Assert.NotNull(json["errors"]?["Address"]);
-            //Assert.NotNull(json["errors"]?["AdminMail"]);
-            //Assert.NotNull(json["errors"]?["AdminPhone"]);
-            //Assert.NotNull(json["errors"]?["DelegatePhone"]);
+            Assert.NotNull(json["errors"]?["url"]);
+            Assert.NotNull(json["errors"]?["name"]);
+            Assert.NotNull(json["errors"]?["address"]);
+            Assert.NotNull(json["errors"]?["adminMail"]);
+            Assert.NotNull(json["errors"]?["adminPhone"]);
+            Assert.NotNull(json["errors"]?["delegatePhone"]);
         }
 
         /// <summary>
@@ -94,13 +94,13 @@ namespace AdminTests.IntegrationTests.Organization
             var token = Utils.GetAccessToken(_client, "user1", "user1"); // ユーザー管理者1
             var obj = new
             {
-                code = "a", // 
+                code = "a", //コード数字以外設定 
                 name = "org1",
                 address = "address1",
                 delegatePhone = "1234567890",
                 url = "https://example.com",
                 adminPhone = "2345678901",
-                adminMail = "admin@example.com",
+                adminMail = "admin@example.com"
             };
             var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -125,7 +125,7 @@ namespace AdminTests.IntegrationTests.Organization
                 delegatePhone = "1234567890a", // 数字以外の文字含む
                 url = "fuga", // 先頭文字列"https://" or "http://"以外
                 adminPhone = "2345678901b", // 数字以外の文字含む
-                adminMail = "piyo", // "xxx@xxx"形式でない
+                adminMail = "piyo" // "xxx@xxx"形式でない
             };
             var result = Utils.Put(_client, $"{Url}/{_org1.Code}", Utils.CreateJsonContent(obj), token);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -175,7 +175,7 @@ namespace AdminTests.IntegrationTests.Organization
             {
                 code = 3,
                 name = "org1",
-                address = "address1",
+                //address = "address1",　//TODO テストケースより、住所設定削除予定
                 delegatePhone = "1234567890",
                 url = "https://example.com",
                 adminPhone = "2345678901",
@@ -186,7 +186,7 @@ namespace AdminTests.IntegrationTests.Organization
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-
+            Assert.NotNull(json["errors"]?["organization"]);
         }
 
         /// <summary>
