@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JinCreek.Server.Common.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System.Diagnostics.CodeAnalysis;
-using JinCreek.Server.Common.Models;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Repositories
 {
@@ -58,7 +58,7 @@ namespace JinCreek.Server.Common.Repositories
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        public DbSet<Deauthentication> Deauthentication { get; set; }
+        public DbSet<DeauthenticationAuthenticationLogSuccess> Deauthentication { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
@@ -96,7 +96,7 @@ namespace JinCreek.Server.Common.Repositories
         // DbSetアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<AdminUser> AdminUser { get; set; }
-        
+
         //DbSetアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public DbSet<GeneralUser> GeneralUser { get; set; }
@@ -129,7 +129,7 @@ namespace JinCreek.Server.Common.Repositories
 
             //modelBuilder.Entity<DeviceGroup>()
             //    .HasAlternateKey(dg => new {
-            //        dg.OrganizationCode, dg.OsType, dg.Version
+            //        dg.OrganizationCode, dg.Os, dg.Version
             //    }).HasName("DeviceGroup_Code_UQ");
 
             modelBuilder.Entity<AuthenticationLog>(authenticationLog =>
@@ -203,7 +203,7 @@ namespace JinCreek.Server.Common.Repositories
                 .WithMany(fc => fc.MultiFactorAuthenticationLogSuccesses)
                 .HasForeignKey(fc => fc.FactorCombinationId);
 
-            modelBuilder.Entity<Deauthentication>()
+            modelBuilder.Entity<DeauthenticationAuthenticationLogSuccess>()
                 .HasOne(da => da.FactorCombination)
                 .WithMany(fc => fc.Deauthentications)
                 .HasForeignKey(fc => fc.FactorCombinationId);
@@ -343,7 +343,7 @@ namespace JinCreek.Server.Common.Repositories
             modelBuilder.Entity<MultiFactorAuthenticationLogSuccess>()
                 .HasBaseType<AuthenticationLog>();
 
-            modelBuilder.Entity<Deauthentication>()
+            modelBuilder.Entity<DeauthenticationAuthenticationLogSuccess>()
                 .HasBaseType<AuthenticationLog>();
 
             modelBuilder.Entity<SimDeviceAuthenticationStateDone>()

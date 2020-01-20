@@ -18,7 +18,7 @@ namespace JinCreek.Server.Auth.Controllers
     [ApiController]
     public class DeauthenticationController : ControllerBase
     {
-        [SuppressMessage("ReSharper", "NotAccessedField.Local")] 
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private readonly ILogger<DeauthenticationController> _logger;
 
         private readonly AuthenticationRepository _authenticationRepository;
@@ -60,7 +60,7 @@ namespace JinCreek.Server.Auth.Controllers
         }
         private void CreateDeauthentication(FactorCombination factorCombination)
         {
-            var deauthentication = new Deauthentication
+            var deauthentication = new DeauthenticationAuthenticationLogSuccess
             {
                 FactorCombination = factorCombination,
                 ConnectionTime = DateTime.Now

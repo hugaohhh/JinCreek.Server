@@ -19,7 +19,7 @@ namespace JinCreek.Server.Interfaces
         /// SIMデバイス認証済みの合致しないがエラー
         /// </summary>
         public static readonly ErrorResponse NotMatchAuthId = new ErrorResponse { ErrorCode = "1003", ErrorMessage = "Not Match AuthId Info" };
-        
+
         /// <summary>
         /// エラーコード。
         /// </summary>

@@ -37,6 +37,13 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         [Required]
+        [Url]
+        [Column(TypeName = "LONGTEXT BINARY")]
+        public string Url { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [Required]
         [Phone]
         [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
         [Column(TypeName = "LONGTEXT BINARY")]
@@ -60,13 +67,6 @@ namespace JinCreek.Server.Common.Models
         [Required]
         [Column(TypeName = "DATE")]
         public DateTime EndDay { get; set; }
-
-        // DBアクセスのため自動プロパティを利用
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-        [Required]
-        [Url]
-        [Column(TypeName = "LONGTEXT BINARY")]
-        public string Url { get; set; }
 
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
