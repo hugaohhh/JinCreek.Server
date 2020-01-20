@@ -107,16 +107,16 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
             var body = result.Content.ReadAsStringAsync().Result;
             var json = JObject.Parse(body);
-            //Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["errors"]?["Url"]);
-            //Assert.NotNull(json["errors"]?["Name"]);
-            //Assert.NotNull(json["errors"]?["Address"]);
-            //Assert.NotNull(json["errors"]?["AdminMail"]);
-            //Assert.NotNull(json["errors"]?["AdminPhone"]);
-            //Assert.NotNull(json["errors"]?["DelegatePhone"]);
-            //Assert.NotNull(json["errors"]?["startDay"]);
-            //Assert.NotNull(json["errors"]?["endDay"]);
-            //Assert.NotNull(json["errors"]?["IsValid"]);   //TODO 入力必須チェック
+            Assert.NotNull(json["traceId"]);
+            Assert.NotNull(json["errors"]?["url"]);
+            Assert.NotNull(json["errors"]?["name"]);
+            Assert.NotNull(json["errors"]?["address"]);
+            Assert.NotNull(json["errors"]?["adminMail"]);
+            Assert.NotNull(json["errors"]?["adminPhone"]);
+            Assert.NotNull(json["errors"]?["delegatePhone"]);
+            Assert.NotNull(json["errors"]?["startDay"]);
+            Assert.NotNull(json["errors"]?["endDay"]);
+            Assert.NotNull(json["errors"]?["isValid"]);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             var json = JObject.Parse(body);
             Assert.NotNull(json["traceId"]);
-            //Assert.NotNull(json["organization"]); //TODO 組織のエラーチェックの設定について要確認
+            Assert.NotNull(json["errors"]?["organization"]);
         }
 
         /// <summary>

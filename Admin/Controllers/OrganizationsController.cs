@@ -101,6 +101,9 @@ namespace Admin.Controllers
                     AdminMail = "required",
                     AdminPhone = "required",
                     DelegatePhone = "required",
+                    StartDay = "required",
+                    EndDay = "required",
+                    IsValid = "required",
                 }
                 });
             }
