@@ -49,6 +49,10 @@ namespace JinCreek.Server.AuthTests
             MainDbContext.Database.EnsureDeleted();
             MainDbContext.Database.EnsureCreated();
             MainDbContext.Database.Migrate();
+
+            RadiusDbContext.Database.EnsureDeleted();
+            RadiusDbContext.Database.EnsureCreated();
+            RadiusDbContext.Database.Migrate();
         }
 
 
@@ -56,6 +60,7 @@ namespace JinCreek.Server.AuthTests
         {
             TestOutputHelper.WriteLine("Dispose");
             MainDbContext.Database.EnsureDeleted();
+            RadiusDbContext.Database.EnsureDeleted();
         }
 
 
