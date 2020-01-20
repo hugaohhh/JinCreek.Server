@@ -86,9 +86,9 @@ namespace AdminTests.IntegrationTests.Organization
             Assert.NotNull(json["errors"]?["Url"]);
             Assert.NotNull(json["errors"]?["AdminPhone"]);
             Assert.NotNull(json["errors"]?["AdminMail"]);
-            Assert.Null(json["errors"]?["StartDay"]);    //入力必須チェックに変更予定
-            Assert.Null(json["errors"]?["EndDay"]);  //入力必須チェックに変更予定
-            Assert.Null(json["errors"]?["IsValid"]); //入力必須チェックに変更予定
+            Assert.Null(json["errors"]?["StartDay"]);    //TODO 入力必須チェックに変更予定
+            Assert.Null(json["errors"]?["EndDay"]);  //TODO 入力必須チェックに変更予定
+            Assert.Null(json["errors"]?["IsValid"]); //TODO 入力必須チェックに変更予定
         }
 
         /// <summary>
