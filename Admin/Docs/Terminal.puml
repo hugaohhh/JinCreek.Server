@@ -1,0 +1,27 @@
+'
+' PlantUML
+' https://plantuml.com/
+'
+@startuml
+
+abstract class Microsoft.AspNetCore.Mvc.ControllerBase
+
+class Admin.Controllers.TerminalsController {
+    ActionResult<IEnumerable<Terminal>> GetTerminals()
+    ActionResult<Terminal> GetTerminal(string id)
+    IActionResult PutTerminal(string id, Terminal terminal)
+    ActionResult<Terminal> PostTerminal(Terminal terminal)
+    ActionResult<Terminal> DeleteTerminal(string id)
+}
+
+class Admin.Models.Terminal {
+    string Name
+    string No
+    string ModelName
+    string SerialNo
+}
+
+Microsoft.AspNetCore.Mvc.ControllerBase <|-- Admin.Controllers.TerminalsController
+Admin.Models.Terminal <-- Admin.Controllers.TerminalsController
+
+@enduml

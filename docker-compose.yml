@@ -1,0 +1,54 @@
+version: '3'
+services:
+  dotnet:
+    build:
+      context: docker
+      dockerfile: Dockerfile.dotnet
+    container_name: dotnet
+    hostname: dotnet
+    volumes:
+      - .:/app
+      - home-dir:/root
+    working_dir: /app
+    command: tail -f /dev/stdout
+  base:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.ubuntu
+    container_name: base
+    hostname: base 
+    volumes:
+      - home-dir:/root
+  mariadb:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.mariadb
+    container_name: mariadb
+    hostname: mariadb 
+    restart: always
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./docker/mariadb/initdb:/docker-entrypoint-initdb.d
+      - home-dir:/root
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+#      - MYSQL_DATABASE=mdb
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - TZ=Asia/Tokyo   
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.nginx
+    container_name: nginx
+    hostname: nginx 
+    restart: always
+    ports:
+      - "10080:80"
+      - "10443:443"
+    volumes:
+      - home-dir:/root
+    command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+#    command: tail -f /dev/stdout
+volumes:
+  home-dir:     

@@ -1,0 +1,1805 @@
+﻿{
+  "x-generator": "NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v12.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Admin API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/authentication/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_Register",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersRegisterRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/authentication/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_Login",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersLoginRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/authentication/refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_Refresh",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersRefreshRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/domains/{id}": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomain",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Domain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/domains": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderKey"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/organizations": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganizations",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 2
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey2"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderKey2"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "StartDayFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "StartDayTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "EndDayFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "EndDayTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "IsValid",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Organization"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_PostOrganization",
+        "requestBody": {
+          "x-name": "organization",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Organization"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/organizations/mine": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganization",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_PutOrganization",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutOrganizationParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/organizations/{code}": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganization2",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_PutOrganization2",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutOrganizationAdminParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_DeleteOrganization",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdminUser"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/RandomNumber/Generate": {
+      "get": {
+        "tags": [
+          "RandomNumber"
+        ],
+        "operationId": "RandomNumber_Generate",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UsersRegisterRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "UsersLoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "UsersRefreshRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "Domain": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domainName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "domainName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organization": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Organization"
+              }
+            ]
+          },
+          "endUsers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/EndUser"
+            }
+          },
+          "userGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UserGroup"
+            }
+          },
+          "adDevices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AdDevice"
+            }
+          }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "address",
+          "delegatePhone",
+          "url",
+          "adminPhone",
+          "adminMail",
+          "startDay",
+          "endDay",
+          "isValid"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "delegatePhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "domains": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Domain"
+            }
+          },
+          "simGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimGroup"
+            }
+          },
+          "deviceGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroup"
+            }
+          }
+        }
+      },
+      "SimGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organizationCode",
+          "simGroupName",
+          "nw1IpAddressPool",
+          "apn",
+          "nasIpAddress",
+          "nw1IpAddressRange",
+          "primaryDns",
+          "secondaryDns",
+          "nw1PrimaryDns",
+          "nw1SecondaryDns",
+          "authServerIpAddress"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "simGroupName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1IpAddressPool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nasIpAddress": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1IpAddressRange": {
+            "type": "string",
+            "minLength": 1
+          },
+          "primaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secondaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1PrimaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nw1SecondaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authServerIpAddress": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organization": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Organization"
+              }
+            ]
+          },
+          "sims": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Sim"
+            }
+          }
+        }
+      },
+      "Sim": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "simGroupId",
+          "msisdn",
+          "imsi",
+          "iccId",
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simGroupId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "msisdn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "imsi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "iccId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "simGroup": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimGroup"
+              }
+            ]
+          },
+          "simDevice": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimDevice"
+              }
+            ]
+          },
+          "simDeviceAuthenticationLogFails": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimDeviceAuthenticationLogFail"
+            }
+          }
+        }
+      },
+      "SimDevice": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "simId",
+          "deviceId",
+          "nw2IpAddressPool"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "nw2IpAddressPool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authPeriod": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "sim": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Sim"
+              }
+            ]
+          },
+          "device": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Device"
+              }
+            ]
+          },
+          "simDeviceAuthenticationLogSuccesses": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimDeviceAuthenticationLogSuccess"
+            }
+          },
+          "factorCombinations": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/FactorCombination"
+            }
+          },
+          "simDeviceAuthenticationStateDone": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimDeviceAuthenticationStateDone"
+              }
+            ]
+          },
+          "multiFactorAuthenticationLogFails": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MultiFactorAuthenticationLogFail"
+            }
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "deviceName",
+          "manageNumber",
+          "type",
+          "imei",
+          "deviceGroupId",
+          "lteId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "deviceName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "manageNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "imei": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceGroupId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "lteId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "deviceGroup": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            ]
+          },
+          "lte": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Lte"
+              }
+            ]
+          },
+          "simDevice": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimDevice"
+              }
+            ]
+          }
+        }
+      },
+      "DeviceGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organizationCode",
+          "os",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "organizationCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "os": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organization": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Organization"
+              }
+            ]
+          },
+          "devices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        }
+      },
+      "Lte": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lteName",
+          "nwAdapterName",
+          "softwareRadioState"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "lteName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nwAdapterName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "softwareRadioState": {
+            "type": "boolean"
+          },
+          "devices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        }
+      },
+      "SimDeviceAuthenticationLogSuccess": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationLog"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "simDeviceId"
+            ],
+            "properties": {
+              "simDeviceId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "simDevice": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SimDevice"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AuthenticationLog": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "connectionTime"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "connectionTime": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          }
+        }
+      },
+      "FactorCombination": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "simDeviceId",
+          "endUserId",
+          "nwIpAddress"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simDeviceId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "endUserId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "nwIpAddress": {
+            "type": "string",
+            "minLength": 1
+          },
+          "startDay": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDay": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "simDevice": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimDevice"
+              }
+            ]
+          },
+          "endUser": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EndUser"
+              }
+            ]
+          },
+          "multiFactorAuthenticationLogSuccesses": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MultiFactorAuthenticationLogSuccess"
+            }
+          },
+          "multiFactorAuthenticationStateDone": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MultiFactorAuthenticationStateDone"
+              }
+            ]
+          },
+          "deauthentications": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeauthenticationAuthenticationLogSuccess"
+            }
+          }
+        }
+      },
+      "EndUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": false,
+            "required": [
+              "domainId",
+              "userGroupId",
+              "isDisconnectWhenScreenLock"
+            ],
+            "properties": {
+              "domainId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "userGroupId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "isDisconnectWhenScreenLock": {
+                "type": "boolean"
+              },
+              "domain": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                ]
+              },
+              "userGroup": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/UserGroup"
+                  }
+                ]
+              },
+              "factorCombinations": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/FactorCombination"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UserGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domainId",
+          "userGroupName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domainId": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "userGroupName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domain": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Domain"
+              }
+            ]
+          },
+          "endUsers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/EndUser"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "accountName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "accountName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MultiFactorAuthenticationLogSuccess": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationLog"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factorCombinationId"
+            ],
+            "properties": {
+              "factorCombinationId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "factorCombination": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/FactorCombination"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MultiFactorAuthenticationStateDone": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationState"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factorCombinationId"
+            ],
+            "properties": {
+              "factorCombinationId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "factorCombination": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/FactorCombination"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AuthenticationState": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "timeLimit"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "timeLimit": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          }
+        }
+      },
+      "DeauthenticationAuthenticationLogSuccess": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationLog"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factorCombinationId"
+            ],
+            "properties": {
+              "factorCombinationId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "factorCombination": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/FactorCombination"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "SimDeviceAuthenticationStateDone": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationState"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "simDeviceId"
+            ],
+            "properties": {
+              "simDeviceId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "simDevice": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SimDevice"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MultiFactorAuthenticationLogFail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationLog"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "simDeviceId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "simDevice": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SimDevice"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "SimDeviceAuthenticationLogFail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuthenticationLog"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "simId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "sim": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Sim"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AdDevice": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Device"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "domainId"
+            ],
+            "properties": {
+              "domainId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "domain": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Domain"
+                  }
+                ]
+              },
+              "adDeviceSettingOfflineWindowsSignIn": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AdDeviceSettingOfflineWindowsSignIn"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AdDeviceSettingOfflineWindowsSignIn": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "windowsSignInListCacheDays"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "windowsSignInListCacheDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "adDevice": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AdDevice"
+              }
+            ]
+          },
+          "adDeviceId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SortKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Id",
+          "DomainName"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "OrderKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "SortKey2": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Code",
+          "Name",
+          "Address",
+          "DelegatePhone",
+          "AdminPhone",
+          "AdminMail",
+          "StartDay",
+          "EndDay",
+          "Url",
+          "IsValid"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "OrderKey2": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PutOrganizationParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "delegatePhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10,
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10,
+            "nullable": true
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          }
+        }
+      },
+      "PutOrganizationAdminParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutOrganizationParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "startDay": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "endDay": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "isValid": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
+}

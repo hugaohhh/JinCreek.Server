@@ -1,0 +1,25 @@
+FROM ubuntu:18.04
+
+RUN echo "" \
+ && sed -i.bak -e "s/http:\/\/archive\.ubuntu\.com/http:\/\/jp\.archive\.ubuntu\.com/g" /etc/apt/sources.list \
+ && apt update -y \
+ && apt install -y \
+    zip jq vim groff nkf telnet wget curl net-tools \
+    python-pip python3-pip \
+    language-pack-ja-base language-pack-ja ibus-mozc \
+ && echo ""
+
+### Setting TZ=JST
+RUN DEBIAN_FRONTEND=noninteractive apt install -y tzdata
+
+### Setting Locale=Japanease
+RUN locale-gen ja_JP.UTF-8 \ 
+ && update-locale LANG=ja_JP.UTF-8
+
+
+ENV TZ=Asia/Tokyo
+ENV LANG=ja_JP.UTF-8
+
+### Clean up...
+RUN rm -rf /var/lib/apt/lists/*
+

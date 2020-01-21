@@ -1,0 +1,32 @@
+version: '3'
+services:
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8081:8080"
+  swagger-ui-auth:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui-auth"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./Auth/auth-swagger.json:/usr/share/nginx/html/auth-swagger.json
+    # for Linux
+    #   - ./swagger/openapi.yaml:/usr/share/nginx/html/openapi.yaml
+    # for Windows (include WSL)
+    #  - /C/swagger-all-in-one-docker-compose-master/swagger/openapi.yaml:/usr/share/nginx/html/openapi.yaml
+    environment:
+      API_URL: /auth-swagger.json
+#  swagger-api:
+#    image: danielgtaylor/apisprout
+#    container_name: "swagger-api"
+#    ports:
+#      - "8083:8000"
+#    volumes:
+#      - ./Auth/auth-swagger.json:/auth-swagger.json
+#    # for Linux
+#    #   - ./swagger/openapi.yaml:/openapi.yaml
+#    # for Windows (include WSL)
+#    #  - /C/swagger-all-in-one-docker-compose-master/swagger/openapi.yaml:/openapi.yaml
+#    command: /auth-swagger.json
