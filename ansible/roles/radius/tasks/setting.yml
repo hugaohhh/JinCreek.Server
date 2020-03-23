@@ -1,0 +1,62 @@
+- name: Copy files
+  copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0640
+    owner: freerad
+    group: freerad
+  with_items:
+    - etc/freeradius/3.0/sites-available/default
+    - etc/freeradius/3.0/mods-available/python
+    - etc/freeradius/3.0/mods-available/sqlippool
+    - etc/freeradius/3.0/mods-config/files/authorize
+    - etc/freeradius/3.0/policy.d/filter
+
+- name: Add FreeRADIUS sql settings
+  template:
+    src: etc/freeradius/3.0/mods-available/sql.j2
+    dest: /etc/freeradius/3.0/mods-available/sql
+
+- name: Create symbolic link
+  file:
+    src: /etc/freeradius/3.0/mods-available/python
+    dest: /etc/freeradius/3.0/mods-enabled/python
+    state: link
+- name: Create symbolic link
+  file:
+    src: /etc/freeradius/3.0/mods-available/sql
+    dest: /etc/freeradius/3.0/mods-enabled/sql
+    state: link
+- name: Create symbolic link
+  file:
+    src: /etc/freeradius/3.0/mods-available/sqlippool
+    dest: /etc/freeradius/3.0/mods-enabled/sqlippool
+    state: link
+
+- name: Hook Directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - /etc/freeradius/3.0/mods-config/python/models/
+    - /etc/freeradius/3.0/mods-config/python/models/freeradius
+    - /etc/freeradius/3.0/mods-config/python/models/jincreek
+
+- name: Copy files for hook
+  copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - etc/freeradius/3.0/mods-config/python/example.py
+    - etc/freeradius/3.0/mods-config/python/jincreek_oneshot.py
+    - etc/freeradius/3.0/mods-config/python/models/__init__.py
+    - etc/freeradius/3.0/mods-config/python/models/freeradius/__init__.py
+    - etc/freeradius/3.0/mods-config/python/models/freeradius/radreply.py
+    - etc/freeradius/3.0/mods-config/python/models/jincreek/__init__.py
+    - etc/freeradius/3.0/mods-config/python/models/jincreek/sim.py

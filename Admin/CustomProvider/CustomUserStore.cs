@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
-namespace Admin.CustomProvider
+namespace JinCreek.Server.Admin.CustomProvider
 {
     // see https://docs.microsoft.com/ja-jp/aspnet/core/security/authentication/identity-custom-storage-providers?view=aspnetcore-3.1
     public class CustomUserStore : IUserPasswordStore<ApplicationUser>
@@ -30,33 +30,20 @@ namespace Admin.CustomProvider
 
         public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            return Task.FromResult<string>(null);
+            //cancellationToken.ThrowIfCancellationRequested();
+            //if (user == null) throw new ArgumentNullException(nameof(user));
 
-            return Task.FromResult(user.UserName);
+            //return Task.FromResult(user.AccountName);
         }
 
         public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken) => throw new NotImplementedException();
 
         public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-        public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null) throw new ArgumentNullException(nameof(user));
-            if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
+        public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-            user.NormalizedUserName = normalizedName;
-            return Task.FromResult<object>(null);
-        }
-
-        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (user == null) throw new ArgumentNullException(nameof(user));
-
-            return Task.FromResult(_usersTable.Create(user));
-        }
+        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) => throw new NotImplementedException();
 
         public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) => throw new NotImplementedException();
 

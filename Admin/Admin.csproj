@@ -7,20 +7,40 @@
     <AssemblyVersion>1.0.19354.0608</AssemblyVersion>
     <FileVersion>1.0.19354.0608</FileVersion>
     <LangVersion>8</LangVersion>
+    <RootNamespace>JinCreek.Server.Admin</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="nlog.config" />
+  </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Version.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Version.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
-    <PackageReference Include="NSwag.MSBuild" Version="13.2.0">
+    <PackageReference Include="NLog" Version="4.6.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.2" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -33,5 +53,9 @@
 
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
     <Exec Command="$(NSwagExe_Core31) aspnetcore2swagger /assembly:$(TargetDir)Admin.dll /output:Docs/swagger.json" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="git rev-parse HEAD &gt; Version.txt" />
   </Target>
 </Project>

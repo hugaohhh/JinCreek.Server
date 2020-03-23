@@ -22,7 +22,6 @@ namespace JinCreek.Server.AuthTests
         protected readonly MainDbContext MainDbContext;
         protected readonly RadiusDbContext RadiusDbContext;
 
-        protected readonly SimDeviceRepository SimDeviceRepository;
         protected readonly UserRepository UserRepository;
         protected readonly AuthenticationRepository AuthenticationRepository;
         protected readonly RadiusRepository RadiusRepository;
@@ -40,14 +39,13 @@ namespace JinCreek.Server.AuthTests
             MainDbContext = scope.ServiceProvider.GetService<MainDbContext>();
             RadiusDbContext = scope.ServiceProvider.GetService<RadiusDbContext>();
 
-            SimDeviceRepository = scope.ServiceProvider.GetService<SimDeviceRepository>();
             UserRepository = scope.ServiceProvider.GetService<UserRepository>();
             AuthenticationRepository = scope.ServiceProvider.GetService<AuthenticationRepository>();
             RadiusRepository = scope.ServiceProvider.GetService<RadiusRepository>();
 
             TestOutputHelper.WriteLine("Database Init");
             MainDbContext.Database.EnsureDeleted();
-            MainDbContext.Database.EnsureCreated();
+            //MainDbContext.Database.EnsureCreated();
             MainDbContext.Database.Migrate();
 
             RadiusDbContext.Database.EnsureDeleted();

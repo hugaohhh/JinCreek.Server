@@ -1,0 +1,9 @@
+- include: install.yml
+- include: galera_conf.yml
+
+- include: galera_restart.yml
+
+- include: rootpw.yml
+- include: user.yml
+
+- include: logrotate.yml

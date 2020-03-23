@@ -1,0 +1,29 @@
+- name: Application Directory
+  file:
+    path: "{{ application_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Script Directory
+  file:
+    path: "{{ application_directory }}/bin"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Logs Directory
+  file:
+    path: "{{ application_directory }}/logs"
+    state: directory
+    owner: jincreek
+    group: jincreek
+    mode: 0755
+
+- name: Create symbolic link
+  file:
+    src: "{{ application_directory }}/logs"
+    dest: "/var/log/jincreek"
+    state: link

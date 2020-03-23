@@ -1,0 +1,27 @@
+[mmng]
+mmng000
+mmng001
+
+[msca]
+msca000
+msca001
+
+[mrad]
+mrad000
+mrad001
+
+[jinc]
+jinc000
+jinc001
+
+[mdbx]
+mdbx000 galera_server_id=100 ip_address=172.19.0.4
+mdbx001 galera_server_id=101 ip_address=172.19.0.5
+mdbx002 galera_server_id=102 ip_address=172.19.0.3
+#mdbx000 galera_server_id=100 ip_address={{ansible_default_ipv4.address}}
+
+[develop:children]
+mmng
+msca
+jinc
+mdbx

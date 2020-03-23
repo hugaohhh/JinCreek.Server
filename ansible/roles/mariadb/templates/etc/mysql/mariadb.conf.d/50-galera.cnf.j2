@@ -1,0 +1,24 @@
+### https://github.com/adfinis-sygroup/mariadb-ansible-galera-cluster/blob/master/roles/galera_conf/templates/server.cnf.j2
+### https://www.digitalocean.com/community/tutorials/how-to-configure-a-galera-cluster-with-mariadb-on-ubuntu-18-04-servers
+[galera]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+# server-id={{ galera_server_id }}
+
+# Galera Provider Configuration
+wsrep_on=ON
+wsrep_provider=/usr/lib/galera/libgalera_smm.so
+
+# Galera Cluster Configuration
+wsrep_cluster_name={{ galera_wsrep_cluster_name }}
+wsrep_cluster_address=gcomm://{{ groups['mdbx'] | map('extract', hostvars, ['ip_address']) | list | join(',') }}
+
+# Galera Synchronization Configuration
+#wsrep_sst_method=rsync
+
+# Galera Node Configuration
+wsrep_node_address={{ ip_address }}
+wsrep_node_name={{ ansible_hostname }}
+

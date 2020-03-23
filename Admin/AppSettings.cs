@@ -1,4 +1,4 @@
-﻿namespace Admin
+﻿namespace JinCreek.Server.Admin
 {
     public class AppSettings
     {

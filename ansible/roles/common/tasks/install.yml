@@ -1,0 +1,20 @@
+- name: Install packages
+  apt: 
+    name:
+      - zip
+      - vim
+      - jq
+      - groff
+      - nkf
+      - telnet
+      - expect
+      - wget
+      - curl
+      - net-tools
+      - iputils-ping
+- name: Install tzdata
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  apt: 
+    name:
+      - tzdata

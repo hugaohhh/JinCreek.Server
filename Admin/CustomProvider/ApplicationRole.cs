@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Admin.CustomProvider
+namespace JinCreek.Server.Admin.CustomProvider
 {
     public class ApplicationRole
     {

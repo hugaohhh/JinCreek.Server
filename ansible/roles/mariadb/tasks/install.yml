@@ -1,0 +1,60 @@
+#https://www.digitalocean.com/community/tutorials/how-to-configure-a-galera-cluster-with-mariadb-on-ubuntu-18-04-servers
+
+- name: Install Pre Requires for Gelera MariaDB Cluster
+  apt: 
+    name: software-properties-common
+    state: latest
+  with_items:
+    - software-properties-common
+    - python-mysqldb
+    - rsync
+
+- name: Install pymysql
+  pip:
+    name: pymysql
+    state: present
+
+- name: IpAddress Debug
+  debug:
+    msg: this is {{ galera_server_id }} ( {{ ip_address }} )
+  ignore_errors: True
+
+- name: Add Repository key to the system
+  apt_key: keyserver=keyserver.ubuntu.com id=0xF1656F24C74CD1D8
+
+- name: Install MariaDB repository
+  apt_repository:
+    repo: "{{ mariadb_repo }}"
+    state: present
+    update_cache: no
+
+- name: Install mariadb-server
+  apt: 
+    name: mariadb-server
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Enable mariadb
+  service:
+    name: mysql
+    enabled: yes
+
+- name: Configure root my.cnf
+  template:
+    src: root/my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
+
+#- name: Restart mysql
+#  service:
+#    name: mysql
+#    state: restarted
+
+#- name: Restart mysql
+#  service:
+#    name: mysql
+#    state: stopped
+

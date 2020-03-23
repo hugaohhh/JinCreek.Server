@@ -1,0 +1,100 @@
+version: '3'
+services:
+  base_ansible:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.ubuntu_ansible
+    container_name: base_ansible
+    hostname: base _ansible
+    volumes:
+      - home-dir:/root
+  ansible:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.ansible
+    container_name: ansible
+    hostname: ansible 
+    volumes:
+      - home-dir:/root
+      - ./ansible:/ansible
+    working_dir: /ansible
+    command: tail -f /dev/stdout
+  mmng000:
+    image: serverapp_base_ansible
+    container_name: mmng000
+    hostname: mmng000 
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mmng001:
+    image: serverapp_base_ansible
+    container_name: mmng001
+    hostname: mmng001
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  msca000:
+    image: serverapp_base_ansible
+    container_name: msca000
+    hostname: msca000 
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  msca001:
+    image: serverapp_base_ansible
+    container_name: msca001
+    hostname: msca001
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mrad000:
+    image: serverapp_base_ansible
+    container_name: mrad000
+    hostname: mrad000 
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mrad001:
+    image: serverapp_base_ansible
+    container_name: mrad001
+    hostname: mrad001
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  jinc000:
+    image: serverapp_base_ansible
+    container_name: jinc000
+    hostname: jinc000 
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  jinc001:
+    image: serverapp_base_ansible
+    container_name: jinc001
+    hostname: jinc001
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mdbx000:
+    image: serverapp_base_ansible
+    container_name: mdbx000
+    hostname: mdbx000 
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mdbx001:
+    image: serverapp_base_ansible
+    container_name: mdbx001
+    hostname: mdbx001
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+  mdbx002:
+    image: serverapp_base_ansible
+    container_name: mdbx002
+    hostname: mdbx002
+    volumes:
+      - home-dir:/root
+    command: tail -f /dev/stdout
+volumes:
+  home-dir:     

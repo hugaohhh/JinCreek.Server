@@ -36,6 +36,7 @@ namespace JinCreek.Server.Auth
                 })
                 .ConfigureLogging(logging =>
                 {
+                    logging.AddAzureWebAppDiagnostics();
                     logging.ClearProviders();
                     logging.AddConsole();
                     logging.SetMinimumLevel(LogLevel.Trace);

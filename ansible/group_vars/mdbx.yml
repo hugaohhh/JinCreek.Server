@@ -1,0 +1,25 @@
+mariadb_version: '10.5'
+mariadb_repo: deb [arch=amd64] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.5/ubuntu bionic main
+mariadb_root_password: root
+mariadb_users:
+  - name: jincreek-admin
+    hosts:
+      - "%"
+      - "127.0.0.1"
+    password: jincreek12345
+    encrypted: no
+    priv: "*.*:USAGE"
+    state: present
+    append_privs: no
+  - name: radius-admin
+    hosts:
+      - "%"
+      - "127.0.0.1"
+    password: radius12345
+    encrypted: no
+    priv: "*.*:USAGE"
+    state: present
+    append_privs: no
+## Define bind address for galera cluster
+#galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+#galera_reconfigure_galera: false

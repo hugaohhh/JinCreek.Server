@@ -1,0 +1,9 @@
+- name: Add MariaDB configuration
+  template:
+    src: etc/mysql/mariadb.conf.d/50-server.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/50-server.cnf
+- name: Add Galera MariaDB Cluster configuration
+  template:
+    src: etc/mysql/mariadb.conf.d/50-galera.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/50-galera.cnf
+#  notify: Restart MariaDB Galera cluster

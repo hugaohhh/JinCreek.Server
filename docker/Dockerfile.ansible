@@ -1,0 +1,12 @@
+FROM serverapp_base
+
+RUN echo "" \
+  && echo "" >> /etc/apt/sources.list \
+  && apt update -y \
+  && apt install -y software-properties-common \
+  && apt-add-repository --yes --update ppa:ansible/ansible \
+  && apt install -y \
+    ansible \
+  && echo ""
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+

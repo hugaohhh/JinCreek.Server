@@ -1,0 +1,57 @@
+- name: Now
+  command: date +"%Y%m%d%H%M"
+  register: now
+
+- name: debug
+  debug:
+    var: now.stdout
+
+- name: Application(Server) Directory({{ now.stdout }})
+  file:
+    path: "{{ application_directory }}/Admin_{{ now.stdout }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: PID Directory
+  file:
+    path: "/var/run/admin"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Script
+  copy:
+    src: restart_admin.sh
+    dest: "{{ application_directory }}/bin"
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Copy Assembly(Server)
+  copy: 
+    src: Admin.zip
+    dest: "{{ item }}"
+    mode: 0640
+    owner: root
+    group: root
+  with_items: "{{ application_directory }}/Admin.zip"
+
+- name: Unarchive Assembly(Server)
+  unarchive:
+    src: "{{ application_directory }}/Admin.zip"
+    dest: "{{ application_directory }}/Admin_{{ now.stdout }}"
+    remote_src: yes
+
+- name: Create symbolic link(Server)
+  file:
+    src: "{{ application_directory }}/Admin_{{ now.stdout }}"
+    dest: "{{ application_directory }}/Admin"
+    state: link
+
+- name: Restart dotnet
+  shell: "{{ application_directory }}/bin/restart_admin.sh"
+  async: 5
+  poll: 0

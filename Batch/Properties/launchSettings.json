@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Batch": {
+      "commandName": "Project",
+      "commandLineArgs": "deauthentication -organization_code 2"
+    },
+    "CIDRサンプル": {
+      "commandName": "Project",
+      "commandLineArgs": "cidr_sample -cidr 192.168.1.0/30"
+    },
+    "LdapSync": {
+      "commandName": "Project",
+      "commandLineArgs": "ldap_sync -organization_code 4",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

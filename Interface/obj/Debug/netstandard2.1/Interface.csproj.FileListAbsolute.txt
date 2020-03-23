@@ -1,3 +1,12 @@
+/app/Interface/bin/Debug/netstandard2.1/Interface.deps.json
+/app/Interface/bin/Debug/netstandard2.1/Interface.dll
+/app/Interface/bin/Debug/netstandard2.1/Interface.pdb
+/app/Interface/bin/Debug/netstandard2.1/Interface.xml
+/app/Interface/obj/Debug/netstandard2.1/Interface.csprojAssemblyReference.cache
+/app/Interface/obj/Debug/netstandard2.1/Interface.AssemblyInfoInputs.cache
+/app/Interface/obj/Debug/netstandard2.1/Interface.AssemblyInfo.cs
+/app/Interface/obj/Debug/netstandard2.1/Interface.dll
+/app/Interface/obj/Debug/netstandard2.1/Interface.pdb
 C:\Repos\JinCreek.Server\Interface\bin\Debug\netstandard2.1\Interface.deps.json
 C:\Repos\JinCreek.Server\Interface\bin\Debug\netstandard2.1\Interface.dll
 C:\Repos\JinCreek.Server\Interface\bin\Debug\netstandard2.1\Interface.pdb

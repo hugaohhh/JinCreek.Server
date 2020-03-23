@@ -24,76 +24,76 @@ see https://docs.microsoft.com/ja-jp/ef/core/miscellaneous/cli/powershell#common
 - https://localhost:5001/swagger/v1/swagger.json
 
 
-## 3 ユーザ登録（テスト用）
+## 3 トークンの取得
 
-`/api/authentication/register`に`username`と`password`をJSON形式(`Content-Type: application/json`)でPOSTするとユーザが作成される。
-`password`は6文字以上で、英字大文字と英字小文字と数字と記号を含む必要がある。
-
-例：
-
-```
-$ http -v POST http://localhost:5000/api/authentication/register username="t-suzuki@indigo.co.jp" password="9Q'vl!"
-POST /api/authentication/register HTTP/1.1
-Accept: application/json, */*
-Accept-Encoding: gzip, deflate
-Connection: keep-alive
-Content-Length: 59
-Content-Type: application/json
-Host: localhost:5000
-User-Agent: HTTPie/1.0.3
-
-{
-    "password": "9Q'vl!",
-    "username": "t-suzuki@indigo.co.jp"
-}
-
-HTTP/1.1 200 OK
-Content-Length: 0
-Date: Fri, 20 Dec 2019 05:18:57 GMT
-Server: Kestrel
-```
-
-
-## 4 トークンの取得
-
-`/api/authentication/login`に`username`と`password`をPOSTすると`accessToken`と`refreshToken`が返る。
+`/api/authentication/login`に`organizationCode`と`domainName`と`userName`と`password`をPOSTすると`accessToken`と`refreshToken`が返る。
 
 例：
 
 ```
-$ http -v POST http://localhost:5000/api/authentication/login username="t-suzuki@indigo.co.jp" password="9Q'vl!"
+$ http -v POST http://localhost:5000/api/authentication/login organizationCode:=1 domainName="domain01" userName="user1" password="user1"
 POST /api/authentication/login HTTP/1.1
 Accept: application/json, */*
 Accept-Encoding: gzip, deflate
 Connection: keep-alive
-Content-Length: 59
+Content-Length: 91
 Content-Type: application/json
 Host: localhost:5000
 User-Agent: HTTPie/1.0.3
 
 {
-    "password": "9Q'vl!",
-    "username": "t-suzuki@indigo.co.jp"
+    "domainName": "domain01",
+    "organizationCode": 1,
+    "password": "user1",
+    "userName": "user1"
 }
 
 HTTP/1.1 200 OK
-Cache-Control: no-cache
+Content-Length: 530
 Content-Type: application/json; charset=utf-8
-Date: Fri, 20 Dec 2019 05:20:29 GMT
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Pragma: no-cache
+Date: Mon, 17 Feb 2020 10:03:46 GMT
 Server: Kestrel
-Set-Cookie: .AspNetCore.Identity.Application=CfDJ8GdXAJiHVDlMk2THvgbmyBerq2PL-MlbhYVESPUrXALq5fAJ6YU6J-HZHP-DFllBBfU48_dwG1UhrrnKxnYz4GNU57S5q5VUMs4mQs6HpvLLUvIz-TCsIDYilZf-Uu49dn9byRGsthSWFws1w7EcZiimxqSFOG6tK0XIgjxQB_rT9Z2y_NxsFw5Y2bwzpanOT0DZgiS2EF8plRQ3SsNhc6pLMtnGaNc3x9SK0Jx-heBfuL2rthkXKwKE4kglLEaxKFh_mt7pxoxuwvT4HkZQgwN-JnNZYiSaRAHsQGLAdEWy-lAXjxfFUe-j6aHug3TtxI_Cge96VJq-OZCJO3dVb3wqB5Yqa225B0Ba9XNN4B-q5Igrz1RtSGq3v8AMDOBu5knBLLz3umDWDWPHoZpTWEHG-5Tmy4-GW2CkahD4jNcDeC-TYal69Wu8Fq8QwkKE_CbtLoHz3_-A6fTnntLMzqZCvutJf_eukfjUVocCLQTfSPeAJKMFX0cF5kWIIpAeK5vtVQk4PfhzNU2SrFZJgp48XmqWGgpp6G6x7UIqlbUYzm-NuYrNIpnFSGUfhdHJYNKwdn1AQbn67OpJPq7qIAvvfPP4TSux46Gi0WcYgAon0ZhkCQVLlqPjQAFY6Mqvbw; expires=Fri, 03 Jan 2020 05:20:29 GMT; path=/; secure; samesite=lax; httponly
-Transfer-Encoding: chunked
 
 {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODE5Mjg5LCJpYXQiOjE1NzY4MTkyMjl9.hbnmqwgKX81O257WsevBz1Nqxe9r_kfv4OE2byd4H7o",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjM2OWI5ZTUyLWNkZjItNGE4NS1iZjNiLWRkMDViMWZkNmNiNiIsIm5iZiI6MTU3NjgxOTIyOSwiZXhwIjoxNTc2ODYyNDI5LCJpYXQiOjE1NzY4MTkyMjl9.vIXlAOJgHaPjug4pk6lMwjq8myaFWfA-TJT9VrXVFQo"
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImViNzUwNDk3LWYzMjUtNDY5MS05NDI1LWJiZTdkM2ZhYmNjMCIsInJvbGUiOiJVc2VyQWRtaW4iLCJuYmYiOjE1ODE5MzM4MjcsImV4cCI6MTU4MTkzMzg4NywiaWF0IjoxNTgxOTMzODI3fQ.lo7Zq-Dih2JigVH3EtEl7sFC_Z3cLsI5vxOUv5s4AEk",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImViNzUwNDk3LWYzMjUtNDY5MS05NDI1LWJiZTdkM2ZhYmNjMCIsInJvbGUiOiJVc2VyQWRtaW4iLCJuYmYiOjE1ODE5MzM4MjcsImV4cCI6MTU4MTk3NzAyNywiaWF0IjoxNTgxOTMzODI3fQ.qOWz4gvDbUWmoKNKFKzoiY8Eom3dEZKDip2HBE1OCzo"
+}
+```
+
+スーパー管理者の場合は`organizationCode`と`domainName`をつけない。
+
+例：
+
+```
+$ http -v POST http://localhost:5000/api/authentication/login username="user0" password="user0"
+POST /api/authentication/login HTTP/1.1
+Accept: application/json, */*
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Content-Length: 42
+Content-Type: application/json
+Host: localhost:5000
+User-Agent: HTTPie/1.0.3
+
+{
+    "password": "user0",
+    "username": "user0"
+}
+
+HTTP/1.1 200 OK
+Content-Length: 532
+Content-Type: application/json; charset=utf-8
+Date: Mon, 17 Feb 2020 10:01:37 GMT
+Server: Kestrel
+
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ijk4Mjg4MWRiLTFlMWQtNDZmMy1hM2UxLTkwOGM5Zjc2NWVlNCIsInJvbGUiOiJTdXBlckFkbWluIiwibmJmIjoxNTgxOTMzNjk3LCJleHAiOjE1ODE5MzM3NTcsImlhdCI6MTU4MTkzMzY5N30.e9XnuMBMkYQFQIMAE1OzyddJ7mB0z6qnKqlQqUTLF1k",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ijk4Mjg4MWRiLTFlMWQtNDZmMy1hM2UxLTkwOGM5Zjc2NWVlNCIsInJvbGUiOiJTdXBlckFkbWluIiwibmJmIjoxNTgxOTMzNjk3LCJleHAiOjE1ODE5NzY4OTcsImlhdCI6MTU4MTkzMzY5N30.oYxo0g3tfATdls8EHKgEijXslMEJw3LTt8h16lhbo2w"
 }
 ```
 
 
-## 5 アクセス
+## 4 アクセス
 
 `accessToken`を`Authorization: Bearer`ヘッダにつけて`GET`する。
 
@@ -121,7 +121,7 @@ Transfer-Encoding: chunked
 ```
 
 
-## 6 リフレッシュ
+## 5 リフレッシュ
 
 `/api/authentication/refresh`に`refreshtoken`をPOSTすると、新しい`accessToken`が返る。
 
@@ -154,7 +154,7 @@ Transfer-Encoding: chunked
 ```
 
 
-## 7 おまけ
+## 6 おまけ
 
 accessTokenのペイロード：
 
@@ -196,7 +196,7 @@ refreshTokenのペイロード：
 トークンタイプが含まれていない!
 
 
-## 8 おまけ2
+## 7 おまけ2
 
 エラーのときに例えば次のようなレスポンスボディが返る（see [既定の BadRequest 応答](https://docs.microsoft.com/ja-jp/aspnet/core/web-api/index?view=aspnetcore-3.1#default-badrequest-response)）：
 

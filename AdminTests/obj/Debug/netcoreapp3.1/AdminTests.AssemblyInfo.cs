@@ -11,8 +11,8 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("Admin", "C:\\Repos\\JinCreek.Server\\Admin", "Admin.csproj", "0")]
-[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("Common", "C:\\Repos\\JinCreek.Server\\Common", "Common.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("Admin, Version=1.0.19354.608, Culture=neutral, PublicKeyToken=null", "C:\\Repos\\JinCreek.Server\\Admin", "Admin.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Repos\\JinCreek.Server\\Common", "Common.csproj", "0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("AdminTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.19358.0423")]

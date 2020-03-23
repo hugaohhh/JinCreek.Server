@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace JinCreek.Server.Common.Models
@@ -164,6 +165,36 @@ namespace JinCreek.Server.Common.Models
         // DBアクセスのため自動プロパティを利用
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public string Delegatedipv6prefix { get; set; }
+    }
+
+    public class Radippool
+    {
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public uint Id { get; set; }
+
+        [Column("pool_name")]
+        public string PoolName { get; set; }
+
+        public string Framedipaddress { get; set; }
+
+        public string Nasipaddress { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public string Calledstationid { get; set; }
+
+        // DBアクセスのため自動プロパティを利用
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public string Callingstationid { get; set; }
+
+        [Column("expiry_time")]
+        public DateTime? ExpiryTime { get; set; }
+
+        public string Username { get; set; }
+
+        [Column("pool_key")]
+        public string Poolkey { get; set; }
     }
 
     public class Radcheck

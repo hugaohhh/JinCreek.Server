@@ -1,0 +1,7 @@
+web_server_role: admin
+key_file: /etc/ssl/server/www-jincreek-jp-key.pem.nopass
+cert_file: /etc/ssl/server/www-jincreek-jp.crt
+conf_file: /etc/nginx/conf.d/ssl.conf
+server_name: www.jincreek.jp
+server_port: 443
+dotnet_server: http://localhost:3000

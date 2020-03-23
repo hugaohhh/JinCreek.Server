@@ -1,0 +1,3 @@
+- include: install.yml
+- include: setting.yml
+- include: logrotate.yml

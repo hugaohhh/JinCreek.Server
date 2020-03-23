@@ -1,0 +1,7 @@
+web_server_role: ca
+key_file: /etc/ssl/server/www-jincreek-jp-key.pem.nopass
+cert_file: /etc/ssl/server/www-jincreek-jp.crt
+conf_file: /etc/nginx/conf.d/ssl.conf
+ca_cert_file: /etc/ssl/private_ca/cacert.pem
+server_name: www.jincreek.jp
+server_port: 443

@@ -1,0 +1,12 @@
+- name: Install logrotate
+  apt: 
+    name: logrotate
+    state: latest
+- name: Copy systemctl file
+  copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items: "etc/logrotate.d/freeradius"

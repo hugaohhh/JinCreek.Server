@@ -1,9 +1,9 @@
-﻿using JinCreek.Server.Common.Models;
+﻿using JinCreek.Server.Common.Exceptions;
+using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
-using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Admin.CustomProvider
+namespace JinCreek.Server.Admin.CustomProvider
 {
     public class DapperUsersTable
     {
@@ -12,18 +12,6 @@ namespace Admin.CustomProvider
         public DapperUsersTable(UserRepository userRepository)
         {
             _userRepository = userRepository;
-        }
-
-        public IdentityResult Create(ApplicationUser applicationUser)
-        {
-            _userRepository.Create(new SuperAdminUser
-            {
-                Id = new Guid(),
-                AccountName = applicationUser.NormalizedUserName,
-                Password = applicationUser.PasswordHash,
-            });
-
-            return IdentityResult.Success;
         }
 
         public ApplicationUser FindById(Guid userId)
@@ -37,12 +25,12 @@ namespace Admin.CustomProvider
             return new ApplicationUser
             {
                 Id = user.Id,
-                Name = user.AccountName,
+                AccountName = user.AccountName,
                 Role = user.GetType().Name,
                 PasswordHash = user.GetType() switch
                 {
-                    var type when type == typeof(AdminUser) => ((AdminUser)user).Password,
-                    var type when type == typeof(SuperAdminUser) => ((SuperAdminUser)user).Password,
+                    var type when type == typeof(UserAdmin) => ((UserAdmin)user).Password,
+                    var type when type == typeof(SuperAdmin) => ((SuperAdmin)user).Password,
                     _ => "",
                 },
             };
@@ -50,24 +38,26 @@ namespace Admin.CustomProvider
 
         public ApplicationUser FindByName(string userName)
         {
-            var user = _userRepository.GetUserByName(userName);
-            if (user == null)
+            try
+            {
+                var user = _userRepository.GetUserByName(userName);
+                return new ApplicationUser
+                {
+                    Id = user.Id,
+                    AccountName = user.AccountName,
+                    Role = user.GetType().Name,
+                    PasswordHash = user.GetType() switch
+                    {
+                        var type when type == typeof(UserAdmin) => ((UserAdmin)user).Password,
+                        var type when type == typeof(SuperAdmin) => ((SuperAdmin)user).Password,
+                        _ => "",
+                    },
+                };
+            }
+            catch (EntityNotFoundException)
             {
                 return null;
             }
-
-            return new ApplicationUser
-            {
-                Id = user.Id,
-                Name = user.AccountName,
-                Role = user.GetType().Name,
-                PasswordHash = user.GetType() switch
-                {
-                    var type when type == typeof(AdminUser) => ((AdminUser)user).Password,
-                    var type when type == typeof(SuperAdminUser) => ((SuperAdminUser)user).Password,
-                    _ => "",
-                },
-            };
         }
     }
 }

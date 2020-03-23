@@ -1,0 +1,4 @@
+- include: deploy_common.yml
+- include: deploy_server.yml
+- include: deploy_client.yml
+- include: systemctl.yml

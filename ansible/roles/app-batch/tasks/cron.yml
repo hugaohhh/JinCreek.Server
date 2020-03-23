@@ -1,0 +1,12 @@
+- name: Copy Cron
+  copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - etc/cron.d/jincreek-deauthentication
+    - etc/cron.d/jincreek-ldap_sync
+    - etc/cron.d/jincreek-radius_sync
+

@@ -1,0 +1,57 @@
+- name: Now
+  command: date +"%Y%m%d%H%M"
+  register: now
+
+- name: debug
+  debug:
+    var: now.stdout
+
+- name: Application Directory({{ now.stdout }})
+  file:
+    path: "{{ application_directory }}/Auth_{{ now.stdout }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: PID Directory
+  file:
+    path: "/var/run/auth"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Script
+  copy:
+    src: restart_auth.sh
+    dest: "{{ application_directory }}/bin"
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Copy Assembly
+  copy: 
+    src: Auth.zip
+    dest: "{{ item }}"
+    mode: 0640
+    owner: root
+    group: root
+  with_items: "{{ application_directory }}/Auth.zip"
+
+- name: Unarchive Assembly
+  unarchive:
+    src: "{{ application_directory }}/Auth.zip"
+    dest: "{{ application_directory }}/Auth_{{ now.stdout }}"
+    remote_src: yes
+
+- name: Create symbolic link
+  file:
+    src: "{{ application_directory }}/Auth_{{ now.stdout }}"
+    dest: "{{ application_directory }}/Auth"
+    state: link
+
+- name: Restart dotnet
+  shell: "{{ application_directory }}/bin/restart_auth.sh"
+  async: 5
+  poll: 0

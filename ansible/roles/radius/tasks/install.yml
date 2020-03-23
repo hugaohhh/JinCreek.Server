@@ -1,0 +1,26 @@
+- name: Install Python2
+  apt:
+    name: python
+    state: present
+- name: Install FreeRADIUS
+  apt:
+    name: freeradius
+    state: present
+- name: Install Some Package
+  apt:
+    name: 
+      - python-pip
+      - freeradius-mysql
+      - python-dev
+      - python-pymysql
+      - python-sqlalchemy
+      - default-libmysqlclient-dev
+    state: present
+- name: Install mysql-connector-python
+  pip:
+    name: mysql-connector-python
+- name: Enable FreeRADIUS
+  service:
+    name: freeradius
+    enabled: yes
+    state: started

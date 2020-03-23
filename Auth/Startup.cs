@@ -1,10 +1,13 @@
-using JinCreek.Server.Common.Repositories;
+Ôªøusing JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
+using System;
+using JinCreek.Server.Auth.Services;
 
 namespace JinCreek.Server.Auth
 {
@@ -20,14 +23,44 @@ namespace JinCreek.Server.Auth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
-            services.AddDbContext<MainDbContext>(options =>
+            services.AddControllers(options =>
             {
-                options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
+                options.Filters.Add(new ServerVersionHeaderAttribute());
+
+            }).AddNewtonsoftJson(options =>
+            {
+                // Use the default property (Pascal) casing
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+
+                // Configure a custom converter
+                //options.SerializerOptions.Converters.Add(new MyCustomJsonConverter());
             });
+
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Azure")
+            {
+                services.AddDbContext<MainDbContext>(options =>
+                {
+                    options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
+                });
+                services.AddDbContext<RadiusDbContext>(options =>
+                {
+                    options.UseMySql(Configuration.GetConnectionString("RadiusDbConnection"));
+                });
+                services.BuildServiceProvider().GetService<MainDbContext>().Database.Migrate();
+            }
+            else
+            {
+                var a = Configuration.GetConnectionString("MainDbConnection");
+                services.AddDbContext<MainDbContext>(options =>
+                {
+                    options.UseMySql(Configuration.GetConnectionString("MainDbConnection"));
+                });
+                services.AddDbContext<RadiusDbContext>(options =>
+                {
+                    options.UseMySql(Configuration.GetConnectionString("RadiusDbConnection"));
+                });
+            }
             services.AddTransient<UserRepository>();
-            services.AddTransient<SimDeviceRepository>();
             services.AddTransient<AuthenticationRepository>();
 
             services.AddDbContext<RadiusDbContext>(options =>
@@ -41,8 +74,8 @@ namespace JinCreek.Server.Auth
                     config.PostProcess = document =>
                     {
                         document.Info.Version = "v1";
-                        document.Info.Title = "JinCreek îFèÿÉAÉvÉä API";
-                        document.Info.Description = "JinCreekÉTÅ[ÉrÉX ÇÃ îFèÿÉAÉvÉä APIÇ≈Ç∑ÅB";
+                        document.Info.Title = "JinCreek Ë™çË®º„Ç¢„Éó„É™ API";
+                        document.Info.Description = "JinCreek„Çµ„Éº„Éì„Çπ „ÅÆ Ë™çË®º„Ç¢„Éó„É™ API„Åß„Åô„ÄÇ";
                         document.Info.TermsOfService = "None";
                     };
                 }

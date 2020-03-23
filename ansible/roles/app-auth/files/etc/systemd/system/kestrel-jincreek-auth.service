@@ -1,0 +1,19 @@
+[Unit]
+Description=JinCreek Auth App running on Ubuntu
+
+[Service]
+WorkingDirectory=/opt/apps/Auth
+ExecStart=/usr/bin/dotnet /opt/apps/Auth/Auth.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-jincreek-auth
+User=jincreek
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
+Alias=jincreek-auth.service
+

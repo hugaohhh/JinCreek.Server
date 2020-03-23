@@ -1,5 +1,4 @@
-﻿using Admin.CustomProvider;
-using Admin.Services;
+﻿using JinCreek.Server.Admin.CustomProvider;
 using JinCreek.Server.Common.Models;
 using JinCreek.Server.Common.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -9,286 +8,291 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
 
-namespace Admin.Controllers
+namespace JinCreek.Server.Admin.Controllers
 {
+    /// <summary>
+    /// POST: api/organizations          組織登録
+    /// GET: api/organizations           組織一覧照会
+    /// GET: api/organizations/mine      自己組織照会
+    /// GET: api/organizations/{code}    組織照会
+    /// PUT: api/organizations/mine      自己組織更新
+    /// PUT: api/organizations/{code}    組織更新
+    /// DELETE: api/organizations/{code} 組織削除
+    /// </summary>
     [Route("api/organizations")]
     [ApiController]
     [Authorize]
+    [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class OrganizationsController : ControllerBase
     {
-        private readonly IAuthorizationService _authorizationService;
         private readonly UserRepository _userRepository;
         private readonly MainDbContext _context;
 
-        public OrganizationsController(IAuthorizationService authorizationService, UserRepository userRepository, MainDbContext context)
+        public OrganizationsController(UserRepository userRepository, MainDbContext context)
         {
-            _authorizationService = authorizationService;
             _userRepository = userRepository;
             _context = context;
         }
 
-        // GET: api/organizations
         /// <summary>
         /// 組織一覧照会
+        /// GET: api/organizations
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(Roles = Roles.SuperAdminUser)]
-        public IEnumerable<Organization> GetOrganizations([FromQuery] GetOrganizationsParam param)
+        [Authorize(Roles = Roles.SuperAdmin)]
+        public ActionResult<PaginatedResponse<Organization>> GetOrganizations([FromQuery] GetOrganizationsParam param)
         {
+            // filter
             var query = _context.Organization.Where(a => true);
             if (param.Name != null) query = query.Where(a => a.Name.Contains(param.Name));
-            if (param.StartDayFrom != null) query = query.Where(a => a.StartDay >= param.StartDayFrom);
-            if (param.StartDayTo != null) query = query.Where(a => a.StartDay <= param.StartDayTo);
-            if (param.EndDayFrom != null) query = query.Where(a => a.EndDay >= param.EndDayFrom);
-            if (param.EndDayTo != null) query = query.Where(a => a.EndDay <= param.EndDayTo);
+            if (param.StartDateFrom != null) query = query.Where(a => a.StartDate >= param.StartDateFrom);
+            if (param.StartDateTo != null) query = query.Where(a => a.StartDate <= param.StartDateTo);
+            if (param.IncludingEndDateNotSet)
+            {
+                if (param.EndDateFrom == null && param.EndDateTo == null) query = query.Where(a => a.EndDate == null);
+                if (param.EndDateFrom != null && param.EndDateTo == null) query = query.Where(a => a.EndDate == null || param.EndDateFrom <= a.EndDate);
+                if (param.EndDateFrom == null && param.EndDateTo != null) query = query.Where(a => a.EndDate == null || a.EndDate <= param.EndDateTo);
+                if (param.EndDateFrom != null && param.EndDateTo != null) query = query.Where(a => a.EndDate == null || (param.EndDateFrom <= a.EndDate && a.EndDate <= param.EndDateTo));
+            }
+            else
+            {
+                if (param.EndDateFrom != null) query = query.Where(a => a.EndDate >= param.EndDateFrom);
+                if (param.EndDateTo != null) query = query.Where(a => a.EndDate <= param.EndDateTo);
+            }
             if (param.IsValid != null) query = query.Where(a => a.IsValid == param.IsValid);
+            var count = query.Count();
 
-            // order by
-            if (param.OrderBy == OrderKey.Asc) query = OrderBy(query, param.SortBy.ToString());
-            if (param.OrderBy == OrderKey.Desc) query = OrderByDescending(query, param.SortBy.ToString());
+            // sort
+            query = Utils.OrderBy(query, param.SortBy.ToString(), param.OrderBy).ThenBy(a => a.Code);
 
-            // paging
-            return query.Skip((param.Page - 1) * param.PageSize).Take(param.PageSize).ToList();
+            // pagination
+            if (param.Page != null) query = query.Skip((int)((param.Page - 1) * param.PageSize)).Take(param.PageSize);
+
+            return new PaginatedResponse<Organization> { Count = count, Results = query.ToList() };
         }
 
-        // GET: api/organizations/mine
         /// <summary>
-        /// 組織照会
+        /// 自己組織照会
+        /// GET: api/organizations/mine
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = Roles.AdminUser)]
+        [Authorize(Roles = Roles.UserAdmin)]
         [HttpGet("mine")]
         public ActionResult<Organization> GetOrganization()
         {
             var user = (EndUser)_userRepository.GetUser(Guid.Parse(User.Identity.Name));
-            var domain = _userRepository.GetDomain(user.DomainId);
-            return GetOrganization(domain.OrganizationCode);
+            var domain = _userRepository.GetDomain(user.Domain.Id);
+            return GetOrganization(domain.Organization.Code);
         }
 
-        // GET: api/organizations/5
         /// <summary>
         /// 組織照会
+        /// GET: api/organizations/5
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        [Authorize(Roles = Roles.SuperAdminUser)]
+        [Authorize(Roles = Roles.SuperAdmin)]
         [HttpGet("{code}")]
-        public ActionResult<Organization> GetOrganization(long code)
+        public ActionResult<Organization> GetOrganization(int code)
         {
-            var organization = _userRepository.GetOrganization(code);
-            if (organization == null)
-            {
-                return NotFound(new { traceId = Activity.Current.Id });
-            }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Read).Result.Succeeded)
-            {
-                return new ObjectResult(new { traceId = Activity.Current.Id, errors = new { role = "invalid role" } }) { StatusCode = StatusCodes.Status403Forbidden };
-            }
-            return organization;
+            return _userRepository.GetOrganization(code);
         }
 
-        // PUT: api/organizations/mine
         /// <summary>
-        /// 組織更新
+        /// 自己組織更新
+        /// PUT: api/organizations/mine
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [Authorize(Roles = Roles.AdminUser)]
+        [Authorize(Roles = Roles.UserAdmin)]
         [HttpPut("mine")]
         public IActionResult PutOrganization(PutOrganizationParam param)
         {
-            if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
-            {
-                return BadRequest(new { traceId = Activity.Current.Id });
-            }
-
             var user = (EndUser)_userRepository.GetUser(Guid.Parse(User.Identity.Name));
-            var domain = _userRepository.GetDomain(user.DomainId);
-            var organization = _userRepository.GetOrganization(domain.OrganizationCode);
-            if (organization == null)
+            var domain = _userRepository.GetDomain(user.Domain.Id);
+            var organization = _userRepository.GetOrganization(domain.Organization.Code);
+            organization.Name = param.Name;
+            organization.Address = param.Address;
+            organization.Phone = param.Phone;
+            organization.Url = param.Url;
+            organization.AdminPhone = param.AdminPhone;
+            organization.AdminMail = param.AdminMail;
+
+            try
             {
-                return NotFound(new { traceId = Activity.Current.Id });
+                _userRepository.Update(organization);
+                return Ok(organization);
             }
-
-            organization.Code = param.Code ?? organization.Code;
-            organization.Name = param.Name ?? organization.Name;
-            organization.Address = param.Address ?? organization.Address;
-            organization.DelegatePhone = param.DelegatePhone ?? organization.DelegatePhone;
-            organization.Url = param.Url ?? organization.Url;
-            organization.AdminPhone = param.AdminPhone ?? organization.AdminPhone;
-            organization.AdminMail = param.AdminMail ?? organization.AdminMail;
-
-            _userRepository.Update(organization);
-            return Ok(organization);
+            catch (DbUpdateException ex)
+            {
+                if (_context.Organization.Any(a => a.Name == organization.Name))
+                {
+                    ModelState.AddModelError(nameof(organization.Name), ex.InnerException?.Message);
+                    return ValidationProblem(ModelState);
+                }
+                throw;
+            }
         }
 
-        // PUT: api/organizations/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         /// <summary>
         /// 組織更新
+        /// PUT: api/organizations/5
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        /// more details see https://aka.ms/RazorPagesCRUD.
         /// </summary>
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        [Authorize(Roles = Roles.SuperAdminUser)]
+        [Authorize(Roles = Roles.SuperAdmin)]
         [HttpPut("{code}")]
-        public IActionResult PutOrganization(long code, PutOrganizationAdminParam param)
+        public IActionResult PutOrganization(int code, PutOrganizationAdminParam param)
         {
-            if (param.GetType().GetProperties().All(a => a.GetValue(param) == null))
-            {
-                return BadRequest(new { traceId = Activity.Current.Id, errors = new
-                {
-                    Url = "required",
-                    Name = "required",
-                    Address = "required",
-                    AdminMail = "required",
-                    AdminPhone = "required",
-                    DelegatePhone = "required",
-                    StartDay = "required",
-                    EndDay = "required",
-                    IsValid = "required",
-                }
-                });
-            }
-
             var organization = _userRepository.GetOrganization(code);
-            if (organization == null)
-            {
-                return NotFound(new { traceId = Activity.Current.Id });
-            }
-
-            organization.Code = param.Code ?? organization.Code;
-            organization.Name = param.Name ?? organization.Name;
-            organization.Address = param.Address ?? organization.Address;
-            organization.DelegatePhone = param.DelegatePhone ?? organization.DelegatePhone;
-            organization.Url = param.Url ?? organization.Url;
-            organization.AdminPhone = param.AdminPhone ?? organization.AdminPhone;
-            organization.AdminMail = param.AdminMail ?? organization.AdminMail;
-            organization.StartDay = param.StartDay ?? organization.StartDay;
-            organization.EndDay = param.EndDay ?? organization.EndDay;
-            organization.IsValid = param.IsValid ?? organization.IsValid;
-
-            _userRepository.Update(organization);
-            return Ok(organization);
-        }
-
-
-        // POST: api/organizations
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        /// <summary>
-        /// 組織登録
-        /// </summary>
-        /// <param name="organization"></param>
-        /// <returns></returns>
-        [Authorize(Roles = Roles.SuperAdminUser)]
-        [HttpPost]
-        public ActionResult<Organization> PostOrganization(Organization organization)
-        {
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Create).Result.Succeeded)
-            {
-                return Forbid();
-            }
+            organization.Name = param.Name;
+            organization.Address = param.Address;
+            organization.Phone = param.Phone;
+            organization.Url = param.Url;
+            organization.AdminPhone = param.AdminPhone;
+            organization.AdminMail = param.AdminMail;
+            organization.StartDate = param.StartDate;
+            organization.EndDate = param.EndDate;
+            organization.IsValid = param.IsValid;
+            organization.DistributionServerIp = param.DistributionServerIp;
             try
             {
-                _userRepository.Create(organization);
+                _userRepository.Update(organization);
+                return Ok(organization);
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                if (OrganizationExists(organization.Code))
+                if (_context.Organization.Any(a => a.Name == organization.Name))
                 {
-                    return Conflict();
+                    ModelState.AddModelError(nameof(organization.Name), ex.InnerException?.Message);
+                    return ValidationProblem(ModelState);
                 }
                 throw;
             }
-            return CreatedAtAction("GetOrganization", new { code = organization.Code }, organization);
         }
 
-        // DELETE: api/organizations/5
+        /// <summary>
+        /// 組織登録
+        /// POST: api/organizations
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        /// more details see https://aka.ms/RazorPagesCRUD.
+        /// </summary>
+        /// <param name="organization"></param>
+        /// <returns></returns>
+        [Authorize(Roles = Roles.SuperAdmin)]
+        [HttpPost]
+        public ActionResult<Organization> PostOrganization(Organization organization)
+        {
+            try
+            {
+                _userRepository.Create(organization);
+                return CreatedAtAction("GetOrganization", new { code = organization.Code }, organization);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (_context.Organization.Any(a => a.Code == organization.Code))
+                {
+                    ModelState.AddModelError(nameof(organization.Code), ex.InnerException?.Message);
+                }
+                if (_context.Organization.Any(a => a.Name == organization.Name))
+                {
+                    ModelState.AddModelError(nameof(organization.Name), ex.InnerException?.Message);
+                }
+                if (!ModelState.IsValid) return ValidationProblem(ModelState);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 組織削除
+        /// DELETE: api/organizations/5
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        [Authorize(Roles = Roles.SuperAdminUser)]
+        [Authorize(Roles = Roles.SuperAdmin)]
         [HttpDelete("{code}")]
-        public ActionResult<Organization> DeleteOrganization(long code)
+        public ActionResult<Organization> DeleteOrganization(int code)
         {
-            var organization = _userRepository.GetOrganization(code);
-            if (organization == null)
+            _userRepository.GetOrganization(code);
+
+            try
             {
-                return NotFound();
+                var organization = _userRepository.RemoveOrganization(code);
+                return new ObjectResult(organization) { StatusCode = StatusCodes.Status204NoContent };
             }
-            if (!_authorizationService.AuthorizeAsync(User, organization, Operations.Delete).Result.Succeeded)
+            catch (DbUpdateException)
             {
-                return Forbid();
+                var org = _context.Organization.AsNoTracking().FirstOrDefault(a => a.Code == code);
+                if (_context.Domain.Any(a => a.Organization == org))
+                {
+                    ModelState.AddModelError(nameof(Domain), Messages.ChildEntityExists);
+                }
+                if (_context.SimGroup.Any(a => a.Organization == org))
+                {
+                    ModelState.AddModelError(nameof(SimGroup), Messages.ChildEntityExists);
+                }
+                if (_context.OrganizationClientApp.Any(a => a.Organization == org))
+                {
+                    ModelState.AddModelError(nameof(OrganizationClientApp), Messages.ChildEntityExists);
+                }
+                if (!ModelState.IsValid) return ValidationProblem(ModelState);
+                throw;
             }
-            organization = _userRepository.RemoveOrganization(code);
-            if (organization == null)
-            {
-                return NotFound();
-            }
-            return new ObjectResult(organization) { StatusCode = StatusCodes.Status204NoContent };
         }
 
-
-
-
-        private bool OrganizationExists(long code)
+        private bool OrganizationExists(int code)
         {
-            return _userRepository.GetOrganization(code) != null;
-        }
-
-        // see Sorting using property name as string, https://entityframeworkcore.com/knowledge-base/34899933/
-        private static IOrderedQueryable<TSource> OrderBy<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderBy" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
-        }
-
-        private static IOrderedQueryable<TSource> OrderByDescending<TSource>(IQueryable<TSource> source, string propertyName)
-        {
-            var parameter = Expression.Parameter(typeof(TSource), "x");
-            Expression property = Expression.Property(parameter, propertyName);
-            return (IOrderedQueryable<TSource>)typeof(Queryable).GetMethods()
-                .First(x => x.Name == "OrderByDescending" && x.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TSource), property.Type).Invoke(null,
-                    new object[] { source, Expression.Lambda(property, parameter) });
+            return _context.Organization.Any(a => a.Code == code);
         }
 
         public class PutOrganizationParam
         {
-            public long? Code { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
+            [Required] public string Name { get; set; }
+            [Required] public string Address { get; set; }
+
             [Phone]
-            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
-            public string DelegatePhone { get; set; }
-            [Url]
-            public string Url { get; set; }
+            [StringLength(11, MinimumLength = 10)]
+            [Required]
+            public string Phone { get; set; }
+
+            [Url] [Required] public string Url { get; set; }
+
             [Phone]
-            [StringLength(11, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+            [StringLength(11, MinimumLength = 10)]
+            [Required]
             public string AdminPhone { get; set; }
-            [EmailAddress]
-            public string AdminMail { get; set; }
+
+            [EmailAddress] [Required] public string AdminMail { get; set; }
+
         }
 
-        public class PutOrganizationAdminParam : PutOrganizationParam
+        public class PutOrganizationAdminParam : PutOrganizationParam, IValidatableObject
         {
-            public DateTime? StartDay { get; set; }
-            public DateTime? EndDay { get; set; }
-            public bool? IsValid { get; set; }
+            [Required] public DateTime? StartDate { get; set; }
+            public DateTime? EndDate { get; set; }
+            [Required] public bool? IsValid { get; set; }
+
+            [RegularExpression("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}", ErrorMessage = Messages.InvalidIpAddress)]
+            [Required]
+            public string DistributionServerIp { get; set; }
+
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                if (StartDate > EndDate)
+                {
+                    yield return new ValidationResult(Messages.InvalidEndDate, new[] { nameof(EndDate) });
+                }
+            }
         }
 
         public enum SortKey
@@ -296,36 +300,26 @@ namespace Admin.Controllers
             Code,
             Name,
             Address,
-            DelegatePhone,
+            Phone,
             AdminPhone,
             AdminMail,
-            StartDay,
-            EndDay,
+            StartDate,
+            EndDate,
             Url,
             IsValid,
         }
 
-        public enum OrderKey
+        public class GetOrganizationsParam : PageParam
         {
-            Asc,
-            Desc,
-        }
-
-        public class GetOrganizationsParam
-        {
-            [Range(1, int.MaxValue)]
-            public int Page { get; set; } = 1;
-            [Range(1, 1000)]
-            public int PageSize { get; set; } = 20;
-
             public SortKey SortBy { get; set; } = SortKey.Code;
-            public OrderKey OrderBy { get; set; } = OrderKey.Asc;
+            public Order OrderBy { get; set; } = Order.Asc;
 
             public string Name { get; set; }
-            public DateTime? StartDayFrom { get; set; }
-            public DateTime? StartDayTo { get; set; }
-            public DateTime? EndDayFrom { get; set; }
-            public DateTime? EndDayTo { get; set; }
+            public DateTime? StartDateFrom { get; set; }
+            public DateTime? StartDateTo { get; set; }
+            public DateTime? EndDateFrom { get; set; }
+            public DateTime? EndDateTo { get; set; }
+            public bool IncludingEndDateNotSet { get; set; } = false;
             public bool? IsValid { get; set; }
         }
     }

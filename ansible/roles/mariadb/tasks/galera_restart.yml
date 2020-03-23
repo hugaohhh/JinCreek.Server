@@ -1,0 +1,74 @@
+- name: Check file /var/lib/mysql/grastate.dat
+  stat:
+    path: /var/lib/mysql/grastate.dat
+  register: glera_state
+  when: inventory_hostname == groups['mdbx'][0]
+
+- name: Modify /var/lib/mysql/grastate.dat
+  lineinfile:
+    dest: /var/lib/mysql/grastate.dat
+    state: present
+    regex: ^safe_to_bootstrap
+    line: "safe_to_bootstrap: 1"
+  when:
+    - inventory_hostname == groups['mdbx'][0]
+    - glera_state.stat.exists
+
+
+#- name: Stop MariaDB
+#  service:
+#    name: mysql
+#    state: stopped
+#
+#- name: Find ib_logfile
+#  find:
+#    paths: /var/lib/mysql
+#    patterns: ib_*
+#  register: ib_logfiles
+#  when: inventory_hostname != groups['mdbx'][0]
+#- name: Print ib_logfile
+#  debug:
+#    var: ib_logfiles
+#  when: inventory_hostname != groups['mdbx'][0]
+#- name: Print ib_logfile
+#  debug: 
+#    var: item.path
+#  with_items: '{{ ib_logfiles.files }}'
+#  when: inventory_hostname != groups['mdbx'][0]
+#- name: Remove ib_logfiles
+#  file :
+#    path: "{{ item.path }}"
+#    state: absent
+#  with_items:
+#    - '{{ ib_logfiles.files }}'
+#  when: inventory_hostname != groups['mdbx'][0]
+#- name: Remove ibdata1
+#  file :
+#    path: /var/lib/mysql/ibdata1
+#    state: absent
+#  when: inventory_hostname != groups['mdbx'][0]
+#- name: Remove grastate.dat
+#  file :
+#    path: /var/lib/mysql/grastate.dat
+#    state: absent
+#  when: inventory_hostname != groups['mdbx'][0]
+
+
+
+
+- name: Start MariaDB on first MariaDB Galera cluster node
+  #  command: nohup mysqld --wsrep-new-cluster
+  #shell: nohup mysqld --wsrep-new-cluster
+  shell: /etc/init.d/mysql bootstrap
+  async: 50
+  poll: 0
+  when:
+    - inventory_hostname == groups['mdbx'][0]
+
+- name: Restart MariaDB the other MariaDB Galera cluster node
+  #  command: nohup mysqld
+  shell: /etc/init.d/mysql start
+  async: 50
+  poll: 0
+  when: inventory_hostname != groups['mdbx'][0]
+

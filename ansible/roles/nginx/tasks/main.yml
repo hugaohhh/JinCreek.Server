@@ -1,0 +1,65 @@
+- name: Add user nginx
+  user:
+    name: nginx
+
+- name: Install nginx
+  apt: 
+    name: nginx
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Start nginx
+  service:
+    name: nginx
+    enabled: yes
+
+- name: nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - Restart nginx
+
+#- name: debug
+#  debug: msg='{{ stage }}'
+
+- name: debug
+  debug: msg='{{ web_server_role }}'
+
+- name: create ssl for server directories
+  file: path=/etc/ssl/server state=directory
+
+- name: copy key
+  copy: src=files/etc/ssl/server/www-jincreek-jp-key.pem.nopass dest={{ key_file }} owner=root mode=0600
+  notify:
+    - Restart nginx
+
+- name: copy crt
+  copy: src=files/etc/ssl/server/www-jincreek-jp.crt dest={{ cert_file }} owner=root mode=0600
+  notify:
+    - Restart nginx
+
+#- name: copy config
+#  copy: src=files/ssl_{{web_server_role}}.conf dest={{ conf_file }} owner=root mode=0600
+#  notify:
+#    - Restart nginx
+
+- name: create ssl for server directories
+  file: path=/etc/ssl/private_ca state=directory
+  when: web_server_role == 'auth' or web_server_role == 'ca'
+
+- name: copy crt
+  copy: src=files/etc/ssl/private_ca/cacert.pem dest={{ ca_cert_file }} owner=root mode=0600
+  when: web_server_role == 'auth' or web_server_role == 'ca'
+  notify:
+    - Restart nginx
+
+- name: copy config for SSL
+  template:
+    src: templates/ssl.conf.j2
+    dest: /etc/nginx/conf.d/ssl.conf
+  notify:
+    - Restart nginx
+
+- include: logrotate.yml

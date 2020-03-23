@@ -1,0 +1,2 @@
+user01 Cleartext-Password := "pass"
+hoge01 Cleartext-Password := "hogehoge"

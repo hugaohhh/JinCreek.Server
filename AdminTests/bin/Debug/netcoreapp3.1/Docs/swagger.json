@@ -1,45 +1,12 @@
 ﻿{
-  "x-generator": "NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v12.0.0.0))",
+  "x-generator": "NSwag v13.2.2.0 (NJsonSchema v10.1.4.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Admin API",
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Authentication/Register": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "operationId": "Authentication_Register",
-        "requestBody": {
-          "x-name": "request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UsersRegisterRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Authentication/Login": {
+    "/api/authentication/login": {
       "post": {
         "tags": [
           "Authentication"
@@ -72,7 +39,7 @@
         }
       }
     },
-    "/api/Authentication/Refresh": {
+    "/api/authentication/refresh": {
       "post": {
         "tags": [
           "Authentication"
@@ -105,28 +72,1358 @@
         }
       }
     },
-    "/api/Organizations": {
+    "/api/authentication-logs/mine": {
       "get": {
         "tags": [
-          "Organizations"
+          "AuthenticationLogs"
         ],
-        "operationId": "Organizations_GetOrganizations",
+        "operationId": "AuthenticationLogs_GetLogs",
         "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "TimeFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "TimeTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "SimMsisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "UserAccountName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TypeKey"
+                }
+              ]
+            },
+            "x-position": 8
+          },
           {
             "name": "Page",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
             },
-            "x-position": 1
+            "x-position": 9
           },
           {
             "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAuthenticationLogDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/authentication-logs": {
+      "get": {
+        "tags": [
+          "AuthenticationLogs"
+        ],
+        "operationId": "AuthenticationLogs_GetLogs2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "TimeFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "TimeTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "SimMsisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "UserAccountName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TypeKey"
+                }
+              ]
+            },
+            "x-position": 9
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 11
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAuthenticationLogDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/dashboard/mine": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_GetMine",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_GetAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/device-groups/mine": {
+      "get": {
+        "tags": [
+          "DeviceGroups"
+        ],
+        "operationId": "DeviceGroups_GetDeviceGroups",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey2"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDeviceGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/device-groups": {
+      "get": {
+        "tags": [
+          "DeviceGroups"
+        ],
+        "operationId": "DeviceGroups_GetDeviceGroups2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey2"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDeviceGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices/mine": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevices",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey3"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DeviceGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "ProductName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "LteModuleId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 13
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 14
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevices2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey3"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "DeviceGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "ProductName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "LteModuleId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 12
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 13
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 14
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 15
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices/mine/{id}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_PutDeviceMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutDeviceParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices/{id}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevice2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_PutDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutDeviceParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices/mine/csv": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevicesCsv",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_PostDevicesCsv",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/devices/csv": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDevicesCsv2",
+        "parameters": [
+          {
+            "name": "organizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_PostDevicesCsv2",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/domains/mine": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey4"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDomain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/domains": {
+      "get": {
+        "tags": [
+          "Domains"
+        ],
+        "operationId": "Domains_GetDomains2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey4"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfDomain"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/healthcheck": {
+      "get": {
+        "tags": [
+          "ヘルスチェック"
+        ],
+        "operationId": "HealthCheck_HealthCheck",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lte-modules": {
+      "get": {
+        "tags": [
+          "LteModules"
+        ],
+        "operationId": "LteModules_GetLte",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey5"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
             },
             "x-position": 2
           },
@@ -140,48 +1437,739 @@
             "x-position": 3
           },
           {
-            "name": "StartDayFrom",
+            "name": "UseSoftwareRadioState",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "boolean",
+              "nullable": true
             },
             "x-position": 4
           },
           {
-            "name": "StartDayTo",
+            "name": "Page",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
             },
             "x-position": 5
           },
           {
-            "name": "EndDayFrom",
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfLteModule"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/multi-factors/mine": {
+      "post": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PostMultiFactorMine",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactors",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey6"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "UserAccountName",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "IsAuthenticationDone",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
             },
             "x-position": 6
           },
           {
-            "name": "EndDayTo",
+            "name": "StartDateFrom",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "nullable": true
             },
             "x-position": 7
           },
           {
-            "name": "IsActive",
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "IncludingEndDateNotSet",
             "in": "query",
             "schema": {
               "type": "boolean"
             },
+            "x-position": 11
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 12
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 13
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfMultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/multi-factors": {
+      "post": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PostMultiFactor",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactors2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey6"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "UserAccountName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "IsAuthenticationDone",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
             "x-position": 8
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 13
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 14
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfMultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/multi-factors/mine/{id}": {
+      "delete": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_DeleteMultiFactorMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PutMultiFactorMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutMultiFactorParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/multi-factors/{id}": {
+      "delete": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_DeleteMultiFactor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactor2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultiFactor"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PutMultiFactor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutMultiFactorParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/multi-factors/mine/csv": {
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactorsCsv",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PostMultiFactorsCsv",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
           }
         ],
         "responses": {
@@ -192,13 +2180,379 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Organization"
+                    "$ref": "#/components/schemas/MultiFactor"
                   }
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/multi-factors/csv": {
+      "get": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_GetMultiFactorsCsv2",
+        "parameters": [
+          {
+            "name": "organizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "MultiFactors"
+        ],
+        "operationId": "MultiFactors_PostMultiFactorsCsv2",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MultiFactor"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/organization-client-apps/mine": {
+      "get": {
+        "tags": [
+          "OrganizationClientApps"
+        ],
+        "operationId": "OrganizationClientApps_Get",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey7"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfOrganizationClientApp"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/organization-client-apps": {
+      "get": {
+        "tags": [
+          "OrganizationClientApps"
+        ],
+        "operationId": "OrganizationClientApps_Get2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey7"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfOrganizationClientApp"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/organizations": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganizations",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey8"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "IsValid",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 11
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfOrganization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -228,23 +2582,95 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       }
     },
-    "/api/Organizations/{id}": {
+    "/api/organizations/mine": {
       "get": {
         "tags": [
           "Organizations"
         ],
         "operationId": "Organizations_GetOrganization",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_PutOrganization",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutOrganizationParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/organizations/{code}": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GetOrganization2",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int32"
             },
             "x-position": 1
           }
@@ -260,31 +2686,38 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
           "Organizations"
         ],
-        "operationId": "Organizations_PutOrganization",
+        "operationId": "Organizations_PutOrganization2",
         "parameters": [
           {
-            "name": "id",
+            "name": "code",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "guid"
+              "type": "integer",
+              "format": "int32"
             },
             "x-position": 1
           }
         ],
         "requestBody": {
-          "x-name": "organization",
+          "x-name": "param",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Organization"
+                "$ref": "#/components/schemas/PutOrganizationAdminParam"
               }
             }
           },
@@ -303,13 +2736,429 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Organizations"
         ],
         "operationId": "Organizations_DeleteOrganization",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices/mine": {
+      "post": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PostSimAndDeviceMine",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_GetSimAndDevices",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey9"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 9
+          },
+          {
+            "name": "IsAuthenticationDone",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 12
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices": {
+      "post": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PostSimAndDevice",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_GetSimAndDevices2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey9"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "DeviceName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 10
+          },
+          {
+            "name": "IsAuthenticationDone",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 12
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 13
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices/mine/{id}": {
+      "delete": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_DeleteSimAndDeviceMine",
         "parameters": [
           {
             "name": "id",
@@ -328,56 +3177,2245 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Organization"
+                  "$ref": "#/components/schemas/SimAndDevice"
                 }
               }
             }
           }
-        }
-      }
-    },
-    "/api/RandomNumber/Generate": {
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
-          "RandomNumber"
+          "SimAndDevices"
         ],
-        "operationId": "RandomNumber_Generate",
+        "operationId": "SimAndDevices_GetSimAndDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/SimAndDevice"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PutSimAndDeviceMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutSimAndDeviceParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices/{id}": {
+      "delete": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_DeleteSimAndDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_GetSimAndDevice2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimAndDevice"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PutSimAndDevice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutSimAndDeviceParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices/mine/csv": {
+      "get": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_GetSimAndDevicesCsv",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PostSimAndDevicesCsv",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimAndDevice"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-and-devices/csv": {
+      "get": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_GetSimAndDevicesCsv2",
+        "parameters": [
+          {
+            "name": "organizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "SimAndDevices"
+        ],
+        "operationId": "SimAndDevices_PostSimAndDevicesCsv2",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimAndDevice"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-groups/mine": {
+      "post": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_PostSimMine",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostSimGroupParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_GetSimGroups",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey10"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Apn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-groups": {
+      "post": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_PostSim",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostSimGroupAdminParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_GetSimGroups2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey10"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Apn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-groups/mine/{id}": {
+      "delete": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_DeleteSimGroupMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_GetSimGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_UpdateSimGroupMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutSimGroupParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sim-groups/{id}": {
+      "delete": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_DeleteSimGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_GetSimGroup2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "SimGroups"
+        ],
+        "operationId": "SimGroups_UpdateSimGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutSimGroupParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims/mine": {
+      "post": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PostSimMine",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam3"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSims",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey11"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "SimGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims": {
+      "post": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PostSim",
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam3"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSims2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey11"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "UserName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Msisdn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "SimGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 8
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims/mine/{id}": {
+      "delete": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_DeleteSimMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSim",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PutSimMine",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam3"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims/{id}": {
+      "delete": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_DeleteSim",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSim2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PutSim",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterParam3"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims/mine/csv": {
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSimsCsv",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PostSimsCsv",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sim"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/sims/csv": {
+      "get": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_GetSimsCsv2",
+        "parameters": [
+          {
+            "name": "organizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Sims"
+        ],
+        "operationId": "Sims_PostDevicesCsv2",
+        "parameters": [
+          {
+            "type": "file",
+            "name": "csv",
+            "in": "formData",
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sim"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user-groups/mine": {
+      "get": {
+        "tags": [
+          "UserGroups"
+        ],
+        "operationId": "UserGroups_GetUserGroups",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey12"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfUserGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user-groups": {
+      "get": {
+        "tags": [
+          "UserGroups"
+        ],
+        "operationId": "UserGroups_GetUserGroups2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey12"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfUserGroup"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/ours": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUsers",
+        "parameters": [
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey13"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "UserGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "AccountName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 11
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 12
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 13
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfUserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUsers2",
+        "parameters": [
+          {
+            "name": "OrganizationCode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SortKey13"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "DomainId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "UserGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "AccountName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "EndDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "EndDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "IncludingEndDateNotSet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 13
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 1000.0,
+              "minimum": 1.0
+            },
+            "x-position": 14
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfUserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/ours/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUser2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_PutUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutUserParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "UserAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_GetUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "Users_PutUser2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutUserParam"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "UsersRegisterRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "userName",
-          "password"
-        ],
-        "properties": {
-          "userName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "password": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
-      },
       "UsersLoginRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -386,6 +5424,15 @@
           "password"
         ],
         "properties": {
+          "organizationCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "domainName": {
+            "type": "string",
+            "nullable": true
+          },
           "userName": {
             "type": "string",
             "minLength": 1
@@ -413,336 +5460,43 @@
           }
         }
       },
-      "Organization": {
+      "PaginatedResponseOfAuthenticationLogDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "name",
-          "address",
-          "delegatePhone",
-          "adminPhone",
-          "adminMail",
-          "startDay",
-          "endDay",
-          "url",
-          "isValid"
-        ],
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
+          "count": {
+            "type": "integer",
+            "format": "int32"
           },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "address": {
-            "type": "string",
-            "minLength": 1
-          },
-          "delegatePhone": {
-            "type": "string",
-            "minLength": 1
-          },
-          "adminPhone": {
-            "type": "string",
-            "minLength": 1
-          },
-          "adminMail": {
-            "type": "string",
-            "minLength": 1
-          },
-          "startDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "endDay": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "url": {
-            "type": "string",
-            "minLength": 1
-          },
-          "isValid": {
-            "type": "boolean"
-          },
-          "domains": {
+          "results": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/Domain"
-            }
-          },
-          "simGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SimGroup"
-            }
-          },
-          "deviceGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/DeviceGroup"
+              "$ref": "#/components/schemas/AuthenticationLogDto"
             }
           }
         }
       },
-      "Domain": {
+      "AuthenticationLogDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "domainName"
-        ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "domainName": {
-            "type": "string",
-            "minLength": 1
+          "type": {
+            "$ref": "#/components/schemas/TypeKey"
           },
-          "endUsers": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/EndUser"
-            }
-          },
-          "userGroups": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/UserGroup"
-            }
-          },
-          "organizationId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "organization": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Organization"
-              }
-            ]
-          },
-          "adDevices": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/AdDevice"
-            }
-          }
-        }
-      },
-      "EndUser": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/User"
-          },
-          {
-            "type": "object",
-            "x-abstract": true,
-            "additionalProperties": false,
-            "required": [
-              "domainId",
-              "userGroupId",
-              "isDisconnectWhenScreenLock"
-            ],
-            "properties": {
-              "domainId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              },
-              "userGroupId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              },
-              "userGroup": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/UserGroup"
-                  }
-                ]
-              },
-              "domain": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Domain"
-                  }
-                ]
-              },
-              "factorCombinations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/FactorCombination"
-                }
-              },
-              "isDisconnectWhenScreenLock": {
-                "type": "boolean"
-              }
-            }
-          }
-        ]
-      },
-      "UserGroup": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "userGroupName",
-          "domainId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "userGroupName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "domainId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "domain": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Domain"
-              }
-            ]
-          },
-          "endUsers": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/EndUser"
-            }
-          }
-        }
-      },
-      "FactorCombination": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "simDeviceId",
-          "endUserId",
-          "nwAddress"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "simDeviceId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "simDevice": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimDevice"
-              }
-            ]
-          },
-          "endUserId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "endUser": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/EndUser"
-              }
-            ]
-          },
-          "nwAddress": {
-            "type": "string",
-            "minLength": 1
-          },
-          "startDay": {
+          "time": {
             "type": "string",
             "format": "date-time"
           },
-          "endDay": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "multiFactorAuthenticationStateDone": {
+          "simAndDevice": {
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/MultiFactorAuthenticationStateDone"
-              }
-            ]
-          },
-          "deauthentications": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Deauthentication"
-            }
-          },
-          "multiFactorAuthenticationLogSuccesses": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/MultiFactorAuthenticationLogSuccess"
-            }
-          }
-        }
-      },
-      "SimDevice": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "simId",
-          "deviceId",
-          "nw2AddressPool"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "simId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "deviceId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "device": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Device"
+                "$ref": "#/components/schemas/SimAndDevice"
               }
             ]
           },
@@ -754,194 +5508,85 @@
               }
             ]
           },
-          "nw2AddressPool": {
+          "multiFactor": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MultiFactor"
+              }
+            ]
+          }
+        }
+      },
+      "TypeKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "SimAndDeviceAuthenticationSuccessLog",
+          "SimAndDeviceAuthenticationFailureLog",
+          "MultiFactorAuthenticationSuccessLog",
+          "MultiFactorAuthenticationFailureLog",
+          "DeauthenticationLog"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "SimAndDevice": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "isolatedNw2Ip",
+          "startDate"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sim": {
+            "$ref": "#/components/schemas/Sim"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "isolatedNw2Ip": {
             "type": "string",
             "minLength": 1
           },
-          "startDay": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDay": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "authPeriod": {
+          "authenticationDuration": {
             "type": "integer",
             "format": "int32"
           },
-          "factorCombinations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FactorCombination"
-            }
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
           },
-          "simDeviceAuthenticationLogSuccesses": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SimDeviceAuthenticationLogSuccess"
-            }
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
-          "simDeviceAuthenticationStateDone": {
+          "simAndDeviceAuthenticated": {
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/SimDeviceAuthenticationStateDone"
+                "$ref": "#/components/schemas/SimAndDeviceAuthenticated"
               }
             ]
-          },
-          "multiFactorAuthenticationLogFails": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/MultiFactorAuthenticationLogFail"
-            }
-          }
-        }
-      },
-      "Device": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "deviceName",
-          "deviceImei",
-          "managerNumber",
-          "type",
-          "deviceGroupId",
-          "lteId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "deviceName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "deviceImei": {
-            "type": "string",
-            "minLength": 1
-          },
-          "managerNumber": {
-            "type": "string",
-            "minLength": 1
-          },
-          "type": {
-            "type": "string",
-            "minLength": 1
-          },
-          "deviceGroupId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "deviceGroup": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/DeviceGroup"
-              }
-            ]
-          },
-          "lteId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "lte": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Lte"
-              }
-            ]
-          },
-          "simDevice": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimDevice"
-              }
-            ]
-          }
-        }
-      },
-      "DeviceGroup": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "version",
-          "osType",
-          "organizationId"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "version": {
-            "type": "string",
-            "minLength": 1
-          },
-          "osType": {
-            "type": "string",
-            "minLength": 1
-          },
-          "organization": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/Organization"
-              }
-            ]
-          },
-          "organizationId": {
-            "type": "string",
-            "format": "guid",
-            "minLength": 1
-          },
-          "devices": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Device"
-            }
-          }
-        }
-      },
-      "Lte": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "lteName",
-          "lteAdapter",
-          "softwareRadioState"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "lteName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "lteAdapter": {
-            "type": "string",
-            "minLength": 1
-          },
-          "devices": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Device"
-            }
-          },
-          "softwareRadioState": {
-            "type": "boolean"
           }
         }
       },
@@ -953,8 +5598,7 @@
           "imsi",
           "iccId",
           "userName",
-          "password",
-          "simGroupId"
+          "password"
         ],
         "properties": {
           "id": {
@@ -983,31 +5627,10 @@
           },
           "simGroupId": {
             "type": "string",
-            "format": "guid",
-            "minLength": 1
+            "format": "guid"
           },
           "simGroup": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimGroup"
-              }
-            ]
-          },
-          "simDevice": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SimDevice"
-              }
-            ]
-          },
-          "simDeviceAuthenticationLogFails": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SimDeviceAuthenticationLogFail"
-            }
+            "$ref": "#/components/schemas/SimGroup"
           }
         }
       },
@@ -1015,29 +5638,240 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "simGroupName",
-          "organizationId",
-          "primaryDns",
-          "secondDns",
+          "name",
           "apn",
-          "nasAddress",
-          "nw1AddressPool",
-          "nw1AddressRange",
-          "serverAddress"
+          "nasIp",
+          "isolatedNw1IpPool",
+          "isolatedNw1IpRange",
+          "authenticationServerIp",
+          "primaryDns",
+          "secondaryDns",
+          "userNameSuffix"
         ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "simGroupName": {
+          "organizationCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/Organization"
+          },
+          "name": {
             "type": "string",
             "minLength": 1
           },
-          "organizationId": {
+          "apn": {
             "type": "string",
-            "format": "guid",
             "minLength": 1
+          },
+          "nasIp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isolatedNw1IpPool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isolatedNw1IpRange": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authenticationServerIp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "primaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secondaryDns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isolatedNw1PrimaryDns": {
+            "type": "string",
+            "nullable": true
+          },
+          "isolatedNw1SecondaryDns": {
+            "type": "string",
+            "nullable": true
+          },
+          "userNameSuffix": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "address",
+          "phone",
+          "url",
+          "adminPhone",
+          "adminMail",
+          "distributionServerIp",
+          "startDate",
+          "isValid"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "distributionServerIp": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isValid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "useTpm",
+          "windowsSignInListCacheDays",
+          "startDate"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domainId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/Domain"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceGroupDevices": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroupDevice"
+            }
+          },
+          "managedNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lteModule": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LteModule"
+              }
+            ]
+          },
+          "organizationClientApp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationClientApp"
+              }
+            ]
+          },
+          "useTpm": {
+            "type": "boolean"
+          },
+          "windowsSignInListCacheDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "adObjectId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "Domain": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "organizationCode": {
+            "type": "integer",
+            "format": "int32"
           },
           "organization": {
             "nullable": true,
@@ -1047,117 +5881,187 @@
               }
             ]
           },
-          "primaryDns": {
+          "name": {
             "type": "string",
             "minLength": 1
           },
-          "secondDns": {
+          "adObjectId": {
             "type": "string",
-            "minLength": 1
-          },
-          "apn": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nasAddress": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nw1AddressPool": {
-            "type": "string",
-            "minLength": 1
-          },
-          "nw1AddressRange": {
-            "type": "string",
-            "minLength": 1
-          },
-          "serverAddress": {
-            "type": "string",
-            "minLength": 1
-          },
-          "sims": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Sim"
-            }
+            "format": "guid"
           }
         }
       },
-      "SimDeviceAuthenticationLogFail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuthenticationLog"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "sim": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Sim"
-                  }
-                ]
-              },
-              "simId": {
-                "type": "string",
-                "format": "guid"
-              }
-            }
-          }
-        ]
-      },
-      "AuthenticationLog": {
+      "DeviceGroupDevice": {
         "type": "object",
-        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "deviceGroupId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "deviceGroup": {
+            "$ref": "#/components/schemas/DeviceGroup"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "device": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Device"
+              }
+            ]
+          }
+        }
+      },
+      "DeviceGroup": {
+        "type": "object",
         "additionalProperties": false,
         "required": [
-          "connectionTime"
+          "name"
         ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "connectionTime": {
+          "domainId": {
             "type": "string",
-            "format": "date-time",
+            "format": "guid"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/Domain"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deviceGroupDevices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroupDevice"
+            }
+          },
+          "adObjectId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "LteModule": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "nwAdapterName",
+          "useSoftwareRadioState"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nwAdapterName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "useSoftwareRadioState": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OrganizationClientApp": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "organizationCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organization": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Organization"
+              }
+            ]
+          },
+          "clientAppId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "clientApp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ClientApp"
+              }
+            ]
+          }
+        }
+      },
+      "ClientApp": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "clientOsId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "clientOs": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ClientOs"
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
             "minLength": 1
           }
         }
       },
-      "SimDeviceAuthenticationLogSuccess": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuthenticationLog"
+      "ClientOs": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "simDeviceId"
-            ],
-            "properties": {
-              "simDevice": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/SimDevice"
-                  }
-                ]
-              },
-              "simDeviceId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              }
-            }
+          "name": {
+            "type": "string",
+            "minLength": 1
           }
-        ]
+        }
       },
-      "SimDeviceAuthenticationStateDone": {
+      "SimAndDeviceAuthenticated": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AuthenticationState"
@@ -1165,20 +6069,16 @@
           {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "simDeviceId"
-            ],
             "properties": {
-              "simDeviceId": {
+              "simAndDeviceId": {
                 "type": "string",
-                "format": "guid",
-                "minLength": 1
+                "format": "guid"
               },
-              "simDevice": {
+              "simAndDevice": {
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/SimDevice"
+                    "$ref": "#/components/schemas/SimAndDevice"
                   }
                 ]
               }
@@ -1191,38 +6091,106 @@
         "x-abstract": true,
         "additionalProperties": false,
         "required": [
-          "timeLimit"
+          "expiration"
         ],
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "timeLimit": {
+          "expiration": {
             "type": "string",
             "format": "date-time",
             "minLength": 1
           }
         }
       },
-      "MultiFactorAuthenticationLogFail": {
+      "MultiFactor": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "closedNwIp",
+          "startDate"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simAndDeviceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "simAndDevice": {
+            "$ref": "#/components/schemas/SimAndDevice"
+          },
+          "endUserId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "endUser": {
+            "$ref": "#/components/schemas/EndUser"
+          },
+          "closedNwIp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "multiFactorAuthenticated": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MultiFactorAuthenticated"
+              }
+            ]
+          }
+        }
+      },
+      "EndUser": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuthenticationLog"
+            "$ref": "#/components/schemas/User"
           },
           {
             "type": "object",
+            "x-abstract": true,
             "additionalProperties": false,
+            "required": [
+              "authenticateWhenUnlockingScreen"
+            ],
             "properties": {
-              "simDevice": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/SimDevice"
-                  }
-                ]
+              "domainId": {
+                "type": "string",
+                "format": "guid"
               },
-              "simDeviceId": {
+              "domain": {
+                "$ref": "#/components/schemas/Domain"
+              },
+              "userGroupEndUsers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserGroupEndUser"
+                }
+              },
+              "authenticateWhenUnlockingScreen": {
+                "type": "boolean"
+              },
+              "availablePeriods": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AvailablePeriod"
+                }
+              },
+              "adObjectId": {
                 "type": "string",
                 "format": "guid"
               }
@@ -1230,92 +6198,93 @@
           }
         ]
       },
-      "MultiFactorAuthenticationStateDone": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuthenticationState"
+      "UserGroupEndUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "factorCombinationId"
-            ],
-            "properties": {
-              "factorCombinationId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              },
-              "factorCombination": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/FactorCombination"
-                  }
-                ]
-              }
-            }
+          "userGroupId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userGroup": {
+            "$ref": "#/components/schemas/UserGroup"
+          },
+          "endUserId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "endUser": {
+            "$ref": "#/components/schemas/EndUser"
           }
-        ]
+        }
       },
-      "Deauthentication": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuthenticationLog"
+      "UserGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "factorCombinationId"
-            ],
-            "properties": {
-              "factorCombinationId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              },
-              "factorCombination": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/FactorCombination"
-                  }
-                ]
-              }
+          "domainId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domain": {
+            "$ref": "#/components/schemas/Domain"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userGroupEndUsers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserGroupEndUser"
             }
+          },
+          "adObjectId": {
+            "type": "string",
+            "format": "guid"
           }
-        ]
+        }
       },
-      "MultiFactorAuthenticationLogSuccess": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AuthenticationLog"
+      "AvailablePeriod": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "startDate"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "factorCombinationId"
-            ],
-            "properties": {
-              "factorCombinationId": {
-                "type": "string",
-                "format": "guid",
-                "minLength": 1
-              },
-              "factorCombination": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/FactorCombination"
-                  }
-                ]
-              }
-            }
+          "endUserId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "endUser": {
+            "$ref": "#/components/schemas/EndUser"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
-        ]
+        }
       },
       "User": {
         "type": "object",
@@ -1329,50 +6298,33 @@
             "type": "string",
             "format": "guid"
           },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
           "accountName": {
             "type": "string",
             "minLength": 1
+          },
+          "name": {
+            "type": "string"
           }
         }
       },
-      "AdDevice": {
+      "MultiFactorAuthenticated": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Device"
+            "$ref": "#/components/schemas/AuthenticationState"
           },
           {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "domainId"
-            ],
             "properties": {
-              "domain": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Domain"
-                  }
-                ]
-              },
-              "domainId": {
+              "multiFactorId": {
                 "type": "string",
-                "format": "guid",
-                "minLength": 1
+                "format": "guid"
               },
-              "adDeviceSettingOfflineWindowsSignIn": {
+              "multiFactor": {
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/AdDeviceSettingOfflineWindowsSignIn"
+                    "$ref": "#/components/schemas/MultiFactor"
                   }
                 ]
               }
@@ -1380,35 +6332,1021 @@
           }
         ]
       },
-      "AdDeviceSettingOfflineWindowsSignIn": {
+      "SortKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Time"
+        ],
+        "enum": [
+          0
+        ]
+      },
+      "Order": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "DashboardDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "windowsSignInListCacheDays"
+        "properties": {
+          "onlineUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windowsDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "iosDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "androidDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "linuxDevices": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PaginatedResponseOfDeviceGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroup"
+            }
+          }
+        }
+      },
+      "SortKey2": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "DomainName",
+          "Name"
         ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PaginatedResponseOfDeviceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceDto"
+            }
+          }
+        }
+      },
+      "DeviceDto": {
+        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "string",
             "format": "guid"
           },
-          "windowsSignInListCacheDays": {
-            "type": "integer",
-            "format": "int32"
+          "domainId": {
+            "type": "string",
+            "format": "guid"
           },
-          "adDevice": {
+          "domain": {
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/AdDevice"
+                "$ref": "#/components/schemas/Domain"
               }
             ]
           },
-          "adDeviceId": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DeviceGroup"
+            }
+          },
+          "managedNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lteModule": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LteModule"
+              }
+            ]
+          },
+          "organizationClientApp": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationClientApp"
+              }
+            ]
+          },
+          "useTpm": {
+            "type": "boolean"
+          },
+          "windowsSignInListCacheDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SortKey3": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "DomainName",
+          "Name",
+          "ProductName",
+          "LteModuleName",
+          "StartDate",
+          "EndDate"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "PutDeviceParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "useTpm",
+          "windowsSignInListCacheDays"
+        ],
+        "properties": {
+          "managedNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lteModuleId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "organizationClientAppId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "useTpm": {
+            "type": "boolean"
+          },
+          "windowsSignInListCacheDays": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PaginatedResponseOfDomain": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Domain"
+            }
+          }
+        }
+      },
+      "SortKey4": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Id",
+          "Name"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PaginatedResponseOfLteModule": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/LteModule"
+            }
+          }
+        }
+      },
+      "SortKey5": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Name",
+          "UseSoftwareRadioState"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "RegisterParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutMultiFactorParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "simAndDeviceId",
+              "userId"
+            ],
+            "properties": {
+              "simAndDeviceId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "userId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "PutMultiFactorParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "startDate",
+          "closedNwIp"
+        ],
+        "properties": {
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "closedNwIp": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          }
+        }
+      },
+      "PaginatedResponseOfMultiFactor": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MultiFactor"
+            }
+          }
+        }
+      },
+      "SortKey6": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Msisdn",
+          "DeviceName",
+          "UserAccountName",
+          "ClosedNwIp",
+          "StartDate",
+          "EndDate"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "PaginatedResponseOfOrganizationClientApp": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/OrganizationClientApp"
+            }
+          }
+        }
+      },
+      "SortKey7": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "ClientOsName"
+        ],
+        "enum": [
+          0
+        ]
+      },
+      "PaginatedResponseOfOrganization": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Organization"
+            }
+          }
+        }
+      },
+      "SortKey8": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Code",
+          "Name",
+          "Address",
+          "Phone",
+          "AdminPhone",
+          "AdminMail",
+          "StartDate",
+          "EndDate",
+          "Url",
+          "IsValid"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "PutOrganizationParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "address",
+          "phone",
+          "url",
+          "adminPhone",
+          "adminMail"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "adminPhone": {
+            "type": "string",
+            "format": "phone",
+            "maxLength": 11,
+            "minLength": 10
+          },
+          "adminMail": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        }
+      },
+      "PutOrganizationAdminParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutOrganizationParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "startDate",
+              "isValid",
+              "distributionServerIp"
+            ],
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "minLength": 1
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "isValid": {
+                "type": "boolean"
+              },
+              "distributionServerIp": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+              }
+            }
+          }
+        ]
+      },
+      "RegisterParam2": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutSimAndDeviceParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "simId",
+              "deviceId"
+            ],
+            "properties": {
+              "simId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "deviceId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "PutSimAndDeviceParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "isolatedNw2Ip",
+          "startDate",
+          "authenticationDuration"
+        ],
+        "properties": {
+          "isolatedNw2Ip": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\/([1-9]|[1-2]\\d|3[0-2])$"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "authenticationDuration": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PaginatedResponseOfSimAndDevice": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimAndDevice"
+            }
+          }
+        }
+      },
+      "SortKey9": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Msisdn",
+          "DeviceName",
+          "IsolatedNw2Ip",
+          "StartDate",
+          "EndDate",
+          "AuthenticationDuration"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "PostSimGroupParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SimParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SimParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "apn",
+          "isolatedNw1IpPool",
+          "isolatedNw1IpRange",
+          "authenticationServerIp",
+          "nasIp",
+          "primaryDns",
+          "secondaryDns",
+          "userNameSuffix"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apn": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[\\x21-\\x7eA-Za-z0-9]*$"
+          },
+          "isolatedNw1IpPool": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[\\x21-\\x7eA-Za-z0-9]*$"
+          },
+          "isolatedNw1IpRange": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?:(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\/([1-9]|[1-2]\\d|3[0-2])$"
+          },
+          "authenticationServerIp": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          },
+          "isolatedNw1SecondaryDns": {
+            "type": "string",
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}",
+            "nullable": true
+          },
+          "isolatedNw1PrimaryDns": {
+            "type": "string",
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}",
+            "nullable": true
+          },
+          "nasIp": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          },
+          "primaryDns": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          },
+          "secondaryDns": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}"
+          },
+          "userNameSuffix": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "PostSimGroupAdminParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostSimGroupParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "organizationCode"
+            ],
+            "properties": {
+              "organizationCode": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "PaginatedResponseOfSimGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SimGroup"
+            }
+          }
+        }
+      },
+      "SortKey10": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Name",
+          "Apn",
+          "AuthenticationServerIp",
+          "NasIp"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "PutSimGroupParam": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SimParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "RegisterParam3": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PutSimParam"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "simGroupId"
+            ],
+            "properties": {
+              "simGroupId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "PutSimParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "msisdn",
+          "imsi",
+          "iccId"
+        ],
+        "properties": {
+          "msisdn": {
+            "type": "string",
+            "maxLength": 15,
+            "minLength": 0,
+            "pattern": "^[0-9]*$"
+          },
+          "imsi": {
+            "type": "string",
+            "maxLength": 15,
+            "minLength": 0,
+            "pattern": "^[0-9]*$"
+          },
+          "iccId": {
+            "type": "string",
+            "maxLength": 19,
+            "minLength": 0,
+            "pattern": "^[0-9]*$"
+          },
+          "userName": {
+            "type": "string",
+            "pattern": "^[\\x21-\\x7eA-Za-z0-9]*$",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "pattern": "^[\\x21-\\x7eA-Za-z0-9]*$",
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedResponseOfSim": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Sim"
+            }
+          }
+        }
+      },
+      "SortKey11": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "UserName",
+          "SimGroupName",
+          "Msisdn"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "PaginatedResponseOfUserGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UserGroup"
+            }
+          }
+        }
+      },
+      "SortKey12": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "DomainName",
+          "Name"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PaginatedResponseOfUserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "results": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
             "type": "string",
             "format": "guid"
+          },
+          "accountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "domainId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "authenticateWhenUnlockingScreen": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "domain": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Domain"
+              }
+            ]
+          },
+          "userGroups": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UserGroup"
+            }
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SortKey13": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "DomainName",
+          "AccountName",
+          "Name",
+          "StartDate",
+          "EndDate"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "PutUserParam": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "authenticateWhenUnlockingScreen"
+        ],
+        "properties": {
+          "authenticateWhenUnlockingScreen": {
+            "type": "boolean"
           }
         }
       }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "ヘルスチェック",
+      "description": "ヘルスチェックを行う。(DBと接続し組織とradgroupcheckを取得する)"
+    }
+  ]
 }

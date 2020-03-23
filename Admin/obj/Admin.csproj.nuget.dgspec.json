@@ -45,6 +45,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[13.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[3.1.0, )"
@@ -69,23 +73,27 @@
               "target": "Package",
               "version": "[3.1.0, )"
             },
-            "Microsoft.Extensions.Logging.Debug": {
-              "target": "Package",
-              "version": "[3.1.0, )"
-            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.0, )"
             },
+            "NLog": {
+              "target": "Package",
+              "version": "[4.6.8, )"
+            },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[4.9.0, )"
+            },
             "NSwag.AspNetCore": {
               "target": "Package",
-              "version": "[13.2.0, )"
+              "version": "[13.2.2, )"
             },
             "NSwag.MSBuild": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[13.2.0, )"
+              "version": "[13.2.2, )"
             }
           },
           "imports": [
@@ -163,6 +171,10 @@
               "target": "Package",
               "version": "[3.1.0, )"
             },
+            "Microsoft.Extensions.Logging.AzureAppServices": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[3.1.0, )"
@@ -179,13 +191,13 @@
               "target": "Package",
               "version": "[4.9.0, )"
             },
-            "NSwag.AspNetCore": {
-              "target": "Package",
-              "version": "[13.2.0, )"
-            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
+            },
+            "Novell.Directory.Ldap.NETStandard2_0": {
+              "target": "Package",
+              "version": "[3.1.0, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",

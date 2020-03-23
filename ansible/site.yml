@@ -1,0 +1,34 @@
+- name: apply common
+  hosts: all
+  remote_user: root
+  roles:
+    - common
+- name: apply mmng
+  hosts: mmng
+  remote_user: root
+  roles:
+    - nginx
+    - dotnet
+    - app-admin
+- name: apply msca
+  hosts: msca
+  remote_user: root
+  roles:
+    - nginx
+    - app-batch
+- name: apply mrad
+  hosts: mrad
+  roles:
+    - radius
+- name: apply jinc
+  hosts: jinc
+  remote_user: root
+  roles:
+    - nginx
+    - dotnet
+    - app-auth
+- name: apply mdbx
+  hosts: mdbx
+  remote_user: root
+  roles:
+    - mariadb

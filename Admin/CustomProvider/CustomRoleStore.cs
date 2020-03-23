@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
-namespace Admin.CustomProvider
+namespace JinCreek.Server.Admin.CustomProvider
 {
     // see https://docs.microsoft.com/ja-jp/aspnet/core/security/authentication/identity-custom-storage-providers?view=aspnetcore-3.1
     public class CustomRoleStore : IRoleStore<ApplicationRole>

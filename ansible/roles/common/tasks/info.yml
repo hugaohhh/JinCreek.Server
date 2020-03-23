@@ -1,0 +1,22 @@
+- name: Print ansible variables
+  debug:
+    var: '{{ item }}'
+  with_items:
+    - inventory_hostname
+    - ansible_os_family
+    - ansible_distribution
+    - ansible_distribution_version
+    - ansible_kernel
+    - ansible_architecture
+    - ansible_default_ipv4.address
+    - ansible_default_ipv4.interface
+    - ansible_default_ipv4.netmask
+    - ansible_default_ipv4.network
+    - ansible_dns.nameservers
+    - ansible_effective_user_id
+    - ansible_effective_group_id
+    - ansible_env.HOME
+    - ansible_env.SHELL
+    - ansible_eth0.ipv4.address
+    - ansible_processor_cores
+    - ansible_processor_vcpus

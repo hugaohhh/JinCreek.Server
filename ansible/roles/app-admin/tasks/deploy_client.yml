@@ -1,0 +1,37 @@
+- name: Now
+  command: date +"%Y%m%d%H%M"
+  register: now
+
+- name: debug
+  debug:
+    var: now.stdout
+
+- name: Application(Client) Directory({{ now.stdout }})
+  file:
+    path: "{{ application_directory }}/AdminClient_{{ now.stdout }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Assembly(Client)
+  copy: 
+    src: AdminClient.zip
+    dest: "{{ item }}"
+    mode: 0640
+    owner: root
+    group: root
+  with_items: "{{ application_directory }}/AdminClient.zip"
+
+- name: Unarchive Assembly(Client)
+  unarchive:
+    src: "{{ application_directory }}/AdminClient.zip"
+    dest: "{{ application_directory }}/AdminClient_{{ now.stdout }}"
+    remote_src: yes
+
+- name: Create symbolic link(Client)
+  file:
+    src: "{{ application_directory }}/AdminClient_{{ now.stdout }}"
+    dest: "{{ application_directory }}/AdminClient"
+    state: link
+

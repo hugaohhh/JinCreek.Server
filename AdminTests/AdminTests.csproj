@@ -10,6 +10,8 @@
     <FileVersion>1.0.19358.0423</FileVersion>
 
     <LangVersion>8</LangVersion>
+
+    <RootNamespace>JinCreek.Server.AdminTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -13,8 +13,8 @@ C:\Repos\JinCreek.Server\Common\bin\Debug\netcoreapp3.1\Common.runtimeconfig.jso
 C:\Repos\JinCreek.Server\Common\bin\Debug\netcoreapp3.1\Common.runtimeconfig.dev.json
 C:\Repos\JinCreek.Server\Common\bin\Debug\netcoreapp3.1\Common.dll
 C:\Repos\JinCreek.Server\Common\bin\Debug\netcoreapp3.1\Common.pdb
-C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.csprojAssemblyReference.cache
 C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfoInputs.cache
 C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfo.cs
 C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.dll
 C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.pdb
+C:\Repos\JinCreek.Server\Common\obj\Debug\netcoreapp3.1\Common.csprojAssemblyReference.cache

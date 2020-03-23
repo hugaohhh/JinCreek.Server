@@ -1,0 +1,12 @@
+web_server_role: auth
+key_file: /etc/ssl/server/www-jincreek-jp-key.pem.nopass
+cert_file: /etc/ssl/server/www-jincreek-jp.crt
+conf_file: /etc/nginx/conf.d/ssl.conf
+#client_key_file: /etc/ssl/client/client-key.pem
+#client_cert_file: /etc/ssl/client/client.crt
+#client_cert_file_pfx: /etc/ssl/client/client.pfx
+#client_cert_file_pem: /etc/ssl/client/client.pem
+ca_cert_file: /etc/ssl/private_ca/cacert.pem
+server_name: www.jincreek.jp
+server_port: 443
+dotnet_server: http://localhost:2000

@@ -1,0 +1,31 @@
+- name: Download MS product repository
+  get_url:
+    url: https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+    dest: /tmp/packages-microsoft-prod.deb
+- name: Install MS product repository
+  apt: deb=/tmp/packages-microsoft-prod.deb
+  become: true
+- name: Make sure HTTPS is supported by apt
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: no
+  become: true
+- name: Install .NET Core SDK
+  apt:
+    name: dotnet-sdk-3.1
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Check EntityFramework Core
+  command: /root/.dotnet/tools/dotnet-ef --version
+  ignore_errors: True
+  register: is_install_dotnetef
+  become: true
+- name: debug
+  debug: msg='{{ is_install_dotnetef }}'
+- name: Install EntityFramework Core
+  command: /usr/bin/dotnet tool install --global dotnet-ef
+  when: is_install_dotnetef.rc != 0
+  ignore_errors: True
